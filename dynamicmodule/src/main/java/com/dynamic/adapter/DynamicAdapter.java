@@ -52,10 +52,10 @@ public class DynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         switch (i) {
             case ItemType.ITEM_TYPE_GRID:
             case ItemType.ITEM_TYPE_SCROLL:
-                return new ScrollViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.slot_dynamic_grid, viewGroup, false));
+                return new ScrollViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dm_slot_dynamic_grid, viewGroup, false));
             case ItemType.ITEM_TYPE_LIST:
             default:
-                return new CommonHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.slot_dynamic_list, viewGroup, false));
+                return new CommonHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dm_slot_dynamic_list, viewGroup, false));
         }
     }
 
@@ -131,7 +131,7 @@ public class DynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
             if(ivIcon != null){
                 String imagePath = getUrl(item.getImage());
-                int placeHolder = R.drawable.ic_slider_placeholder;
+                int placeHolder = R.drawable.ic_dm_slider_placeholder;
                 if (BaseUtil.isValidUrl(imagePath)) {
                     Picasso.get().load(imagePath)
                             .placeholder(placeHolder)

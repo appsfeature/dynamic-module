@@ -2,6 +2,7 @@ package com.dynamic.util;
 
 import android.content.Context;
 
+import com.dynamic.DynamicModule;
 import com.helper.util.BasePrefUtil;
 
 public class DMPreferences extends BasePrefUtil {
@@ -14,7 +15,7 @@ public class DMPreferences extends BasePrefUtil {
     }
 
     public static String getImageBaseUrl(Context context) {
-        return getString(context, BASE_IMAGE_URL);
+        return getString(context, BASE_IMAGE_URL, DynamicModule.DEFAULT_BASE_IMAGE_URL);
     }
 
     public static void setBaseUrl(Context context, String value) {
@@ -22,6 +23,6 @@ public class DMPreferences extends BasePrefUtil {
     }
 
     public static String getBaseUrl(Context context) {
-        return getString(context, BASE_URL);
+        return getString(context, BASE_URL, DynamicModule.DEFAULT_BASE_URL);
     }
 }

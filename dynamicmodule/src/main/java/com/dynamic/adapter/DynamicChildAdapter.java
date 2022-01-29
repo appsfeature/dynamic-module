@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dynamic.DynamicModule;
 import com.dynamic.R;
 import com.dynamic.model.DMContent;
-import com.dynamic.model.DMContent;
 import com.helper.callback.Response;
 import com.helper.util.BaseUtil;
 import com.squareup.picasso.Picasso;
@@ -46,14 +45,14 @@ public class DynamicChildAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case DynamicAdapter.ItemType.ITEM_TYPE_GRID:
-                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.slot_dynamic_grid_view, parent, false));
+                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_dynamic_grid_view, parent, false));
             case DynamicAdapter.ItemType.ITEM_TYPE_SCROLL:
-                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.slot_dynamic_scroll_view, parent, false));
+                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_dynamic_scroll_view, parent, false));
             case DynamicAdapter.ItemType.ITEM_TYPE_SLIDER:
-                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.slot_dynamic_slider, parent, false));
+                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_dynamic_slider, parent, false));
             case DynamicAdapter.ItemType.ITEM_TYPE_LIST:
             default:
-                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.slot_dynamic_list_view, parent, false));
+                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_dynamic_list_view, parent, false));
         }
     }
 
@@ -101,9 +100,9 @@ public class DynamicChildAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             if(ivIcon != null) {
                 String imagePath = getUrl(item.getImage());
-                int placeHolder = R.drawable.ic_place_holder;
+                int placeHolder = R.drawable.ic_dm_place_holder;
                 if((itemType == DynamicAdapter.ItemType.ITEM_TYPE_GRID || itemType == DynamicAdapter.ItemType.ITEM_TYPE_SLIDER)){
-                    placeHolder = R.drawable.ic_slider_placeholder;
+                    placeHolder = R.drawable.ic_dm_slider_placeholder;
                 }
                 if (BaseUtil.isValidUrl(imagePath)) {
                     Picasso.get().load(imagePath)

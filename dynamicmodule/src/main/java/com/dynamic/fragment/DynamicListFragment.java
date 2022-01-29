@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dynamic.DynamicModule;
 import com.dynamic.R;
 import com.dynamic.adapter.DynamicAdapter;
 import com.dynamic.listeners.DynamicCallback;
@@ -54,7 +53,7 @@ public class DynamicListFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_dynamic_list, container, false);
+        View view = inflater.inflate(R.layout.dm_fragment_dynamic_list, container, false);
         activity = getActivity();
         networkManager = new DMNetworkManager(activity);
         initDataFromArguments();
