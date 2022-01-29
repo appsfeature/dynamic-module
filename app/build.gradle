@@ -29,7 +29,7 @@ dependencies {
 
     implementation "androidx.appcompat:appcompat:$rootProject.ext.appcompat"
     implementation "com.google.android.material:material:$rootProject.ext.material"
-    implementation project(path: ':dynamic-module')
+    implementation project(path: ':dynamicmodule')
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
