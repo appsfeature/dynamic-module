@@ -1,0 +1,42 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdk 30
+
+    defaultConfig {
+        minSdk 16
+        targetSdk 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    implementation "androidx.appcompat:appcompat:$rootProject.ext.appcompat"
+    implementation "androidx.recyclerview:recyclerview:$rootProject.ext.recyclerview"
+    implementation "com.google.android.material:material:$rootProject.ext.material"
+
+    implementation "androidx.room:room-runtime:$rootProject.ext.room_version"
+    annotationProcessor "androidx.room:room-compiler:$rootProject.ext.room_version"
+
+    implementation "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofit_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.ext.retrofit_okhttp_version"
+    implementation "org.bitbucket.android-dennislabs:helper:$rootProject.ext.helper_version"
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.tbuonomo:dotsindicator:4.2'
+}
