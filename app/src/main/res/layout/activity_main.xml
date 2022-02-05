@@ -12,6 +12,12 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="onOpenDMActivity"
+        android:text="Open Dynamic Activity"  />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:onClick="onGetCategory"
         android:text="Get Category"  />
 

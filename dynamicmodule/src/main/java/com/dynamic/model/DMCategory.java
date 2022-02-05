@@ -68,11 +68,11 @@ public class DMCategory implements Cloneable, Serializable {
     private String createdAt;
     @Expose
     @Ignore
-    @SerializedName(value="category_list")
+    @SerializedName(value="categories")
     private List<DMCategory> childCategoryList;
     @Expose
     @Ignore
-    @SerializedName(value="child_list", alternate={"data"})
+    @SerializedName(value="contents", alternate={"data"})
     private List<DMContent> childList;
 
     public int getCatId() {

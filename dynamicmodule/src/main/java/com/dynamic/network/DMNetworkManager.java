@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.dynamic.DynamicModule;
 import com.dynamic.listeners.ApiRequestType;
+import com.dynamic.listeners.DMApiConstants;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.google.gson.Gson;
@@ -23,8 +24,6 @@ import java.util.Map;
 
 public class DMNetworkManager extends BaseNetworkManager {
 
-    private static final String GET_CATEGORY = "get-category";
-    private static final String GET_CONTENT = "get-content";
     private final Context context;
     private final Gson gson;
 
@@ -34,15 +33,39 @@ public class DMNetworkManager extends BaseNetworkManager {
         this.gson = new Gson();
     }
 
-
-    public void getDynamicCategory(Response.Callback<List<DMCategory>> callback) {
+    public void insertCategory(DMCategory category, Response.Callback<NetworkBaseModel> callback) {
         Map<String, String> params = new HashMap<>();
-        getDynamicCategory(params, callback);
+        params.put("pkg_id", context.getPackageName());
+        params.put("sub_cat_id", category.getSubCatId() + "");
+        params.put("title", category.getTitle() + "");
+        params.put("item_type", category.getItemType() + "");
+        params.put("image", category.getImage() + "");
+        params.put("ranking", category.getRanking() + "");
+        params.put("visibility", category.getVisibility() + "");
+        params.put("json_data", category.getJsonData() + "");
+        params.put("other_property", category.getOtherProperty() + "");
+        getData(ApiRequestType.POST, DMApiConstants.INSERT_CATEGORY, params, new NetworkResponseCallBack.OnNetworkCall() {
+            @Override
+            public void onComplete(boolean status, NetworkBaseModel data) {
+                if(status && data.getStatus() != null && data.getStatus().equalsIgnoreCase(BaseConstants.SUCCESS)) {
+                    callback.onSuccess(data);
+                }else {
+                    callback.onFailure(new Exception(data.getMessage()));
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                callback.onFailure(e);
+            }
+        });
     }
 
-    public void getDynamicCategory(Map<String, String> params, Response.Callback<List<DMCategory>> callback) {
+    public void getCategory(int catId, Response.Callback<List<DMCategory>> callback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("cat_id", catId + "");
         params.put("pkg_id", context.getPackageName());
-        getData(ApiRequestType.GET, GET_CATEGORY, params, new NetworkResponseCallBack.OnNetworkCall() {
+        getData(ApiRequestType.GET, DMApiConstants.GET_CATEGORY, params, new NetworkResponseCallBack.OnNetworkCall() {
             @Override
             public void onComplete(boolean status, NetworkBaseModel data) {
                 try {
@@ -69,23 +92,17 @@ public class DMNetworkManager extends BaseNetworkManager {
         });
     }
 
-    public void getDynamicContent(Response.Callback<List<DMContent>> callback) {
+    public void getContentBySubCategory(int catId, Response.Callback<List<DMCategory>> callback) {
         Map<String, String> params = new HashMap<>();
-        getDynamicContent(params, true, callback);
-    }
-
-    public void getDynamicContent(Map<String, String> params, boolean isValidate, Response.Callback<List<DMContent>> callback) {
         params.put("pkg_id", context.getPackageName());
-        getData(ApiRequestType.GET, GET_CONTENT, params, new NetworkResponseCallBack.OnNetworkCall() {
+        params.put("cat_id", catId + "");
+        getData(ApiRequestType.GET, DMApiConstants.GET_CONTENT_BY_SUB_CATEGORY, params, new NetworkResponseCallBack.OnNetworkCall() {
             @Override
             public void onComplete(boolean status, NetworkBaseModel data) {
                 try {
                     if(status && !TextUtils.isEmpty(data.getData())) {
-                        List<DMContent> list = gson.fromJson(data.getData(), new TypeToken<List<DMContent>>() {
+                        List<DMCategory> list = gson.fromJson(data.getData(), new TypeToken<List<DMCategory>>() {
                         }.getType());
-                        if(isValidate) {
-                            list = validateData(list);
-                        }
                         if (list != null && list.size() > 0) {
                             callback.onSuccess(list);
                         } else {
@@ -106,70 +123,47 @@ public class DMNetworkManager extends BaseNetworkManager {
         });
     }
 
-    private List<DMContent> validateData(List<DMContent> list) {
-        ArrayList<DMContent> finalList = new ArrayList<>();
-        if (list != null && list.size() > 0) {
-            for (DMContent item : list){
-                if(item.getVisibility() == 1 && validateDate(item.getUpdatedAt(), item.getOtherProperty())){
-                    finalList.add(item);
+    public void getContent(Integer catId, Response.Callback<List<DMContent>> callback) {
+        getContent(null, catId, callback);
+    }
+
+    public void getContent(Integer id, Integer catId, Response.Callback<List<DMContent>> callback) {
+        Map<String, String> params = getValidContentParams(id, catId);
+        getData(ApiRequestType.GET, DMApiConstants.GET_CONTENT, params, new NetworkResponseCallBack.OnNetworkCall() {
+            @Override
+            public void onComplete(boolean status, NetworkBaseModel data) {
+                try {
+                    if(status && !TextUtils.isEmpty(data.getData())) {
+                        List<DMContent> list = gson.fromJson(data.getData(), new TypeToken<List<DMContent>>() {
+                        }.getType());
+                        if (list != null && list.size() > 0) {
+                            callback.onSuccess(list);
+                        } else {
+                            callback.onFailure(new Exception(BaseConstants.NO_DATA));
+                        }
+                    }else {
+                        callback.onFailure(new Exception(data.getMessage()));
+                    }
+                } catch (JsonSyntaxException e) {
+                    callback.onFailure(e);
                 }
             }
-        }
-        return finalList;
-    }
 
-    private boolean validateDate(String liveAt, String expiryDate) {
-        boolean status = true;
-        long liveTimeMills = getTimeInMillis(liveAt);
-        if(!TextUtils.isEmpty(liveAt) && liveTimeMills > 0){
-            if(System.currentTimeMillis() < liveTimeMills){
-                status = false;
+            @Override
+            public void onError(Exception e) {
+                callback.onFailure(e);
             }
-        }
-        long expiryDateMills = getTimeInMillis(expiryDate);
-        if(!TextUtils.isEmpty(expiryDate) && expiryDateMills > 0){
-            if(System.currentTimeMillis() > expiryDateMills){
-                status = false;
-            }
-        }
-        return status;
+        });
     }
 
-    private long getTimeInMillis(String date) {
-        try {
-            if(date == null) return 0;
-            String format = date.contains("T") ? "yyyy-MM-dd'T'HH:mm" : "yyyy-MM-dd HH:mm:ss";
-            Date mDate = new SimpleDateFormat(format, Locale.US).parse(date);
-            if(mDate != null) return mDate.getTime();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
+    private Map<String, String> getValidContentParams(Integer id, Integer catId) {
+        Map<String, String> params = new HashMap<>();
+        params.put("pkg_id", context.getPackageName());
+        if(id != null && id > 0)
+            params.put("id", id + "");
+        if(catId != null && catId > 0)
+            params.put("cat_id", catId + "");
+        return params;
     }
-
-//    private List<DMContent> loadSampleData() {
-//        List<DMContent> response = new ArrayList<>();
-//        DMContent item = new DMContent();
-//        item.setTitle("Happy 1");
-//        item.setVisibility(1);
-//        item.setLink("https://www.bizwiz.co.in");
-//        item.setImage("https://www.bizwiz.co.in/v1/images/aboutus.png");
-//        response.add(item);
-//
-//        item = new DMContent();
-//        item.setTitle("Happy 2");
-//        item.setVisibility(1);
-////        item.setOtherProperty("2022-01-27 12:00:00");
-//        item.setOtherProperty("2022-01-27T11:25");
-//        item.setImage("https://www.bizwiz.co.in/v1/images/aboutus.png");
-//        response.add(item);
-//
-//        item = new DMContent();
-//        item.setTitle("Happy 3");
-//        item.setVisibility(1);
-//        item.setImage("https://www.bizwiz.co.in/v1/images/aboutus.png");
-//        response.add(item);
-//        return response;
-//    }
 
 }

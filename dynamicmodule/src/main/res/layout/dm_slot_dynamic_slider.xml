@@ -26,7 +26,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
-                    android:src="@drawable/ic_dm_slider_placeholder"
+                    android:src="@drawable/ic_dm_placeholder_slider"
                     android:adjustViewBounds="true"/>
 
                 <TextView

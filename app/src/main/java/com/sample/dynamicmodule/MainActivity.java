@@ -1,5 +1,6 @@
 package com.sample.dynamicmodule;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -10,6 +11,7 @@ import com.dynamic.database.DMDatabaseManager;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.network.DMNetworkManager;
+import com.dynamic.util.DMDataManager;
 import com.helper.callback.Response;
 import com.helper.task.TaskRunner;
 import com.helper.util.BaseUtil;
@@ -22,19 +24,19 @@ import java.util.concurrent.Callable;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DMNetworkManager networkManager;
+    private DMDataManager dataManager;
     private DMDatabaseManager databaseManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        networkManager = new DMNetworkManager(this);
+        dataManager = new DMDataManager(this);
         databaseManager = new DMDatabaseManager(this);
     }
 
     public void onGetCategory(View view) {
-        networkManager.getDynamicCategory(new Response.Callback<List<DMCategory>>() {
+        new DMNetworkManager(this).getCategory(0, new Response.Callback<List<DMCategory>>() {
             @Override
             public void onSuccess(List<DMCategory> response) {
 //                TaskRunner.getInstance().executeAsync(new Callable<Boolean>() {
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onGetContent(View view) {
-        networkManager.getDynamicContent(new Response.Callback<List<DMContent>>() {
+        dataManager.getContent(0, true, new Response.Callback<List<DMContent>>() {
             @Override
             public void onSuccess(List<DMContent> response) {
 
@@ -143,5 +145,9 @@ public class MainActivity extends AppCompatActivity {
                 BaseUtil.showToast(MainActivity.this, "Success");
             }
         });
+    }
+
+    public void onOpenDMActivity(View view) {
+        startActivity(new Intent(this, DynamicActivity.class));
     }
 }

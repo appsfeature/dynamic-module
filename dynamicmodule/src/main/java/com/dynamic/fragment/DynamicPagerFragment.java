@@ -14,11 +14,12 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.dynamic.R;
-import com.dynamic.adapter.DynamicAdapter;
 import com.dynamic.adapter.DynamicChildAdapter;
+import com.dynamic.listeners.DMCategoryType;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMContent;
-import com.dynamic.network.DMNetworkManager;
+import com.dynamic.util.DMConstants;
+import com.dynamic.util.DMDataManager;
 import com.helper.callback.Response;
 import com.helper.util.BaseUtil;
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
@@ -33,10 +34,11 @@ public class DynamicPagerFragment extends Fragment {
     private View layoutNoData;
     private final List<DMContent> mList = new ArrayList<>();
     private Activity activity;
-    private DMNetworkManager networkManager;
+    private DMDataManager dataManager;
     private ViewPager2 viewPager;
     private WormDotsIndicator indicatorView;
     private DynamicCallback.OnDynamicPagerListener mClickListener;
+    private int catId;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -46,10 +48,10 @@ public class DynamicPagerFragment extends Fragment {
         }
     }
 
-    public static DynamicPagerFragment getInstance() {
+    public static DynamicPagerFragment getInstance(int catId) {
         DynamicPagerFragment fragment = new DynamicPagerFragment();
         Bundle bundle = new Bundle();
-//        bundle.putInt(LoginConstant.LOGIN_TYPE, getLoginType());
+        bundle.putInt(DMConstants.CAT_ID, catId);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -59,7 +61,7 @@ public class DynamicPagerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dm_fragment_dynamic_pager, container, false);
         activity = getActivity();
-        networkManager = new DMNetworkManager(activity);
+        dataManager = new DMDataManager(activity);
         initDataFromArguments();
         initView(view);
         loadData();
@@ -68,7 +70,7 @@ public class DynamicPagerFragment extends Fragment {
 
     private void initDataFromArguments() {
         if(getArguments() != null){
-//            loginType = getArguments().getInt(LoginConstant.LOGIN_TYPE, LoginType.DEFAULT_USER);
+            catId = getArguments().getInt(DMConstants.CAT_ID, 0);
         }
     }
 
@@ -94,7 +96,7 @@ public class DynamicPagerFragment extends Fragment {
     }
 
     private void getSliderDataFromServer() {
-        networkManager.getDynamicContent(new Response.Callback<List<DMContent>>() {
+        dataManager.getContent(catId, true, new Response.Callback<List<DMContent>>() {
             @Override
             public void onSuccess(List<DMContent> response) {
                 loadViewPager(response);
@@ -129,7 +131,7 @@ public class DynamicPagerFragment extends Fragment {
         BaseUtil.showNoData(layoutNoData, View.GONE);
         mList.clear();
         mList.addAll(response);
-        viewPager.setAdapter(new DynamicChildAdapter(activity, DynamicAdapter.ItemType.ITEM_TYPE_SLIDER, mList, new Response.OnClickListener<DMContent>() {
+        viewPager.setAdapter(new DynamicChildAdapter(activity, DMCategoryType.TYPE_VIEWPAGER_AUTO_SLIDER, mList, new Response.OnClickListener<DMContent>() {
             @Override
             public void onItemClicked(View view, DMContent item) {
                 openItemOnClicked(view, item);

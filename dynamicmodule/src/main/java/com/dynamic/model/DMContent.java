@@ -42,6 +42,10 @@ public class DMContent implements Cloneable, Serializable {
     @ColumnInfo(name = "description")
     private String description;
     @Expose
+    @SerializedName(value="item_type")
+    @ColumnInfo(name = "item_type")
+    private int itemType = 0;
+    @Expose
     @SerializedName(value="image")
     @ColumnInfo(name = "image")
     private String image;
@@ -53,6 +57,10 @@ public class DMContent implements Cloneable, Serializable {
     @SerializedName(value="visibility")
     @ColumnInfo(name = "visibility")
     private int visibility = 1;
+    @Expose
+    @SerializedName(value="ranking")
+    @ColumnInfo(name = "ranking")
+    private int ranking = 0;
     @Expose
     @SerializedName(value="json_data")
     @ColumnInfo(name = "json_data")
@@ -172,6 +180,22 @@ public class DMContent implements Cloneable, Serializable {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public int getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(int itemType) {
+        this.itemType = itemType;
+    }
+
+    public int getRanking() {
+        return ranking;
+    }
+
+    public void setRanking(int ranking) {
+        this.ranking = ranking;
     }
 
     @NonNull
