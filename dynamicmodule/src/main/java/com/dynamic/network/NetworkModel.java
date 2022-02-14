@@ -5,10 +5,10 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by Amit on 3/29/2018.
+ * Created by AppsFeature on 3/29/2018.
  */
 
-public class NetworkBaseModel {
+public class NetworkModel {
 
     @SerializedName("status")
     @Expose
@@ -21,6 +21,10 @@ public class NetworkBaseModel {
     @SerializedName("data")
     @Expose
     private Object data;
+
+    @SerializedName("image_path")
+    @Expose
+    private String imagePath;
 
     public String getData() {
         return new Gson().toJson(data);
@@ -44,5 +48,13 @@ public class NetworkBaseModel {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }

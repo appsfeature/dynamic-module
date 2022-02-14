@@ -1,9 +1,10 @@
 package com.dynamic.network;
 
+import androidx.annotation.NonNull;
+
 import com.dynamic.DynamicModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.helper.Helper;
 
 import java.io.IOException;
 
@@ -16,7 +17,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by Amit on 3/28/2018.
+ * Created by AppsFeature on 3/28/2018.
  */
 
 public class RetrofitBuilder {
@@ -30,19 +31,19 @@ public class RetrofitBuilder {
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
-        Retrofit retrofit = new Retrofit.Builder()
+        return new Retrofit.Builder()
                 .baseUrl(host)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(getHttpClient(securityCode, isDebug).build())
                 .build();
-        return retrofit;
     }
 
     private static OkHttpClient.Builder getHttpClient(final String securityCode, boolean isDebug) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
+                    @NonNull
                     @Override
-                    public Response intercept(Chain chain) throws IOException {
+                    public Response intercept(@NonNull Chain chain) throws IOException {
                         Request original = chain.request();
 
                         Request request = original.newBuilder()

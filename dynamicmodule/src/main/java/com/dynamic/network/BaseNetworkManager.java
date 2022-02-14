@@ -5,7 +5,6 @@ import android.content.Context;
 import com.dynamic.DynamicModule;
 import com.dynamic.listeners.ApiRequestType;
 import com.google.gson.JsonSyntaxException;
-import com.helper.Helper;
 import com.helper.model.base.BaseDataModel;
 import com.helper.util.BaseConstants;
 import com.helper.util.BaseUtil;
@@ -123,17 +122,17 @@ public class BaseNetworkManager {
         }
     }
 
-    public void getData(@ApiRequestType int reqType, String endPoint, Map<String, String> params, NetworkResponseCallBack.OnNetworkCall callback) {
+    public void getData(@ApiRequestType int reqType, String endPoint, Map<String, String> params, NetworkCallback.Response<NetworkModel> callback) {
         if(apiInterface != null) {
             if (reqType == ApiRequestType.POST) {
                 apiInterface.requestPost(endPoint, params)
-                        .enqueue(new NetworkResponseCallBack(callback));
+                        .enqueue(new ResponseCallBack<>(callback));
             } else if (reqType == ApiRequestType.POST_FORM) {
                 apiInterface.requestPostDataForm(endPoint, params)
-                        .enqueue(new NetworkResponseCallBack(callback));
+                        .enqueue(new ResponseCallBack<>(callback));
             } else {
                 apiInterface.requestGet(endPoint, params)
-                        .enqueue(new NetworkResponseCallBack(callback));
+                        .enqueue(new ResponseCallBack<>(callback));
             }
         }
     }

@@ -14,13 +14,11 @@ import com.google.gson.reflect.TypeToken;
 import com.helper.callback.Response;
 import com.helper.util.BaseConstants;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
+
+import retrofit2.Call;
 
 public class DMNetworkManager extends BaseNetworkManager {
 
@@ -33,7 +31,7 @@ public class DMNetworkManager extends BaseNetworkManager {
         this.gson = new Gson();
     }
 
-    public void insertCategory(DMCategory category, Response.Callback<NetworkBaseModel> callback) {
+    public void insertCategory(DMCategory category, Response.Callback<NetworkModel> callback) {
         Map<String, String> params = new HashMap<>();
         params.put("pkg_id", context.getPackageName());
         params.put("sub_cat_id", category.getSubCatId() + "");
@@ -44,9 +42,9 @@ public class DMNetworkManager extends BaseNetworkManager {
         params.put("visibility", category.getVisibility() + "");
         params.put("json_data", category.getJsonData() + "");
         params.put("other_property", category.getOtherProperty() + "");
-        getData(ApiRequestType.POST, DMApiConstants.INSERT_CATEGORY, params, new NetworkResponseCallBack.OnNetworkCall() {
+        getData(ApiRequestType.POST, DMApiConstants.INSERT_CATEGORY, params, new NetworkCallback.Response<NetworkModel>() {
             @Override
-            public void onComplete(boolean status, NetworkBaseModel data) {
+            public void onComplete(boolean status, NetworkModel data) {
                 if(status && data.getStatus() != null && data.getStatus().equalsIgnoreCase(BaseConstants.SUCCESS)) {
                     callback.onSuccess(data);
                 }else {
@@ -55,7 +53,7 @@ public class DMNetworkManager extends BaseNetworkManager {
             }
 
             @Override
-            public void onError(Exception e) {
+            public void onFailure(Call<NetworkModel> call, Exception e) {
                 callback.onFailure(e);
             }
         });
@@ -65,9 +63,9 @@ public class DMNetworkManager extends BaseNetworkManager {
         Map<String, String> params = new HashMap<>();
         params.put("cat_id", catId + "");
         params.put("pkg_id", context.getPackageName());
-        getData(ApiRequestType.GET, DMApiConstants.GET_CATEGORY, params, new NetworkResponseCallBack.OnNetworkCall() {
+        getData(ApiRequestType.GET, DMApiConstants.GET_CATEGORY, params, new NetworkCallback.Response<NetworkModel>() {
             @Override
-            public void onComplete(boolean status, NetworkBaseModel data) {
+            public void onComplete(boolean status, NetworkModel data) {
                 try {
                     if(status && !TextUtils.isEmpty(data.getData())) {
                         List<DMCategory> list = gson.fromJson(data.getData(), new TypeToken<List<DMCategory>>() {
@@ -86,7 +84,7 @@ public class DMNetworkManager extends BaseNetworkManager {
             }
 
             @Override
-            public void onError(Exception e) {
+            public void onFailure(Call<NetworkModel> call, Exception e) {
                 callback.onFailure(e);
             }
         });
@@ -96,9 +94,9 @@ public class DMNetworkManager extends BaseNetworkManager {
         Map<String, String> params = new HashMap<>();
         params.put("pkg_id", context.getPackageName());
         params.put("cat_id", catId + "");
-        getData(ApiRequestType.GET, DMApiConstants.GET_CONTENT_BY_SUB_CATEGORY, params, new NetworkResponseCallBack.OnNetworkCall() {
+        getData(ApiRequestType.GET, DMApiConstants.GET_CONTENT_BY_SUB_CATEGORY, params, new NetworkCallback.Response<NetworkModel>() {
             @Override
-            public void onComplete(boolean status, NetworkBaseModel data) {
+            public void onComplete(boolean status, NetworkModel data) {
                 try {
                     if(status && !TextUtils.isEmpty(data.getData())) {
                         List<DMCategory> list = gson.fromJson(data.getData(), new TypeToken<List<DMCategory>>() {
@@ -117,7 +115,7 @@ public class DMNetworkManager extends BaseNetworkManager {
             }
 
             @Override
-            public void onError(Exception e) {
+            public void onFailure(Call<NetworkModel> call, Exception e) {
                 callback.onFailure(e);
             }
         });
@@ -129,9 +127,9 @@ public class DMNetworkManager extends BaseNetworkManager {
 
     public void getContent(Integer id, Integer catId, Response.Callback<List<DMContent>> callback) {
         Map<String, String> params = getValidContentParams(id, catId);
-        getData(ApiRequestType.GET, DMApiConstants.GET_CONTENT, params, new NetworkResponseCallBack.OnNetworkCall() {
+        getData(ApiRequestType.GET, DMApiConstants.GET_CONTENT, params, new NetworkCallback.Response<NetworkModel>() {
             @Override
-            public void onComplete(boolean status, NetworkBaseModel data) {
+            public void onComplete(boolean status, NetworkModel data) {
                 try {
                     if(status && !TextUtils.isEmpty(data.getData())) {
                         List<DMContent> list = gson.fromJson(data.getData(), new TypeToken<List<DMContent>>() {
@@ -150,7 +148,7 @@ public class DMNetworkManager extends BaseNetworkManager {
             }
 
             @Override
-            public void onError(Exception e) {
+            public void onFailure(Call<NetworkModel> call, Exception e) {
                 callback.onFailure(e);
             }
         });

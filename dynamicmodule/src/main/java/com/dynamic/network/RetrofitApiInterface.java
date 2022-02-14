@@ -16,13 +16,13 @@ import retrofit2.http.QueryMap;
 public interface RetrofitApiInterface {
 
     @POST("{endpoint}")
-    Call<NetworkBaseModel> requestPost(@Path("endpoint") String endpoint, @QueryMap Map<String, String> options);
+    Call<NetworkModel> requestPost(@Path("endpoint") String endpoint, @QueryMap Map<String, String> options);
 
     @GET("{endpoint}")
-    Call<NetworkBaseModel> requestGet(@Path("endpoint") String endpoint, @QueryMap Map<String, String> options);
+    Call<NetworkModel> requestGet(@Path("endpoint") String endpoint, @QueryMap Map<String, String> options);
 
     @FormUrlEncoded
     @POST("{endpoint}")
-    Call<NetworkBaseModel> requestPostDataForm(@Path("endpoint") String endpoint, @FieldMap Map<String, String> options);
+    Call<NetworkModel> requestPostDataForm(@Path("endpoint") String endpoint, @FieldMap Map<String, String> options);
 
 }
