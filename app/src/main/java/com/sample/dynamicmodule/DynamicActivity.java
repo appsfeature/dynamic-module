@@ -20,7 +20,7 @@ public class DynamicActivity extends AppCompatActivity implements DynamicCallbac
         setContentView(R.layout.activity_dynamic);
 
 //        fragmentMapping(DynamicPagerFragment.getInstance(110), R.id.content);
-        fragmentMapping(DynamicListFragment.getInstance(108), R.id.content2);
+        fragmentMapping(DynamicListFragment.getInstance(115), R.id.content2);
     }
 
     private void fragmentMapping(Fragment fragment, int layoutId) {

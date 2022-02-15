@@ -88,7 +88,7 @@ public abstract class BaseDynamicListFragment extends Fragment {
             @Override
             public void onFailure(Exception e) {
                 if(mList.size() == 0) {
-                    BaseUtil.showNoData(layoutNoData, View.GONE);
+                    BaseUtil.showNoData(layoutNoData, View.VISIBLE);
                 }
             }
         });

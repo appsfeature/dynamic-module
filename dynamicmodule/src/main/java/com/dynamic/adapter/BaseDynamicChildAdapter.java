@@ -47,14 +47,18 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
     @NonNull
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
+            case DMCategoryType.TYPE_LIST:
+                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_dynamic_list_card_view, parent, false));
+            case DMCategoryType.TYPE_LIST_CARD:
+                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_dynamic_list_view, parent, false));
             case DMCategoryType.TYPE_GRID:
+                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_dynamic_grid_card_view, parent, false));
+            case DMCategoryType.TYPE_GRID_CARD:
                 return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_dynamic_grid_view, parent, false));
             case DMCategoryType.TYPE_HORIZONTAL_CARD_SCROLL:
                 return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_dynamic_scroll_view, parent, false));
             case DMCategoryType.TYPE_VIEWPAGER_AUTO_SLIDER:
                 return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_dynamic_slider, parent, false));
-            case DMCategoryType.TYPE_LIST:
-                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_dynamic_list_view, parent, false));
             default:
                 return onCreateViewHolderDynamic(parent, viewType);
         }
