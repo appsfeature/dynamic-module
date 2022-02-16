@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="dm_height_view_pager">220dp</dimen>
+    <dimen name="dm_width_horizontal_scroll">300dp</dimen>
+    <dimen name="dm_slot_image_padding">0dp</dimen>
+    <dimen name="dm_slot_image_width_height">50dp</dimen>
+    <dimen name="dm_slot_text_size">12sp</dimen>
+    <dimen name="dm_slot_title_size">16sp</dimen>
 </resources>

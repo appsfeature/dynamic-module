@@ -131,7 +131,7 @@ public class DynamicPagerFragment extends Fragment {
         BaseUtil.showNoData(layoutNoData, View.GONE);
         mList.clear();
         mList.addAll(response);
-        viewPager.setAdapter(new DynamicChildAdapter(activity, DMCategoryType.TYPE_VIEWPAGER_AUTO_SLIDER, mList, new Response.OnClickListener<DMContent>() {
+        viewPager.setAdapter(new DynamicChildAdapter(activity, DMCategoryType.TYPE_VIEWPAGER_AUTO_SLIDER, null, mList, new Response.OnClickListener<DMContent>() {
             @Override
             public void onItemClicked(View view, DMContent item) {
                 openItemOnClicked(view, item);

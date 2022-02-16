@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dynamicThemeTextColor">@color/themeColorBlackWhite</color>
+    <color name="dynamicThemeTitleColor">@color/themeColorBlackWhite</color>
+    <color name="dynamicThemeImageColor">@null</color>
+</resources>

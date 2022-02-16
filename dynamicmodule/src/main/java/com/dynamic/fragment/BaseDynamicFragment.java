@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public abstract class BaseDynamicListFragment extends Fragment {
+public abstract class BaseDynamicFragment extends Fragment {
     protected View layoutNoData;
     protected RecyclerView.Adapter<RecyclerView.ViewHolder> adapter;
     protected final List<DMCategory> mList = new ArrayList<>();
@@ -79,7 +79,7 @@ public abstract class BaseDynamicListFragment extends Fragment {
     }
 
     private void getDataFromServer() {
-        networkManager.getContentBySubCategory(catId, new Response.Callback<List<DMCategory>>() {
+        networkManager.getDataBySubCategory(catId, new Response.Callback<List<DMCategory>>() {
             @Override
             public void onSuccess(List<DMCategory> response) {
                 loadList(response);

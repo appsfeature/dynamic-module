@@ -24,7 +24,7 @@ public class DynamicAdapter extends BaseDynamicAdapter {
 
     @Override
     protected RecyclerView.ViewHolder onCreateViewHolderDynamic(@NonNull ViewGroup parent, int viewType) {
-        return new BaseDynamicAdapter.CommonHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_dynamic_list, parent, false), 0);
+        return new BaseDynamicAdapter.CommonHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_parent_slot_list, parent, false));
     }
 
     @Override
@@ -37,15 +37,15 @@ public class DynamicAdapter extends BaseDynamicAdapter {
     }
 
     @Override
-    protected RecyclerView.Adapter<RecyclerView.ViewHolder> getDynamicChildAdapter(int itemType, List<DMContent> childList) {
-        return new DynamicChildAdapter(context, itemType, childList, listener);
+    protected RecyclerView.Adapter<RecyclerView.ViewHolder> getDynamicChildAdapter(int itemType, DMCategory category, List<DMContent> childList) {
+        return new DynamicChildAdapter(context, itemType, category, childList, listener);
     }
 
 
-    public class ScrollViewHolder extends CommonHolder{
+    public class ScrollViewHolder extends RecyclerView.ViewHolder{
         protected final TextView tvTitle;
         ScrollViewHolder(View view) {
-            super(view, DEFAULT_GRID_COUNT);
+            super(view);
             tvTitle = view.findViewById(R.id.tv_title);
         }
         public void setData(DMCategory item, int position) {

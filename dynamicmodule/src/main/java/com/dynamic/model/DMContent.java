@@ -77,6 +77,10 @@ public class DMContent implements Cloneable, Serializable {
     @SerializedName(value="created_at")
     @ColumnInfo(name = "created_at")
     private String createdAt;
+    @Expose
+    @SerializedName(value="is_content")
+    @ColumnInfo(name = "is_content")
+    private boolean isContent;
 
     public int getId() {
         return id;
@@ -196,6 +200,14 @@ public class DMContent implements Cloneable, Serializable {
 
     public void setRanking(int ranking) {
         this.ranking = ranking;
+    }
+
+    public boolean isContent() {
+        return isContent;
+    }
+
+    public void setContent(boolean content) {
+        isContent = content;
     }
 
     @NonNull

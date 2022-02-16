@@ -1,6 +1,8 @@
 package com.dynamic.adapter;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,25 +13,30 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.dynamic.DynamicModule;
 import com.dynamic.R;
 import com.dynamic.listeners.DMCategoryType;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
+import com.dynamic.model.DMOtherProperty;
 import com.helper.callback.Response;
 import com.helper.util.BaseUtil;
 import com.squareup.picasso.Picasso;
+import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
 
 import java.util.List;
 
 public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    protected static final long SLIDER_DELAY_TIME_IN_MILLIS = 3000;
     protected final Response.OnClickListener<DMContent> listener;
     protected final List<DMCategory> mList;
     protected final String imageUrl;
     protected final Context context;
-    protected static final int DEFAULT_GRID_COUNT = 2;
+    protected static final int defaultGridCount = 2;
 
     public BaseDynamicAdapter(Context context, List<DMCategory> mList, Response.OnClickListener<DMContent> listener) {
         this.context = context;
@@ -51,11 +58,15 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
         switch (position) {
             case DMCategoryType.TYPE_LIST:
             case DMCategoryType.TYPE_GRID:
+            case DMCategoryType.TYPE_GRID_HORIZONTAL:
             case DMCategoryType.TYPE_HORIZONTAL_CARD_SCROLL:
-                return new CommonHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dm_slot_dynamic_list, viewGroup, false), DEFAULT_GRID_COUNT);
+                return new CommonHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dm_parent_slot_list, viewGroup, false));
             case DMCategoryType.TYPE_LIST_CARD:
             case DMCategoryType.TYPE_GRID_CARD:
-                return new CommonHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dm_slot_dynamic_list_card, viewGroup, false), DEFAULT_GRID_COUNT);
+                return new CommonHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dm_parent_slot_list_card, viewGroup, false));
+            case DMCategoryType.TYPE_VIEWPAGER_AUTO_SLIDER:
+            case DMCategoryType.TYPE_VIEWPAGER_AUTO_SLIDER_NO_TITLE:
+                return new AutoSliderViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dm_parent_slot_auto_slider, viewGroup, false));
             default:
                 return onCreateViewHolderDynamic(viewGroup, position);
         }
@@ -69,6 +80,9 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
         if (viewHolder instanceof CommonHolder) {
             CommonHolder holder = (CommonHolder) viewHolder;
             holder.setData(item, position);
+        }else if (viewHolder instanceof AutoSliderViewHolder) {
+            AutoSliderViewHolder holder = (AutoSliderViewHolder) viewHolder;
+            holder.setData(item, position);
         }else {
             onBindViewHolderDynamic(viewHolder, position);
         }
@@ -79,30 +93,65 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
         return mList.size();
     }
 
-//    public class ScrollViewHolder extends CommonHolder{
-//        ScrollViewHolder(View view) {
-//            super(view);
-//        }
-//    }
+    public class AutoSliderViewHolder extends RecyclerView.ViewHolder{
+        private final ViewPager2 viewPager;
+        private final WormDotsIndicator indicatorView;
 
-    protected abstract RecyclerView.Adapter<RecyclerView.ViewHolder> getDynamicChildAdapter(int itemType, List<DMContent> childList);
-
-    public class CommonHolder extends RecyclerView.ViewHolder{
-        private final ImageView ivIcon;
-        private final int mGridSize;
-        protected RecyclerView.Adapter<RecyclerView.ViewHolder> adapter;
-        protected final TextView tvTitle;
-        protected final RecyclerView recyclerView;
-
-        CommonHolder(View view, int gridSize) {
+        AutoSliderViewHolder(View view) {
             super(view);
-            tvTitle = view.findViewById(R.id.tv_title);
-            ivIcon = view.findViewById(R.id.iv_icon);
-            recyclerView = itemView.findViewById(R.id.recycler_view);
-            mGridSize = gridSize;
+            viewPager = view.findViewById(R.id.view_pager);
+            indicatorView = view.findViewById(R.id.indicator_view);
         }
 
         public void setData(DMCategory item, int position) {
+            viewPager.setAdapter(getDynamicChildAdapter(item.getItemType(), item, item.getChildList()));
+            indicatorView.setViewPager2(viewPager);
+            viewPager.setVisibility(View.VISIBLE);
+            indicatorView.setVisibility(mList.size() > 1 ? View.VISIBLE : View.GONE);
+            viewPager.setOffscreenPageLimit(3);
+            viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                @Override
+                public void onPageSelected(int position) {
+                    super.onPageSelected(position);
+                    sliderHandler.removeCallbacks(sliderRunnable);
+                    sliderHandler.postDelayed(sliderRunnable, SLIDER_DELAY_TIME_IN_MILLIS);
+                }
+            });
+        }
+
+        private final Handler sliderHandler = new Handler(Looper.myLooper());
+
+        private final Runnable sliderRunnable = new Runnable() {
+            @Override
+            public void run() {
+                int nextPos = viewPager.getCurrentItem() + 1;
+                if(mList.size() > 0) {
+                    if(mList.size() > nextPos) {
+                        viewPager.setCurrentItem(nextPos);
+                    }else{
+                        viewPager.setCurrentItem(0);
+                    }
+                }
+            }
+        };
+    }
+
+    protected abstract RecyclerView.Adapter<RecyclerView.ViewHolder> getDynamicChildAdapter(int itemType, DMCategory category, List<DMContent> childList);
+
+    public class CommonHolder extends RecyclerView.ViewHolder{
+        protected RecyclerView.Adapter<RecyclerView.ViewHolder> adapter;
+        protected final TextView tvTitle;
+        protected final RecyclerView recyclerView;
+        private DMOtherProperty otherProperty;
+
+        CommonHolder(View view) {
+            super(view);
+            tvTitle = view.findViewById(R.id.tv_title);
+            recyclerView = view.findViewById(R.id.recycler_view);
+        }
+
+        public void setData(DMCategory item, int position) {
+            this.otherProperty = item.getOtherPropertyModel();
             if(tvTitle != null) {
                 if (!TextUtils.isEmpty(item.getTitle())) {
                     tvTitle.setText(item.getTitle());
@@ -113,8 +162,12 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
             }
             if(recyclerView != null) {
                 if (item.getChildList() != null) {
-                    adapter = getDynamicChildAdapter(item.getItemType(), item.getChildList());
-                    recyclerView.setLayoutManager(new GridLayoutManager(itemView.getContext(), getSpanCount(position)));
+                    adapter = getDynamicChildAdapter(item.getItemType(), item, item.getChildList());
+                    if(item.getItemType() == DMCategoryType.TYPE_HORIZONTAL_CARD_SCROLL){
+                        recyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
+                    }else {
+                        recyclerView.setLayoutManager(new GridLayoutManager(itemView.getContext(), getSpanCount(item)));
+                    }
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
                     recyclerView.setAdapter(adapter);
                     recyclerView.setVisibility(View.VISIBLE);
@@ -122,41 +175,36 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
                     recyclerView.setVisibility(View.GONE);
                 }
             }
-            if(ivIcon != null){
-                String imagePath = getUrl(item.getImage());
-                int placeHolder = R.drawable.ic_dm_placeholder_slider;
-                if (BaseUtil.isValidUrl(imagePath)) {
-                    Picasso.get().load(imagePath)
-                            .placeholder(placeHolder)
-                            .into(ivIcon);
-                } else {
-                    ivIcon.setBackgroundResource(placeHolder);
+
+            applyStyle(item);
+        }
+
+        private void applyStyle(DMCategory item) {
+            if (otherProperty != null) {
+                if (tvTitle != null) {
+                    tvTitle.setVisibility(otherProperty.isHideTitle() ? View.GONE : View.VISIBLE);
                 }
             }
         }
 
-        public int getSpanCount(int adapterPosition) {
-            if(mGridSize > 0){
-                return mGridSize;
-            }
-            if(adapterPosition >= 0 && mList != null && mList.size() > adapterPosition){
-                if(mList.get(adapterPosition).getChildList() != null
-                        && mList.get(adapterPosition).getChildList().size() > 0
-                        && mList.get(adapterPosition).getChildList().size() <= 4){
-                    return mList.get(adapterPosition).getChildList().size();
-                }else {
-                    return 3;
+        public int getSpanCount(DMCategory item) {
+            if(item.getItemType() == DMCategoryType.TYPE_GRID || item.getItemType() == DMCategoryType.TYPE_GRID_HORIZONTAL
+                    || item.getItemType() == DMCategoryType.TYPE_GRID_CARD) {
+                if (otherProperty != null) {
+                    if (otherProperty.isGridAutoAdjust()) {
+                        if (item.getChildList().size() > 0 && item.getChildList().size() <= 4) {
+                            return item.getChildList().size();
+                        } else {
+                            return 3;
+                        }
+                    } else if (otherProperty.getGridCount() > 0) {
+                        return otherProperty.getGridCount();
+                    }
                 }
+                return defaultGridCount;
             }else {
                 return 1;
             }
         }
-    }
-
-    public String getUrl(String appImage) {
-        if (TextUtils.isEmpty(appImage) || BaseUtil.isValidUrl(appImage)) {
-            return appImage;
-        }
-        return imageUrl + appImage;
     }
 }

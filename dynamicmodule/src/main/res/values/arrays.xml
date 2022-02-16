@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="dynamic_colors">
+        <item>#13c4a5</item>
+        <item>#10a4b8</item>
+        <item>#8a63b3</item>
+        <item>#3b5295</item>
+        <item>#fdbd57</item>
+        <item>#f6624e</item>
+        <item>#e7486b</item>
+        <item>#9c4274</item>
+    </string-array>
+</resources>

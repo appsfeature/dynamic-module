@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.helper.model.BaseModel;
+import com.helper.util.GsonParser;
 
 import java.io.Serializable;
 import java.util.List;
@@ -185,6 +185,14 @@ public class DMCategory implements Cloneable, Serializable {
 
     public void setChildList(List<DMContent> childList) {
         this.childList = childList;
+    }
+
+    public DMOtherProperty getOtherPropertyModel() {
+        return fromJson(DMOtherProperty.class);
+    }
+
+    public <T> T fromJson(Class<T> classOfT) {
+        return GsonParser.getGson().fromJson(otherProperty, classOfT);
     }
 
     @NonNull

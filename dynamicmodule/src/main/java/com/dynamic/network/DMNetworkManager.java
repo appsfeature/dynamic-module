@@ -90,16 +90,47 @@ public class DMNetworkManager extends BaseNetworkManager {
         });
     }
 
-    public void getContentBySubCategory(int catId, Response.Callback<List<DMCategory>> callback) {
+    public void getDataBySubCategory(int catId, Response.Callback<List<DMCategory>> callback) {
         Map<String, String> params = new HashMap<>();
         params.put("pkg_id", context.getPackageName());
         params.put("cat_id", catId + "");
-        getData(ApiRequestType.GET, DMApiConstants.GET_CONTENT_BY_SUB_CATEGORY, params, new NetworkCallback.Response<NetworkModel>() {
+        getData(ApiRequestType.GET, DMApiConstants.GET_DATA_BY_SUB_CATEGORY, params, new NetworkCallback.Response<NetworkModel>() {
             @Override
             public void onComplete(boolean status, NetworkModel data) {
                 try {
                     if(status && !TextUtils.isEmpty(data.getData())) {
                         List<DMCategory> list = gson.fromJson(data.getData(), new TypeToken<List<DMCategory>>() {
+                        }.getType());
+                        if (list != null && list.size() > 0) {
+                            callback.onSuccess(list);
+                        } else {
+                            callback.onFailure(new Exception(BaseConstants.NO_DATA));
+                        }
+                    }else {
+                        callback.onFailure(new Exception(data.getMessage()));
+                    }
+                } catch (JsonSyntaxException e) {
+                    callback.onFailure(e);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NetworkModel> call, Exception e) {
+                callback.onFailure(e);
+            }
+        });
+    }
+
+    public void getDataByCategory(int catId, Response.Callback<List<DMContent>> callback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("pkg_id", context.getPackageName());
+        params.put("cat_id", catId + "");
+        getData(ApiRequestType.GET, DMApiConstants.GET_DATA_BY_CATEGORY, params, new NetworkCallback.Response<NetworkModel>() {
+            @Override
+            public void onComplete(boolean status, NetworkModel data) {
+                try {
+                    if(status && !TextUtils.isEmpty(data.getData())) {
+                        List<DMContent> list = gson.fromJson(data.getData(), new TypeToken<List<DMContent>>() {
                         }.getType());
                         if (list != null && list.size() > 0) {
                             callback.onSuccess(list);

@@ -17,6 +17,8 @@ public interface DMApiConstants {
     String GET_CONTENT = "get-content";
     String GET_CONTENT_BY_CATEGORY = "get-content-by-category";
     String GET_CONTENT_BY_SUB_CATEGORY = "get-content-by-sub-category";
+    String GET_DATA_BY_SUB_CATEGORY = "get-data-by-sub-category";
+    String GET_DATA_BY_CATEGORY = "get-data-by-category";
 
     /*Json Data Apis list*/
     String INSERT_DATA = "insert-update-data";

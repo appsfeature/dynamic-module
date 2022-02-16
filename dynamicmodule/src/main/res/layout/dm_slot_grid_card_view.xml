@@ -1,45 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/transparent"
-    android:gravity="center|left"
-    android:orientation="horizontal">
+    android:gravity="center"
+    android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="8dp"
+        card_view:cardBackgroundColor="@color/themeBackgroundCardColor"
         card_view:cardCornerRadius="8dp"
-        card_view:cardElevation="4dp"
-        card_view:cardBackgroundColor="@color/themeBackgroundCardColor">
+        card_view:cardElevation="4dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center|left"
-            android:padding="16dp">
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/iv_icon"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_dm_placeholder_icon"/>
+                android:layout_marginTop="20dp"
+                android:padding="@dimen/dm_slot_image_padding"
+                android:src="@drawable/ic_dm_placeholder_icon"
+                android:layout_width="@dimen/dm_slot_image_width_height"
+                android:layout_height="@dimen/dm_slot_image_width_height"
+                card_view:tint="@color/dynamicThemeImageColor" />
 
             <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
+                android:layout_marginBottom="8dp"
                 android:gravity="center"
                 android:text="Title"
                 android:maxLines="2"
                 android:lines="2"
                 android:ellipsize="end"
-                android:textSize="12sp"
+                android:textSize="@dimen/dm_slot_text_size"
                 android:padding="4dp"
-                android:textColor="@color/themeColorBlackWhite" />
+                android:textColor="@color/dynamicThemeTextColor" />
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
 </LinearLayout>

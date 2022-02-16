@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/themeBackgroundCardColor"
@@ -9,9 +11,11 @@
 
     <ImageView
         android:id="@+id/iv_icon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/ic_dm_placeholder_icon"/>
+        android:layout_width="@dimen/dm_slot_image_width_height"
+        android:layout_height="@dimen/dm_slot_image_width_height"
+        android:padding="@dimen/dm_slot_image_padding"
+        android:src="@drawable/ic_dm_placeholder_icon"
+        app:tint="@color/dynamicThemeImageColor" />
 
     <TextView
         android:id="@+id/tv_title"
@@ -23,7 +27,7 @@
         android:maxLines="2"
         android:lines="2"
         android:ellipsize="end"
-        android:textSize="12sp"
+        android:textSize="@dimen/dm_slot_text_size"
         android:padding="4dp"
-        android:textColor="@color/themeColorBlackWhite" />
+        android:textColor="@color/dynamicThemeTextColor" />
 </LinearLayout>
