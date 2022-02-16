@@ -1,5 +1,6 @@
 package com.dynamic.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -9,11 +10,16 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.Bundle;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Base64;
+
+import com.dynamic.model.DMContent;
+import com.helper.util.BaseConstants;
+import com.helper.util.BaseUtil;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -82,5 +88,28 @@ public class DMUtility {
         }
 //        Log.e("printHashKey", "keyHash : " + keyHash);
         return keyHash;
+    }
+
+    public static void showPropertyError(Activity activity) {
+        if (activity != null) {
+            BaseUtil.showToastCentre(activity, DMConstants.MSG_ERROR_PROPERTY);
+            activity.finish();
+        }
+    }
+
+    public static Bundle getPropertyBundle(int catId) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(DMConstants.CATEGORY_PROPERTY, getProperty(catId));
+        return bundle;
+    }
+
+    public static DMProperty getProperty(int catId) {
+        return new DMProperty().setCatId(catId);
+    }
+    public static DMProperty getProperty(DMContent item) {
+        return new DMProperty()
+                .setCatId(item.getId())
+                .setTitle(item.getTitle())
+                .setItemType(item.getItemType());
     }
 }

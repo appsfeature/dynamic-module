@@ -1,9 +1,15 @@
 package com.dynamic;
 
 import android.content.Context;
+import android.view.View;
 
 import com.dynamic.database.DMDatabase;
+import com.dynamic.listeners.DynamicCallback;
+import com.dynamic.model.DMContent;
 import com.dynamic.util.DMPreferences;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class DynamicModule {
 
@@ -61,4 +67,37 @@ public class DynamicModule {
         return DMPreferences.getBaseUrl(context);
     }
 
+    
+    private final HashMap<Integer, DynamicCallback.OnDynamicListListener> mListClickListener = new HashMap<>();
+    
+    public DynamicModule addListClickListener(int hashCode, DynamicCallback.OnDynamicListListener callback) {
+        synchronized (mListClickListener) {
+            this.mListClickListener.put(hashCode, callback);
+        }
+        return this;
+    }
+    
+    public void removeListClickListener(int hashCode) {
+        if (mListClickListener.get(hashCode) != null) {
+            synchronized (mListClickListener) {
+                this.mListClickListener.remove(hashCode);
+            }
+        }
+    }
+    
+    public void dispatchListClickListener(View view, DMContent item) {
+        try {
+            if (mListClickListener.size() > 0) {
+                for (Map.Entry<Integer, DynamicCallback.OnDynamicListListener> entry : mListClickListener.entrySet()) {
+                    Integer key = entry.getKey();
+                    DynamicCallback.OnDynamicListListener callback = entry.getValue();
+                    if (callback != null) {
+                        callback.onItemClicked(view, item);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

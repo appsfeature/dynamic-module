@@ -34,6 +34,9 @@ public interface DMContentDao {
     @Query("SELECT * FROM dm_content WHERE id IN (:ids)")
     List<DMContent> getAllData(List<String> ids);
 
+    @Query("SELECT * FROM dm_content WHERE sub_cat_id == :subCatId")
+    List<DMContent> getDataBySubCategory(int subCatId);
+
     @Query("SELECT * FROM dm_content WHERE id == :id AND title ==:title")
     DMContent getItemById(int id, String title);
 

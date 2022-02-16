@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/Workspace/DroidHelios/dynamic-module/app/src/main/res/layout/activity_dynamic.xml" value="0.275" />
         <entry key="..\:/Workspace/DroidHelios/dynamic-module/app/src/main/res/layout/activity_main.xml" value="0.275" />
+        <entry key="..\:/Workspace/DroidHelios/dynamic-module/dynamicmodule/src/main/res/drawable/dm_bg_circle_primary.xml" value="0.2911458333333333" />
         <entry key="..\:/Workspace/DroidHelios/dynamic-module/dynamicmodule/src/main/res/layout/dm_activity_dynamic.xml" value="0.275" />
         <entry key="..\:/Workspace/DroidHelios/dynamic-module/dynamicmodule/src/main/res/layout/dm_fragment_dynamic.xml" value="0.275" />
         <entry key="..\:/Workspace/DroidHelios/dynamic-module/dynamicmodule/src/main/res/layout/dm_fragment_dynamic_pager.xml" value="0.275" />
@@ -29,6 +30,8 @@
         <entry key="..\:/Workspace/DroidHelios/dynamic-module/dynamicmodule/src/main/res/layout/dm_slot_list_view.xml" value="0.275" />
         <entry key="..\:/Workspace/DroidHelios/dynamic-module/dynamicmodule/src/main/res/layout/dm_slot_scroll_view.xml" value="0.275" />
         <entry key="..\:/Workspace/DroidHelios/dynamic-module/dynamicmodule/src/main/res/layout/dm_slot_slider.xml" value="0.275" />
+        <entry key="..\:/Workspace/DroidHelios/dynamic-module/dynamicmodule/src/main/res/layout/dm_slot_title_only.xml" value="0.275" />
+        <entry key="..\:/Workspace/DroidHelios/dynamic-module/dynamicmodule/src/main/res/layout/dm_slot_title_with_count.xml" value="0.275" />
       </map>
     </option>
   </component>

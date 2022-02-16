@@ -9,4 +9,6 @@ public interface DMCategoryType {
     int TYPE_VIEWPAGER_AUTO_SLIDER_NO_TITLE = 6;// Auto slider with full screen of width without title
     int TYPE_LIST_CARD = 7;                     // list card child simple
     int TYPE_GRID_CARD = 8;                     // list card child simple
+    int TYPE_TITLE_ONLY = 9;                    // Showing title only
+    int TYPE_TITLE_WITH_COUNT = 10;             // Showing title with count
 }

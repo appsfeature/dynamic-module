@@ -20,6 +20,8 @@ import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMContent;
 import com.dynamic.util.DMConstants;
 import com.dynamic.util.DMDataManager;
+import com.dynamic.util.DMProperty;
+import com.dynamic.util.DMUtility;
 import com.helper.callback.Response;
 import com.helper.util.BaseUtil;
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
@@ -50,9 +52,7 @@ public class DynamicPagerFragment extends Fragment {
 
     public static DynamicPagerFragment getInstance(int catId) {
         DynamicPagerFragment fragment = new DynamicPagerFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt(DMConstants.CAT_ID, catId);
-        fragment.setArguments(bundle);
+        fragment.setArguments(DMUtility.getPropertyBundle(catId));
         return fragment;
     }
 
@@ -69,8 +69,12 @@ public class DynamicPagerFragment extends Fragment {
     }
 
     private void initDataFromArguments() {
-        if(getArguments() != null){
-            catId = getArguments().getInt(DMConstants.CAT_ID, 0);
+        Bundle bundle = getArguments();
+        if (bundle != null && bundle.getSerializable(DMConstants.CATEGORY_PROPERTY) instanceof DMProperty) {
+            DMProperty property = (DMProperty) bundle.getSerializable(DMConstants.CATEGORY_PROPERTY);
+            catId = property.getCatId();
+        } else {
+            DMUtility.showPropertyError(activity);
         }
     }
 

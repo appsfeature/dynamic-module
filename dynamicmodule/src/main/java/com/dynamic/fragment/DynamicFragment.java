@@ -13,6 +13,7 @@ import com.dynamic.listeners.DMContentType;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMContent;
 import com.dynamic.util.DMConstants;
+import com.dynamic.util.DMUtility;
 import com.helper.callback.Response;
 import com.helper.util.BaseUtil;
 
@@ -23,9 +24,7 @@ public class DynamicFragment extends BaseDynamicFragment {
 
     public static DynamicFragment getInstance(int catId) {
         DynamicFragment fragment = new DynamicFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt(DMConstants.CAT_ID, catId);
-        fragment.setArguments(bundle);
+        fragment.setArguments(DMUtility.getPropertyBundle(catId));
         return fragment;
     }
 

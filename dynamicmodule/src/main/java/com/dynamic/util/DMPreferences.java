@@ -9,6 +9,7 @@ public class DMPreferences extends BasePrefUtil {
 
     private static final String BASE_IMAGE_URL = "base_image_url";
     private static final String BASE_URL = "base_url";
+    private static final String DYNAMIC_DATA = "dynamic_data";
 
     public static void setImageBaseUrl(Context context, String value) {
         setString(context, BASE_IMAGE_URL, value);
@@ -24,5 +25,13 @@ public class DMPreferences extends BasePrefUtil {
 
     public static String getBaseUrl(Context context) {
         return getString(context, BASE_URL, DynamicModule.DEFAULT_BASE_URL);
+    }
+
+    public static void setDynamicData(Context context, String value) {
+        setString(context, DYNAMIC_DATA, value);
+    }
+
+    public static String getDynamicData(Context context) {
+        return getString(context, DYNAMIC_DATA, "");
     }
 }

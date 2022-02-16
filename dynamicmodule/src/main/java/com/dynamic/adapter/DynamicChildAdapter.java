@@ -25,7 +25,7 @@ public class DynamicChildAdapter extends BaseDynamicChildAdapter {
     @Override
     @NonNull
     public RecyclerView.ViewHolder onCreateViewHolderDynamic(@NonNull ViewGroup parent, int viewType) {
-        return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_list_view, parent, false));
+        return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_list_card_view, parent, false));
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.sample.dynamicmodule;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -11,7 +10,9 @@ import com.dynamic.database.DMDatabaseManager;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.network.DMNetworkManager;
+import com.dynamic.util.DMClassUtil;
 import com.dynamic.util.DMDataManager;
+import com.dynamic.util.DMUtility;
 import com.helper.callback.Response;
 import com.helper.task.TaskRunner;
 import com.helper.util.BaseUtil;
@@ -24,6 +25,7 @@ import java.util.concurrent.Callable;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int DASHBOARD_ID = 115;
     private DMDataManager dataManager;
     private DMDatabaseManager databaseManager;
 
@@ -148,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onOpenDMActivity(View view) {
-        startActivity(new Intent(this, DynamicActivity.class));
+//        startActivity(new Intent(this, AppDynamicActivity.class));
+        DMClassUtil.openDynamicActivity(this, DMUtility.getProperty(DASHBOARD_ID));
     }
 }

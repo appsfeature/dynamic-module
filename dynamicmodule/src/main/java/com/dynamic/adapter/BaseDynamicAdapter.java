@@ -60,6 +60,8 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
             case DMCategoryType.TYPE_GRID:
             case DMCategoryType.TYPE_GRID_HORIZONTAL:
             case DMCategoryType.TYPE_HORIZONTAL_CARD_SCROLL:
+            case DMCategoryType.TYPE_TITLE_ONLY:
+            case DMCategoryType.TYPE_TITLE_WITH_COUNT:
                 return new CommonHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dm_parent_slot_list, viewGroup, false));
             case DMCategoryType.TYPE_LIST_CARD:
             case DMCategoryType.TYPE_GRID_CARD:

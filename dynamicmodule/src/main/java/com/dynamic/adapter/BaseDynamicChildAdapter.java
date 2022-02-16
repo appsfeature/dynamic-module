@@ -75,6 +75,10 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
             case DMCategoryType.TYPE_VIEWPAGER_AUTO_SLIDER:
             case DMCategoryType.TYPE_VIEWPAGER_AUTO_SLIDER_NO_TITLE:
                 return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_slider, parent, false));
+            case DMCategoryType.TYPE_TITLE_ONLY:
+                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_title_only, parent, false));
+            case DMCategoryType.TYPE_TITLE_WITH_COUNT:
+                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_title_with_count, parent, false));
             default:
                 return onCreateViewHolderDynamic(parent, viewType);
         }
@@ -105,7 +109,7 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
     }
 
     protected class CommonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private final TextView tvTitle;
+        private final TextView tvTitle, tvTitleTag;
         private final ImageView ivIcon;
         private final View cardView;
 
@@ -114,6 +118,7 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
             cardView = v.findViewById(R.id.card_view);
             ivIcon = v.findViewById(R.id.iv_icon);
             tvTitle = v.findViewById(R.id.tv_title);
+            tvTitleTag = v.findViewById(R.id.tv_title_tag);
             itemView.setOnClickListener(this);
         }
 
@@ -132,6 +137,10 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
                 }else {
                     tvTitle.setVisibility(View.GONE);
                 }
+            }
+            if (tvTitleTag != null) {
+                tvTitleTag.setText("" + (pos + 1));
+                setColorFilter(tvTitleTag.getBackground(), getSequentialColor(pos));
             }
             if(ivIcon != null) {
                 String imagePath = getUrl(item.getImage());
@@ -193,14 +202,14 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
         }
     }
 
-    private int getSequentialColor(int i) {
+    private int getSequentialColor(int position) {
         String[] colors = context.getResources().getStringArray(R.array.dynamic_colors);
-        if(i % colors.length == 0) {
+        if(position % colors.length == 0) {
             return Color.parseColor(colors[0]);
         } else  {
-            for (int c = 1; c < colors.length; c++){
-                if(i == c || (i-c) % colors.length == 0) {
-                    return Color.parseColor(colors[c]);
+            for (int i = 1; i < colors.length; i++){
+                if(position == i || (position-i) % colors.length == 0) {
+                    return Color.parseColor(colors[i]);
                 }
             }
             return Color.parseColor(colors[0]);

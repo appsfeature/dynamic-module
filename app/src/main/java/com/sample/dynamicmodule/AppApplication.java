@@ -1,7 +1,13 @@
 package com.sample.dynamicmodule;
 
+import android.view.View;
+
 import com.dynamic.DynamicModule;
+import com.dynamic.listeners.DMContentType;
+import com.dynamic.listeners.DynamicCallback;
+import com.dynamic.model.DMContent;
 import com.helper.application.BaseApplication;
+import com.helper.util.BaseUtil;
 
 public class AppApplication extends BaseApplication {
 
@@ -26,7 +32,21 @@ public class AppApplication extends BaseApplication {
         DynamicModule.getInstance()
                 .setDebugMode(isDebugMode())
                 .setBaseUrl(getInstance(), BASE_URL)
-                .setImageBaseUrl(getInstance(), BASE_IMAGE_URL);
+                .setImageBaseUrl(getInstance(), BASE_IMAGE_URL)
+                .addListClickListener(instance.hashCode(), new DynamicCallback.OnDynamicListListener() {
+                    @Override
+                    public void onItemClicked(View view, DMContent item) {
+                        if (item.getItemType() == DMContentType.TYPE_LINK) {
+                            if (BaseUtil.isValidUrl(item.getLink())) {
+                                BaseUtil.showToast(view.getContext(), "Update Later!");
+                            } else {
+                                BaseUtil.showToast(view.getContext(), "Invalid Link!");
+                            }
+                        } else {
+                            BaseUtil.showToast(view.getContext(), "Action Update Later");
+                        }
+                    }
+                });
     }
 
 }
