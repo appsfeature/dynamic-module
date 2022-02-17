@@ -9,6 +9,7 @@ import java.io.Serializable;
 public class DMProperty implements Serializable, Cloneable {
 
     private String title;
+    private String otherProperty;
     private int catId;
     private int itemType = DMCategoryType.TYPE_LIST;
     private boolean isDisableCaching;
@@ -46,6 +47,15 @@ public class DMProperty implements Serializable, Cloneable {
 
     public DMProperty setDisableCaching(boolean disableCaching) {
         isDisableCaching = disableCaching;
+        return this;
+    }
+
+    public String getOtherProperty() {
+        return otherProperty;
+    }
+
+    public DMProperty setOtherProperty(String otherProperty) {
+        this.otherProperty = otherProperty;
         return this;
     }
 

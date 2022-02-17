@@ -8,17 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dynamic.R;
 import com.dynamic.adapter.DynamicChildAdapter;
+import com.dynamic.adapter.holder.BaseCommonHolder;
 import com.dynamic.listeners.DynamicCallback;
+import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
-import com.dynamic.util.DMConstants;
-import com.dynamic.util.DMDataManager;
-import com.dynamic.util.DMProperty;
 import com.dynamic.util.DMUtility;
 import com.helper.callback.Response;
 import com.helper.util.BaseUtil;
@@ -67,7 +64,10 @@ public class DynamicListFragment extends DMBaseFragment {
     private void initView(View view) {
         layoutNoData = view.findViewById(R.id.ll_no_data);
         rvList = view.findViewById(R.id.recycler_view);
-        rvList.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
+        DMCategory item = getCategoryItem();
+        BaseCommonHolder holder = new BaseCommonHolder(new View(activity));
+        holder.setOtherProperty(item.getOtherPropertyModel());
+        rvList.setLayoutManager(holder.getLayoutManager(item));
         adapter = new DynamicChildAdapter(activity, property.getItemType(), null, mList, new Response.OnClickListener<DMContent>() {
             @Override
             public void onItemClicked(View view, DMContent item) {
@@ -114,5 +114,13 @@ public class DynamicListFragment extends DMBaseFragment {
             BaseUtil.showNoData(layoutNoData, View.VISIBLE);
         }
         adapter.notifyDataSetChanged();
+    }
+
+    private DMCategory getCategoryItem() {
+        DMCategory item = new DMCategory();
+        item.setItemType(property.getItemType());
+        item.setOtherProperty(property.getOtherProperty());
+        item.setChildList(mList);
+        return item;
     }
 }

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dynamic.R;
+import com.dynamic.adapter.holder.BaseCommonHolder;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.helper.callback.Response;
@@ -42,7 +43,7 @@ public class DynamicAdapter extends BaseDynamicAdapter {
     }
 
 
-    public class ScrollViewHolder extends RecyclerView.ViewHolder{
+    public class ScrollViewHolder extends BaseCommonHolder {
         protected final TextView tvTitle;
         ScrollViewHolder(View view) {
             super(view);

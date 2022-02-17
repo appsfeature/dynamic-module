@@ -120,6 +120,7 @@ public class DMUtility {
         return property
                 .setCatId(item.getId())
                 .setTitle(item.getTitle())
-                .setItemType(item.getItemType());
+                .setItemType(item.getItemType())
+                .setOtherProperty(item.getOtherProperty());
     }
 }

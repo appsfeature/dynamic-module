@@ -19,6 +19,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.dynamic.DynamicModule;
 import com.dynamic.R;
+import com.dynamic.adapter.holder.BaseCommonHolder;
 import com.dynamic.listeners.DMCategoryType;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
@@ -36,7 +37,6 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
     protected final List<DMCategory> mList;
     protected final String imageUrl;
     protected final Context context;
-    protected static final int defaultGridCount = 2;
 
     public BaseDynamicAdapter(Context context, List<DMCategory> mList, Response.OnClickListener<DMContent> listener) {
         this.context = context;
@@ -140,20 +140,14 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
 
     protected abstract RecyclerView.Adapter<RecyclerView.ViewHolder> getDynamicChildAdapter(int itemType, DMCategory category, List<DMContent> childList);
 
-    public class CommonHolder extends RecyclerView.ViewHolder{
-        protected RecyclerView.Adapter<RecyclerView.ViewHolder> adapter;
-        protected final TextView tvTitle;
-        protected final RecyclerView recyclerView;
-        private DMOtherProperty otherProperty;
+    public class CommonHolder extends BaseCommonHolder {
 
-        CommonHolder(View view) {
+        public CommonHolder(View view) {
             super(view);
-            tvTitle = view.findViewById(R.id.tv_title);
-            recyclerView = view.findViewById(R.id.recycler_view);
         }
 
         public void setData(DMCategory item, int position) {
-            this.otherProperty = item.getOtherPropertyModel();
+            setOtherProperty(item.getOtherPropertyModel());
             if(tvTitle != null) {
                 if (!TextUtils.isEmpty(item.getTitle())) {
                     tvTitle.setText(item.getTitle());
@@ -165,11 +159,7 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
             if(recyclerView != null) {
                 if (item.getChildList() != null) {
                     adapter = getDynamicChildAdapter(item.getItemType(), item, item.getChildList());
-                    if(item.getItemType() == DMCategoryType.TYPE_HORIZONTAL_CARD_SCROLL){
-                        recyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
-                    }else {
-                        recyclerView.setLayoutManager(new GridLayoutManager(itemView.getContext(), getSpanCount(item)));
-                    }
+                    recyclerView.setLayoutManager(getLayoutManager(item));
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
                     recyclerView.setAdapter(adapter);
                     recyclerView.setVisibility(View.VISIBLE);
@@ -179,34 +169,6 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
             }
 
             applyStyle(item);
-        }
-
-        private void applyStyle(DMCategory item) {
-            if (otherProperty != null) {
-                if (tvTitle != null) {
-                    tvTitle.setVisibility(otherProperty.isHideTitle() ? View.GONE : View.VISIBLE);
-                }
-            }
-        }
-
-        public int getSpanCount(DMCategory item) {
-            if(item.getItemType() == DMCategoryType.TYPE_GRID || item.getItemType() == DMCategoryType.TYPE_GRID_HORIZONTAL
-                    || item.getItemType() == DMCategoryType.TYPE_GRID_CARD) {
-                if (otherProperty != null) {
-                    if (otherProperty.isGridAutoAdjust()) {
-                        if (item.getChildList().size() > 0 && item.getChildList().size() <= 4) {
-                            return item.getChildList().size();
-                        } else {
-                            return 3;
-                        }
-                    } else if (otherProperty.getGridCount() > 0) {
-                        return otherProperty.getGridCount();
-                    }
-                }
-                return defaultGridCount;
-            }else {
-                return 1;
-            }
         }
     }
 }
