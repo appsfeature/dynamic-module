@@ -11,6 +11,7 @@ public class DMProperty implements Serializable, Cloneable {
     private String title;
     private int catId;
     private int itemType = DMCategoryType.TYPE_LIST;
+    private boolean isDisableCaching;
 
     public String getTitle() {
         return title;
@@ -36,6 +37,15 @@ public class DMProperty implements Serializable, Cloneable {
 
     public DMProperty setItemType(int itemType) {
         this.itemType = itemType;
+        return this;
+    }
+
+    public boolean isDisableCaching() {
+        return isDisableCaching;
+    }
+
+    public DMProperty setDisableCaching(boolean disableCaching) {
+        isDisableCaching = disableCaching;
         return this;
     }
 

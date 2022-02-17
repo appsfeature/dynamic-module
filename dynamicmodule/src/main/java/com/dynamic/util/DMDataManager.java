@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.dynamic.DynamicModule;
 import com.dynamic.database.DMDatabase;
+import com.dynamic.database.DMDatabaseManager;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.network.DMNetworkManager;
@@ -25,13 +26,17 @@ public class DMDataManager {
     private final Context context;
     private final Gson gson;
     private final DMNetworkManager networkManager;
-    private final DMDatabase dbManager;
+    private final DMDatabaseManager dbManager;
 
     public DMDataManager(Context context) {
         this.context = context;
         this.gson = new Gson();
-        this.dbManager = DynamicModule.getInstance().getDatabase(context);
+        this.dbManager = new DMDatabaseManager(context);
         this.networkManager = new DMNetworkManager(context);
+    }
+
+    public void setDisableCaching(boolean disableCaching) {
+        dbManager.setDisableCaching(disableCaching);
     }
 
     public void getContent(int catId, boolean isValidate, Response.Callback<List<DMContent>> callback) {
@@ -96,17 +101,11 @@ public class DMDataManager {
     }
 
     public void getDynamicData(int catId, Response.Callback<List<DMCategory>> callback) {
-        List<DMCategory> list = gson.fromJson(DMPreferences.getDynamicData(context), new TypeToken<List<DMCategory>>() {
-        }.getType());
-        if(list != null && list.size() > 0){
-            callback.onSuccess(list);
-        }
+        dbManager.getDynamicData(catId, callback);
         networkManager.getDataBySubCategory(catId, new Response.Callback<List<DMCategory>>() {
             @Override
             public void onSuccess(List<DMCategory> response) {
-                String jsonData = gson.toJson(response, new TypeToken<List<DMCategory>>() {
-                }.getType());
-                DMPreferences.setDynamicData(context, jsonData);
+                dbManager.saveDynamicData(catId, response);
                 callback.onSuccess(response);
             }
 
@@ -118,15 +117,11 @@ public class DMDataManager {
     }
 
     public void getDataByCategory(int catId, Response.Callback<List<DMContent>> callback) {
-        TaskRunner.getInstance().executeAsync(() -> dbManager.dmContentDao().getDataBySubCategory(catId), result -> {
-            if(result != null && result.size() > 0){
-                callback.onSuccess(result);
-            }
-        });
+        dbManager.getDataByCategory(catId, callback);
         networkManager.getDataByCategory(catId, new Response.Callback<List<DMContent>>() {
             @Override
             public void onSuccess(List<DMContent> response) {
-                insertContent(response);
+                dbManager.insertData(response);
                 callback.onSuccess(response);
             }
 
@@ -136,41 +131,6 @@ public class DMDataManager {
             }
         });
     }
-
-    private void insertContent(List<DMContent> response) {
-        TaskRunner.getInstance().executeAsync(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                dbManager.dmContentDao().insertContents(response);
-                return true;
-            }
-        });
-    }
-
-//    private List<DMContent> loadSampleData() {
-//        List<DMContent> response = new ArrayList<>();
-//        DMContent item = new DMContent();
-//        item.setTitle("Happy 1");
-//        item.setVisibility(1);
-//        item.setLink("https://www.bizwiz.co.in");
-//        item.setImage("https://www.bizwiz.co.in/v1/images/aboutus.png");
-//        response.add(item);
-//
-//        item = new DMContent();
-//        item.setTitle("Happy 2");
-//        item.setVisibility(1);
-////        item.setOtherProperty("2022-01-27 12:00:00");
-//        item.setOtherProperty("2022-01-27T11:25");
-//        item.setImage("https://www.bizwiz.co.in/v1/images/aboutus.png");
-//        response.add(item);
-//
-//        item = new DMContent();
-//        item.setTitle("Happy 3");
-//        item.setVisibility(1);
-//        item.setImage("https://www.bizwiz.co.in/v1/images/aboutus.png");
-//        response.add(item);
-//        return response;
-//    }
 
 
 }

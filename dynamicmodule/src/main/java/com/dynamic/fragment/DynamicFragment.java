@@ -1,7 +1,6 @@
 package com.dynamic.fragment;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -12,7 +11,6 @@ import com.dynamic.adapter.DynamicAdapter;
 import com.dynamic.listeners.DMContentType;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMContent;
-import com.dynamic.util.DMConstants;
 import com.dynamic.util.DMUtility;
 import com.helper.callback.Response;
 import com.helper.util.BaseUtil;
@@ -55,11 +53,6 @@ public class DynamicFragment extends BaseDynamicFragment {
                 }
             }
         });
-    }
-
-    @Override
-    public void onInitDataFromArguments(Bundle bundle) {
-
     }
 
     @Override

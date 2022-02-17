@@ -25,26 +25,14 @@ import com.dynamic.util.DMUtility;
 import com.helper.util.BaseUtil;
 
 
-public class DynamicActivity extends AppCompatActivity implements DynamicCallback.OnDynamicListListener {
-    private String title;
+public class DynamicActivity extends DMBaseActivity implements DynamicCallback.OnDynamicListListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dm_activity_dynamic);
-        getIntentData();
-    }
-
-    private void getIntentData() {
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null && bundle.getSerializable(DMConstants.CATEGORY_PROPERTY) instanceof DMProperty) {
-            DMProperty property = (DMProperty) bundle.getSerializable(DMConstants.CATEGORY_PROPERTY);
-            title = property.getTitle();
-            setUpToolBar();
-            initFragment(bundle);
-        } else {
-            DMUtility.showPropertyError(this);
-        }
+        setUpToolBar();
+        initFragment(getIntent().getExtras());
     }
 
     private void initFragment(Bundle bundle) {
@@ -63,7 +51,7 @@ public class DynamicActivity extends AppCompatActivity implements DynamicCallbac
     @Override
     public void onItemClicked(View view, DMContent item) {
         if(!item.isContent()){
-            DMClassUtil.openDynamicListActivity(this, DMUtility.getProperty(item));
+            DMClassUtil.openDynamicListActivity(this, DMUtility.getProperty(property, item));
         }else {
             DynamicModule.getInstance().dispatchListClickListener(view, item);
         }

@@ -30,17 +30,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class DynamicPagerFragment extends Fragment {
+public class DynamicPagerFragment extends DMBaseFragment {
 
     private static final long SLIDER_DELAY_TIME_IN_MILLIS = 3000;
     private View layoutNoData;
     private final List<DMContent> mList = new ArrayList<>();
     private Activity activity;
-    private DMDataManager dataManager;
     private ViewPager2 viewPager;
     private WormDotsIndicator indicatorView;
     private DynamicCallback.OnDynamicPagerListener mClickListener;
-    private int catId;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -61,21 +59,9 @@ public class DynamicPagerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dm_fragment_dynamic_pager, container, false);
         activity = getActivity();
-        dataManager = new DMDataManager(activity);
-        initDataFromArguments();
         initView(view);
         loadData();
         return view;
-    }
-
-    private void initDataFromArguments() {
-        Bundle bundle = getArguments();
-        if (bundle != null && bundle.getSerializable(DMConstants.CATEGORY_PROPERTY) instanceof DMProperty) {
-            DMProperty property = (DMProperty) bundle.getSerializable(DMConstants.CATEGORY_PROPERTY);
-            catId = property.getCatId();
-        } else {
-            DMUtility.showPropertyError(activity);
-        }
     }
 
     private void loadData() {

@@ -27,11 +27,11 @@ public class DMPreferences extends BasePrefUtil {
         return getString(context, BASE_URL, DynamicModule.DEFAULT_BASE_URL);
     }
 
-    public static void setDynamicData(Context context, String value) {
-        setString(context, DYNAMIC_DATA, value);
+    public static void setDynamicData(Context context, int catId, String value) {
+        setString(context, DYNAMIC_DATA + catId, value);
     }
 
-    public static String getDynamicData(Context context) {
-        return getString(context, DYNAMIC_DATA, "");
+    public static String getDynamicData(Context context, int catId) {
+        return getString(context, DYNAMIC_DATA + catId, "");
     }
 }

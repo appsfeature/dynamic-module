@@ -104,10 +104,20 @@ public class DMUtility {
     }
 
     public static DMProperty getProperty(int catId) {
-        return new DMProperty().setCatId(catId);
+        return getProperty(catId, false);
     }
+    public static DMProperty getProperty(int catId, boolean isDisableCaching) {
+        return new DMProperty().setCatId(catId)
+                .setDisableCaching(isDisableCaching);
+    }
+
     public static DMProperty getProperty(DMContent item) {
-        return new DMProperty()
+        return getProperty(null, item);
+    }
+
+    public static DMProperty getProperty(DMProperty baseProperty, DMContent item) {
+        DMProperty property = baseProperty != null ? baseProperty.getClone() : new DMProperty();
+        return property
                 .setCatId(item.getId())
                 .setTitle(item.getTitle())
                 .setItemType(item.getItemType());

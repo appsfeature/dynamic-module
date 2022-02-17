@@ -25,19 +25,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public abstract class BaseDynamicFragment extends Fragment {
+public abstract class BaseDynamicFragment extends DMBaseFragment {
     protected View layoutNoData;
     protected RecyclerView.Adapter<RecyclerView.ViewHolder> adapter;
     protected final List<DMCategory> mList = new ArrayList<>();
-    protected Activity activity;
-    protected DMDataManager dataManager;
     protected RecyclerView rvList;
-    private int catId;
 
     @LayoutRes
     public abstract int getLayoutContentView();
     public abstract RecyclerView.Adapter<RecyclerView.ViewHolder> getAdapter();
-    public abstract void onInitDataFromArguments(Bundle bundle);
     public abstract void onInitViews(View view);
     public abstract void onUpdateUi();
     public abstract boolean onResumeReloadList();
@@ -45,9 +41,6 @@ public abstract class BaseDynamicFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(getLayoutContentView(), container, false);
-        activity = getActivity();
-        dataManager = new DMDataManager(activity);
-        initDataFromArguments();
         initView(view);
         onUpdateUi();
         if(!onResumeReloadList()) {
@@ -61,16 +54,6 @@ public abstract class BaseDynamicFragment extends Fragment {
         super.onResume();
         if(onResumeReloadList()){
             getDataFromServer();
-        }
-    }
-
-    private void initDataFromArguments() {
-        Bundle bundle = getArguments();
-        if (bundle != null && bundle.getSerializable(DMConstants.CATEGORY_PROPERTY) instanceof DMProperty) {
-            DMProperty property = (DMProperty) bundle.getSerializable(DMConstants.CATEGORY_PROPERTY);
-            catId = property.getCatId();
-        } else {
-            DMUtility.showPropertyError(activity);
         }
     }
 

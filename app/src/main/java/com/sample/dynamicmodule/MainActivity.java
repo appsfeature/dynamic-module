@@ -151,6 +151,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void onOpenDMActivity(View view) {
 //        startActivity(new Intent(this, AppDynamicActivity.class));
-        DMClassUtil.openDynamicActivity(this, DMUtility.getProperty(DASHBOARD_ID));
+        DMClassUtil.openDynamicActivity(this, DMUtility.getProperty(DASHBOARD_ID, false));
     }
 }

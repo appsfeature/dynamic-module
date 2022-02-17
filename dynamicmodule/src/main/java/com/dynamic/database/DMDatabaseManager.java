@@ -8,16 +8,31 @@ import androidx.sqlite.db.SimpleSQLiteQuery;
 import com.dynamic.DynamicModule;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
+import com.dynamic.util.DMPreferences;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.helper.callback.Response;
+import com.helper.task.TaskRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 public class DMDatabaseManager {
+    private final Context context;
     private final DMDatabase database;
+    private boolean isDisableCaching;
+    private final Gson gson;
 
     public DMDatabaseManager(Context context) {
         this.database = DynamicModule.getInstance().getDatabase(context);
+        this.context = context;
+        this.gson = new Gson();
+    }
+
+    public void setDisableCaching(boolean disableCaching) {
+        isDisableCaching = disableCaching;
     }
 
     public DMCategoryDao getCategoryDao() {
@@ -67,7 +82,7 @@ public class DMDatabaseManager {
             sb.append(entry.getKey());
             sb.append(" = ? ");
             args.add(entry.getValue());
-            if(i < whereClause.size() - 1) {
+            if (i < whereClause.size() - 1) {
                 sb.append(" AND ");
             }
             i++;
@@ -100,6 +115,18 @@ public class DMDatabaseManager {
         return database.dmContentDao().insertContent(item);
     }
 
+    //Contains both category and content
+    public void insertData(List<DMContent> response) {
+        if (isDisableCaching) return;
+        TaskRunner.getInstance().executeAsync(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                insertContents(response);
+                return true;
+            }
+        });
+    }
+
     @WorkerThread
     public List<DMContent> getAllContents() {
         return database.dmContentDao().getAllData();
@@ -124,5 +151,33 @@ public class DMDatabaseManager {
     @WorkerThread
     public void clearAllContents() {
         database.dmContentDao().clearAllRecords();
+    }
+
+    public void getDataByCategory(int catId, Response.Callback<List<DMContent>> callback) {
+        if (isDisableCaching) return;
+        TaskRunner.getInstance().executeAsync(() -> database.dmContentDao().getDataBySubCategory(catId), result -> {
+            if (result != null && result.size() > 0) {
+                callback.onSuccess(result);
+            }
+        });
+    }
+
+    public void getDynamicData(int catId, Response.Callback<List<DMCategory>> callback) {
+        if (isDisableCaching) return;
+        List<DMCategory> list = gson.fromJson(DMPreferences.getDynamicData(context, catId), new TypeToken<List<DMCategory>>() {
+        }.getType());
+        if (list != null && list.size() > 0) {
+            callback.onSuccess(list);
+        }
+    }
+
+    public void saveDynamicData(int catId, List<DMCategory> response) {
+        if (isDisableCaching) return;
+        TaskRunner.getInstance().executeAsync(() -> {
+            String jsonData = gson.toJson(response, new TypeToken<List<DMCategory>>() {
+            }.getType());
+            DMPreferences.setDynamicData(context, catId, jsonData);
+            return true;
+        });
     }
 }
