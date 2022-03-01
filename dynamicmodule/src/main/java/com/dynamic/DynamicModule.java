@@ -16,10 +16,6 @@ public class DynamicModule {
     private static volatile DynamicModule instance;
     private boolean isEnableDebugMode = false;
 
-    public static final String DEFAULT_BASE_URL = "http://appsfeature.com/droidapps/api/v1/database/";
-    public static final String DEFAULT_BASE_IMAGE_URL = "http://appsfeature.com/droidapps/public/uploads/images/";
-
-
     private DynamicModule() { }
 
     public static DynamicModule getInstance() {

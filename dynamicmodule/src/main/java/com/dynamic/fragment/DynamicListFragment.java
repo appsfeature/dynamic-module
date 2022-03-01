@@ -60,7 +60,7 @@ public class DynamicListFragment extends DMBaseFragment {
         getDataFromServer();
     }
 
-//kjhk
+
     private void initView(View view) {
         layoutNoData = view.findViewById(R.id.ll_no_data);
         rvList = view.findViewById(R.id.recycler_view);

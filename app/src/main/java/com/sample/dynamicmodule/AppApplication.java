@@ -12,8 +12,8 @@ import com.helper.util.BaseUtil;
 public class AppApplication extends BaseApplication {
 
 
-    private static final String BASE_URL = "http://appsfeature.com/droidapps/api/v1/database/";
-    private static final String BASE_IMAGE_URL = "http://appsfeature.com/droidapps/public/uploads/images/";
+    private static final String BASE_URL = "http://appsfeature.com/apps/api/v1/database/";
+    private static final String BASE_IMAGE_URL = "http://appsfeature.com/apps/public/uploads/images/";
     private static AppApplication instance;
 
     public static AppApplication getInstance() {
