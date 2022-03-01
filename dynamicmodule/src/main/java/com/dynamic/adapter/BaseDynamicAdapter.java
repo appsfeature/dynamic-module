@@ -110,7 +110,7 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
             indicatorView.setViewPager2(viewPager);
             viewPager.setVisibility(View.VISIBLE);
             indicatorView.setVisibility(mList.size() > 1 ? View.VISIBLE : View.GONE);
-            viewPager.setOffscreenPageLimit(3);
+            viewPager.setOffscreenPageLimit(mList.size());
             viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
                 @Override
                 public void onPageSelected(int position) {
@@ -127,8 +127,8 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
             @Override
             public void run() {
                 int nextPos = viewPager.getCurrentItem() + 1;
-                if(mList.size() > 0) {
-                    if(mList.size() > nextPos) {
+                if(viewPager.getAdapter() != null && viewPager.getAdapter().getItemCount() > 0) {
+                    if(viewPager.getAdapter().getItemCount() > nextPos) {
                         viewPager.setCurrentItem(nextPos);
                     }else{
                         viewPager.setCurrentItem(0);
