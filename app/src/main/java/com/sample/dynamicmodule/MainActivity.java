@@ -10,7 +10,7 @@ import com.dynamic.database.DMDatabaseManager;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.network.DMNetworkManager;
-import com.dynamic.util.DMClassUtil;
+import com.dynamic.DMClassUtil;
 import com.dynamic.util.DMDataManager;
 import com.dynamic.util.DMUtility;
 import com.helper.callback.Response;

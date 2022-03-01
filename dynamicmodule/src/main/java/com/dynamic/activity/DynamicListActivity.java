@@ -7,21 +7,16 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.dynamic.DynamicModule;
 import com.dynamic.R;
 import com.dynamic.fragment.DynamicListFragment;
-import com.dynamic.listeners.DMContentType;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMContent;
-import com.dynamic.util.DMClassUtil;
-import com.dynamic.util.DMConstants;
-import com.dynamic.util.DMProperty;
+import com.dynamic.DMClassUtil;
 import com.dynamic.util.DMUtility;
-import com.helper.util.BaseUtil;
 
 
 public class DynamicListActivity extends DMBaseActivity implements DynamicCallback.OnDynamicListListener {

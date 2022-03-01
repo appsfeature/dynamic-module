@@ -1,10 +1,13 @@
-package com.dynamic.util;
+package com.dynamic;
 
 import android.app.Activity;
 import android.content.Intent;
 
 import com.dynamic.activity.DynamicActivity;
 import com.dynamic.activity.DynamicListActivity;
+import com.dynamic.util.DMConstants;
+import com.dynamic.util.DMProperty;
+import com.dynamic.util.DMUtility;
 
 public class DMClassUtil {
 
