@@ -34,7 +34,7 @@ public class DMNetworkManager extends BaseNetworkManager {
 
     public void insertCategory(DMCategory category, Response.Callback<NetworkModel> callback) {
         Map<String, String> params = new HashMap<>();
-        params.put("pkg_id", context.getPackageName());
+        params.put("pkg_name", context.getPackageName());
         params.put("sub_cat_id", category.getSubCatId() + "");
         params.put("title", category.getTitle() + "");
         params.put("item_type", category.getItemType() + "");
@@ -63,7 +63,7 @@ public class DMNetworkManager extends BaseNetworkManager {
     public void getCategory(int catId, Response.Callback<List<DMCategory>> callback) {
         Map<String, String> params = new HashMap<>();
         params.put("cat_id", catId + "");
-        params.put("pkg_id", context.getPackageName());
+        params.put("pkg_name", context.getPackageName());
         getData(ApiRequestType.GET, DMApiConstants.GET_CATEGORY, params, new NetworkCallback.Response<NetworkModel>() {
             @Override
             public void onComplete(boolean status, NetworkModel data) {
@@ -93,7 +93,7 @@ public class DMNetworkManager extends BaseNetworkManager {
 
     public void getDataBySubCategory(int catId, Response.Callback<List<DMCategory>> callback) {
         Map<String, String> params = new HashMap<>();
-        params.put("pkg_id", context.getPackageName());
+        params.put("pkg_name", context.getPackageName());
         params.put("cat_id", catId + "");
         getData(ApiRequestType.GET, DMApiConstants.GET_DATA_BY_SUB_CATEGORY, params, new NetworkCallback.Response<NetworkModel>() {
             @Override
@@ -127,7 +127,7 @@ public class DMNetworkManager extends BaseNetworkManager {
 
     public void getDataByCategory(int catId, Response.Callback<List<DMContent>> callback) {
         Map<String, String> params = new HashMap<>();
-        params.put("pkg_id", context.getPackageName());
+        params.put("pkg_name", context.getPackageName());
         params.put("cat_id", catId + "");
         getData(ApiRequestType.GET, DMApiConstants.GET_DATA_BY_CATEGORY, params, new NetworkCallback.Response<NetworkModel>() {
             @Override
@@ -160,8 +160,8 @@ public class DMNetworkManager extends BaseNetworkManager {
         getContent(null, catId, callback);
     }
 
-    public void getContent(Integer id, Integer catId, Response.Callback<List<DMContent>> callback) {
-        Map<String, String> params = getValidContentParams(id, catId);
+    public void getContent(Integer id, Integer parentId, Response.Callback<List<DMContent>> callback) {
+        Map<String, String> params = getValidContentParams(id, parentId);
         getData(ApiRequestType.GET, DMApiConstants.GET_CONTENT, params, new NetworkCallback.Response<NetworkModel>() {
             @Override
             public void onComplete(boolean status, NetworkModel data) {
@@ -189,13 +189,13 @@ public class DMNetworkManager extends BaseNetworkManager {
         });
     }
 
-    private Map<String, String> getValidContentParams(Integer id, Integer catId) {
+    private Map<String, String> getValidContentParams(Integer id, Integer parentId) {
         Map<String, String> params = new HashMap<>();
-        params.put("pkg_id", context.getPackageName());
+        params.put("pkg_name", context.getPackageName());
         if(id != null && id > 0)
             params.put("id", id + "");
-        if(catId != null && catId > 0)
-            params.put("cat_id", catId + "");
+        if(parentId != null && parentId > 0)
+            params.put("sub_cat_id", parentId + "");
         return params;
     }
 
