@@ -74,6 +74,8 @@ public class DMCategory implements Cloneable, Serializable {
     @Ignore
     @SerializedName(value="contents", alternate={"data"})
     private List<DMContent> childList;
+    @Ignore
+    private int imageRes;
 
     public int getCatId() {
         return catId;
@@ -169,6 +171,14 @@ public class DMCategory implements Cloneable, Serializable {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public int getImageRes() {
+        return imageRes;
+    }
+
+    public void setImageRes(int imageRes) {
+        this.imageRes = imageRes;
     }
 
     public List<DMCategory> getChildCategoryList() {

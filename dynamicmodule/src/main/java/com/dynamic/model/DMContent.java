@@ -81,6 +81,8 @@ public class DMContent implements Cloneable, Serializable {
     @SerializedName(value="is_content")
     @ColumnInfo(name = "is_content")
     private boolean isContent;
+    @Ignore
+    private int imageRes;
 
     public int getId() {
         return id;
@@ -208,6 +210,14 @@ public class DMContent implements Cloneable, Serializable {
 
     public void setContent(boolean content) {
         isContent = content;
+    }
+
+    public int getImageRes() {
+        return imageRes;
+    }
+
+    public void setImageRes(int imageRes) {
+        this.imageRes = imageRes;
     }
 
     @NonNull
