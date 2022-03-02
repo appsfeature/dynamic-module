@@ -7,13 +7,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -23,10 +19,7 @@ import com.dynamic.adapter.holder.BaseCommonHolder;
 import com.dynamic.listeners.DMCategoryType;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
-import com.dynamic.model.DMOtherProperty;
 import com.helper.callback.Response;
-import com.helper.util.BaseUtil;
-import com.squareup.picasso.Picasso;
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
 
 import java.util.List;
