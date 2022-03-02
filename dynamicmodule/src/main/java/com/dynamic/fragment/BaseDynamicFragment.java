@@ -1,6 +1,5 @@
 package com.dynamic.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,16 +7,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dynamic.R;
 import com.dynamic.model.DMCategory;
-import com.dynamic.util.DMConstants;
-import com.dynamic.util.DMDataManager;
-import com.dynamic.util.DMProperty;
-import com.dynamic.util.DMUtility;
 import com.helper.callback.Response;
 import com.helper.util.BaseUtil;
 
@@ -37,6 +31,7 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
     public abstract void onInitViews(View view);
     public abstract void onUpdateUi();
     public abstract boolean onResumeReloadList();
+    public abstract List<DMCategory> getStaticList();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,7 +62,7 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
     }
 
     private void getDataFromServer() {
-        dataManager.getDynamicData(catId, new Response.Callback<List<DMCategory>>() {
+        dataManager.getDynamicData(catId, getStaticList(), new Response.Callback<List<DMCategory>>() {
             @Override
             public void onSuccess(List<DMCategory> response) {
                 loadList(response);

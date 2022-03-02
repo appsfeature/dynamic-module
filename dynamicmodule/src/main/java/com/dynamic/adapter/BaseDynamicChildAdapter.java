@@ -108,12 +108,12 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
         return imageUrl + appImage;
     }
 
-    protected class CommonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class CommonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView tvTitle, tvTitleTag;
         private final ImageView ivIcon;
         private final View cardView;
 
-        protected CommonViewHolder(View v) {
+        public CommonViewHolder(View v) {
             super(v);
             cardView = v.findViewById(R.id.card_view);
             ivIcon = v.findViewById(R.id.iv_icon);

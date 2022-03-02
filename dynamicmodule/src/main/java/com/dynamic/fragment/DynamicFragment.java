@@ -10,10 +10,13 @@ import com.dynamic.R;
 import com.dynamic.adapter.DynamicAdapter;
 import com.dynamic.listeners.DMContentType;
 import com.dynamic.listeners.DynamicCallback;
+import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.util.DMUtility;
 import com.helper.callback.Response;
 import com.helper.util.BaseUtil;
+
+import java.util.List;
 
 
 public class DynamicFragment extends BaseDynamicFragment {
@@ -68,5 +71,10 @@ public class DynamicFragment extends BaseDynamicFragment {
     @Override
     public boolean onResumeReloadList() {
         return false;
+    }
+
+    @Override
+    public List<DMCategory> getStaticList() {
+        return null;
     }
 }

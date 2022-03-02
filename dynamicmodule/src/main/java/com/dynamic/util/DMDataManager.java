@@ -17,6 +17,8 @@ import com.helper.util.BaseConstants;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -101,12 +103,18 @@ public class DMDataManager {
     }
 
     public void getDynamicData(int catId, Response.Callback<List<DMCategory>> callback) {
-        dbManager.getDynamicData(catId, callback);
+        getDynamicData(catId, null, callback);
+    }
+    public void getDynamicData(int catId, List<DMCategory> staticList, Response.Callback<List<DMCategory>> callback) {
+        dbManager.getDynamicData(catId, staticList, callback);
         networkManager.getDataBySubCategory(catId, new Response.Callback<List<DMCategory>>() {
             @Override
             public void onSuccess(List<DMCategory> response) {
                 dbManager.saveDynamicData(catId, response);
-                callback.onSuccess(response);
+                if(staticList != null && staticList.size() > 0){
+                    response.addAll(staticList);
+                }
+                callback.onSuccess(arraySortCategory(response));
             }
 
             @Override
@@ -133,4 +141,27 @@ public class DMDataManager {
     }
 
 
+    private List<DMCategory> arraySortCategory(List<DMCategory> list) {
+        Collections.sort(list, new Comparator<DMCategory>() {
+            @Override
+            public int compare(DMCategory item, DMCategory item2) {
+                Integer value = item.getRanking();
+                Integer value2 = item2.getRanking();
+                return value.compareTo(value2);
+            }
+        });
+        return list;
+    }
+
+    private List<DMContent> arraySortContent(List<DMContent> list) {
+        Collections.sort(list, new Comparator<DMContent>() {
+            @Override
+            public int compare(DMContent item, DMContent item2) {
+                Integer value = item.getRanking();
+                Integer value2 = item2.getRanking();
+                return value.compareTo(value2);
+            }
+        });
+        return list;
+    }
 }

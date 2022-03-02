@@ -15,6 +15,8 @@ import com.helper.callback.Response;
 import com.helper.task.TaskRunner;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -163,13 +165,34 @@ public class DMDatabaseManager {
     }
 
     public void getDynamicData(int catId, Response.Callback<List<DMCategory>> callback) {
+        getDynamicData(catId, null, callback);
+    }
+
+    public void getDynamicData(int catId, List<DMCategory> staticList, Response.Callback<List<DMCategory>> callback) {
         if (isDisableCaching) return;
         List<DMCategory> list = gson.fromJson(DMPreferences.getDynamicData(context, catId), new TypeToken<List<DMCategory>>() {
         }.getType());
         if (list != null && list.size() > 0) {
-            callback.onSuccess(list);
+            if(staticList != null && staticList.size() > 0){
+                list.addAll(staticList);
+            }
+            callback.onSuccess(arraySortCategory(list));
+        }else {
+            if(staticList != null && staticList.size() > 0){
+                callback.onSuccess(arraySortCategory(staticList));
+            }
         }
     }
+
+    // list = List<Object>
+    // Object = String, Integer, Date etc.
+//    Collections.sort(list, new Comparator<Object>() {
+//        @Override
+//        public int compare(Object item, Object item2) {
+//            return item2.compareToIgnoreCase(item);
+//            return item2.compareTo(item);
+//        }
+//    });
 
     public void saveDynamicData(int catId, List<DMCategory> response) {
         if (isDisableCaching) return;
@@ -179,5 +202,29 @@ public class DMDatabaseManager {
             DMPreferences.setDynamicData(context, catId, jsonData);
             return true;
         });
+    }
+
+    private List<DMCategory> arraySortCategory(List<DMCategory> list) {
+        Collections.sort(list, new Comparator<DMCategory>() {
+            @Override
+            public int compare(DMCategory item, DMCategory item2) {
+                Integer value = item.getRanking();
+                Integer value2 = item2.getRanking();
+                return value.compareTo(value2);
+            }
+        });
+        return list;
+    }
+
+    private List<DMContent> arraySortContent(List<DMContent> list) {
+        Collections.sort(list, new Comparator<DMContent>() {
+            @Override
+            public int compare(DMContent item, DMContent item2) {
+                Integer value = item.getRanking();
+                Integer value2 = item2.getRanking();
+                return value.compareTo(value2);
+            }
+        });
+        return list;
     }
 }
