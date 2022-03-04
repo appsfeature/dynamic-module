@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.dynamic.DynamicModule;
 import com.dynamic.listeners.ApiRequestType;
+import com.dynamic.util.DMUtility;
 import com.google.gson.JsonSyntaxException;
 import com.helper.model.base.BaseDataModel;
 import com.helper.util.BaseConstants;
@@ -27,7 +28,7 @@ public class BaseNetworkManager {
     }
 
     public BaseNetworkManager(Context context, String baseUrl) {
-        apiInterface = RetrofitBuilder.getClient(baseUrl, BaseUtil.getSecurityCode(context), DynamicModule.getInstance().isEnableDebugMode())
+        apiInterface = RetrofitBuilder.getClient(baseUrl, DMUtility.getSecurityCode(context), DynamicModule.getInstance().isEnableDebugMode())
                 .create(RetrofitApiInterface.class);
     }
     public BaseNetworkManager(Context context, String baseUrl, String securityCode) {

@@ -32,7 +32,7 @@ ext {
     retrofit_version = '2.9.0'
     retrofit_okhttp_version = '4.8.1'
 
-    helper_version = '1.6'
+    helper_version = '1.7'
 }
 
 task clean(type: Delete) {
