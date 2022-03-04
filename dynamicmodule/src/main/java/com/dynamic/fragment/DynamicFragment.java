@@ -77,4 +77,9 @@ public class DynamicFragment extends BaseDynamicFragment {
     public List<DMCategory> getStaticList() {
         return null;
     }
+
+    @Override
+    public void onValidateList(List<DMCategory> list, Response.Status<List<DMCategory>> callback) {
+        callback.onSuccess(list);
+    }
 }

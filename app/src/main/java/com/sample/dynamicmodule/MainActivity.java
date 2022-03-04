@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.dynamic.database.DMDatabaseConst;
 import com.dynamic.database.DMDatabaseManager;
+import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.network.DMNetworkManager;
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onGetContent(View view) {
-        dataManager.getContent(0, true, new Response.Callback<List<DMContent>>() {
+        dataManager.getContent(0, new DynamicCallback.Listener<List<DMContent>>() {
             @Override
             public void onSuccess(List<DMContent> response) {
 

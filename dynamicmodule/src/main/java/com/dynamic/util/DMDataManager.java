@@ -3,17 +3,14 @@ package com.dynamic.util;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.dynamic.DynamicModule;
-import com.dynamic.database.DMDatabase;
 import com.dynamic.database.DMDatabaseManager;
+import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.network.DMNetworkManager;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.helper.callback.Response;
 import com.helper.task.TaskRunner;
-import com.helper.util.BaseConstants;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,16 +38,16 @@ public class DMDataManager {
         dbManager.setDisableCaching(disableCaching);
     }
 
-    public void getContent(int catId, boolean isValidate, Response.Callback<List<DMContent>> callback) {
+    public void getContent(int catId, DynamicCallback.Listener<List<DMContent>> callback) {
         networkManager.getContent(catId, new Response.Callback<List<DMContent>>() {
             @Override
             public void onSuccess(List<DMContent> response) {
-                if(isValidate) {
-                    List<DMContent> mList = validateData(response);
-                    callback.onSuccess(mList);
-                }else {
-                    callback.onSuccess(response);
-                }
+                callback.onValidate(arraySortContent(response), new Response.Status<List<DMContent>>() {
+                    @Override
+                    public void onSuccess(List<DMContent> response) {
+                        callback.onSuccess(response);
+                    }
+                });
             }
 
             @Override
@@ -60,52 +57,11 @@ public class DMDataManager {
         });
     }
 
-
-    private List<DMContent> validateData(List<DMContent> list) {
-        ArrayList<DMContent> finalList = new ArrayList<>();
-        if (list != null && list.size() > 0) {
-            for (DMContent item : list){
-                if(item.getVisibility() == 1 && validateDate(item.getUpdatedAt(), item.getOtherProperty())){
-                    finalList.add(item);
-                }
-            }
-        }
-        return finalList;
-    }
-
-    private boolean validateDate(String liveAt, String expiryDate) {
-        boolean status = true;
-        long liveTimeMills = getTimeInMillis(liveAt);
-        if(!TextUtils.isEmpty(liveAt) && liveTimeMills > 0){
-            if(System.currentTimeMillis() < liveTimeMills){
-                status = false;
-            }
-        }
-        long expiryDateMills = getTimeInMillis(expiryDate);
-        if(!TextUtils.isEmpty(expiryDate) && expiryDateMills > 0){
-            if(System.currentTimeMillis() > expiryDateMills){
-                status = false;
-            }
-        }
-        return status;
-    }
-
-    private long getTimeInMillis(String date) {
-        try {
-            if(date == null) return 0;
-            String format = date.contains("T") ? "yyyy-MM-dd'T'HH:mm" : "yyyy-MM-dd HH:mm:ss";
-            Date mDate = new SimpleDateFormat(format, Locale.US).parse(date);
-            if(mDate != null) return mDate.getTime();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    public void getDynamicData(int catId, Response.Callback<List<DMCategory>> callback) {
+    public void getDynamicData(int catId, DynamicCallback.Listener<List<DMCategory>> callback) {
         getDynamicData(catId, null, callback);
     }
-    public void getDynamicData(int catId, List<DMCategory> staticList, Response.Callback<List<DMCategory>> callback) {
+
+    public void getDynamicData(int catId, List<DMCategory> staticList, DynamicCallback.Listener<List<DMCategory>> callback) {
         dbManager.getDynamicData(catId, staticList, callback);
         networkManager.getDataBySubCategory(catId, new Response.Callback<List<DMCategory>>() {
             @Override
@@ -114,7 +70,12 @@ public class DMDataManager {
                 if(staticList != null && staticList.size() > 0){
                     response.addAll(staticList);
                 }
-                callback.onSuccess(arraySortCategory(response));
+                callback.onValidate(arraySortCategory(response), new Response.Status<List<DMCategory>>() {
+                    @Override
+                    public void onSuccess(List<DMCategory> response) {
+                        callback.onSuccess(response);
+                    }
+                });
             }
 
             @Override
@@ -124,13 +85,18 @@ public class DMDataManager {
         });
     }
 
-    public void getDataByCategory(int catId, Response.Callback<List<DMContent>> callback) {
+    public void getDataByCategory(int catId, DynamicCallback.Listener<List<DMContent>> callback) {
         dbManager.getDataByCategory(catId, callback);
         networkManager.getDataByCategory(catId, new Response.Callback<List<DMContent>>() {
             @Override
             public void onSuccess(List<DMContent> response) {
                 dbManager.insertData(response);
-                callback.onSuccess(response);
+                callback.onValidate(arraySortContent(response), new Response.Status<List<DMContent>>() {
+                    @Override
+                    public void onSuccess(List<DMContent> response) {
+                        callback.onSuccess(response);
+                    }
+                });
             }
 
             @Override

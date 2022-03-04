@@ -6,6 +6,7 @@ import androidx.annotation.WorkerThread;
 import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import com.dynamic.DynamicModule;
+import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.util.DMPreferences;
@@ -155,20 +156,25 @@ public class DMDatabaseManager {
         database.dmContentDao().clearAllRecords();
     }
 
-    public void getDataByCategory(int catId, Response.Callback<List<DMContent>> callback) {
+    public void getDataByCategory(int catId, DynamicCallback.Listener<List<DMContent>> callback) {
         if (isDisableCaching) return;
         TaskRunner.getInstance().executeAsync(() -> database.dmContentDao().getDataBySubCategory(catId), result -> {
             if (result != null && result.size() > 0) {
-                callback.onSuccess(result);
+                callback.onValidate(arraySortContent(result), new Response.Status<List<DMContent>>() {
+                    @Override
+                    public void onSuccess(List<DMContent> response) {
+                        callback.onSuccess(response);
+                    }
+                });
             }
         });
     }
 
-    public void getDynamicData(int catId, Response.Callback<List<DMCategory>> callback) {
+    public void getDynamicData(int catId, DynamicCallback.Listener<List<DMCategory>> callback) {
         getDynamicData(catId, null, callback);
     }
 
-    public void getDynamicData(int catId, List<DMCategory> staticList, Response.Callback<List<DMCategory>> callback) {
+    public void getDynamicData(int catId, List<DMCategory> staticList, DynamicCallback.Listener<List<DMCategory>> callback) {
         if (isDisableCaching) return;
         List<DMCategory> list = gson.fromJson(DMPreferences.getDynamicData(context, catId), new TypeToken<List<DMCategory>>() {
         }.getType());
@@ -176,10 +182,20 @@ public class DMDatabaseManager {
             if(staticList != null && staticList.size() > 0){
                 list.addAll(staticList);
             }
-            callback.onSuccess(arraySortCategory(list));
+            callback.onValidate(arraySortCategory(list), new Response.Status<List<DMCategory>>() {
+                @Override
+                public void onSuccess(List<DMCategory> response) {
+                    callback.onSuccess(response);
+                }
+            });
         }else {
             if(staticList != null && staticList.size() > 0){
-                callback.onSuccess(arraySortCategory(staticList));
+                callback.onValidate(arraySortCategory(staticList), new Response.Status<List<DMCategory>>() {
+                    @Override
+                    public void onSuccess(List<DMCategory> response) {
+                        callback.onSuccess(response);
+                    }
+                });
             }
         }
     }

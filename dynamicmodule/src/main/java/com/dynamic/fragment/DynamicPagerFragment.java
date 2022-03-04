@@ -86,7 +86,7 @@ public class DynamicPagerFragment extends DMBaseFragment {
     }
 
     private void getSliderDataFromServer() {
-        dataManager.getContent(catId, true, new Response.Callback<List<DMContent>>() {
+        dataManager.getContent(catId, new DynamicCallback.Listener<List<DMContent>>() {
             @Override
             public void onSuccess(List<DMContent> response) {
                 loadViewPager(response);

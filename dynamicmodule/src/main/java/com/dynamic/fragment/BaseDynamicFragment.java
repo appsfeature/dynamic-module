@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dynamic.R;
+import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
 import com.helper.callback.Response;
 import com.helper.util.BaseUtil;
@@ -32,6 +33,7 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
     public abstract void onUpdateUi();
     public abstract boolean onResumeReloadList();
     public abstract List<DMCategory> getStaticList();
+    public abstract void onValidateList(List<DMCategory> list, Response.Status<List<DMCategory>> callback);
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,10 +64,15 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
     }
 
     private void getDataFromServer() {
-        dataManager.getDynamicData(catId, getStaticList(), new Response.Callback<List<DMCategory>>() {
+        dataManager.getDynamicData(catId, getStaticList(), new DynamicCallback.Listener<List<DMCategory>>() {
             @Override
             public void onSuccess(List<DMCategory> response) {
                 loadList(response);
+            }
+
+            @Override
+            public void onValidate(List<DMCategory> list, Response.Status<List<DMCategory>> callback) {
+                onValidateList(list, callback);
             }
 
             @Override
