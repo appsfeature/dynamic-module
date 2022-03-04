@@ -28,11 +28,17 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
 
     @LayoutRes
     public abstract int getLayoutContentView();
+
     public abstract RecyclerView.Adapter<RecyclerView.ViewHolder> getAdapter();
+
     public abstract void onInitViews(View view);
+
     public abstract void onUpdateUi();
+
     public abstract boolean onResumeReloadList();
+
     public abstract List<DMCategory> getStaticList();
+
     public abstract void onValidateList(List<DMCategory> list, Response.Status<List<DMCategory>> callback);
 
     @Override
@@ -40,7 +46,7 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
         View view = inflater.inflate(getLayoutContentView(), container, false);
         initView(view);
         onUpdateUi();
-        if(!onResumeReloadList()) {
+        if (!onResumeReloadList()) {
             getDataFromServer();
         }
         return view;
@@ -49,7 +55,7 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(onResumeReloadList()){
+        if (onResumeReloadList()) {
             getDataFromServer();
         }
     }
@@ -77,17 +83,25 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
 
             @Override
             public void onFailure(Exception e) {
-                if(mList.size() == 0) {
+                if (mList.size() == 0) {
                     BaseUtil.showNoData(layoutNoData, View.VISIBLE);
                 }
             }
         });
     }
 
-    private void loadList(List<DMCategory> list) {
+    protected void loadList(List<DMCategory> list) {
+        updateList(list, true);
+    }
+
+    protected void updateList(List<DMCategory> list) {
+        updateList(list, false);
+    }
+
+    private void updateList(List<DMCategory> list, boolean isClear) {
         rvList.setVisibility(View.VISIBLE);
         BaseUtil.showNoData(layoutNoData, View.GONE);
-        mList.clear();
+        if (isClear) mList.clear();
         if (list != null && list.size() > 0) {
             mList.addAll(list);
         }
