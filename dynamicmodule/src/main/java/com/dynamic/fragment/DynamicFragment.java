@@ -85,16 +85,5 @@ public class DynamicFragment extends BaseDynamicFragment {
 
     @Override
     public void onNetworkRequestCompleted() {
-        dataManager.getContent(126, new DynamicCallback.Listener<List<DMContent>>() {
-            @Override
-            public void onSuccess(List<DMContent> response) {
-
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-
-            }
-        });
     }
 }
