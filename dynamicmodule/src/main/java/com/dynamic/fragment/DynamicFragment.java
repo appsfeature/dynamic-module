@@ -82,4 +82,9 @@ public class DynamicFragment extends BaseDynamicFragment {
     public void onValidateList(List<DMCategory> list, Response.Status<List<DMCategory>> callback) {
         callback.onSuccess(list);
     }
+
+    @Override
+    public void onNetworkRequestCompleted() {
+
+    }
 }

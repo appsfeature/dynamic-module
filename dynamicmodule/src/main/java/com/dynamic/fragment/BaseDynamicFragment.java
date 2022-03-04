@@ -41,6 +41,8 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
 
     public abstract void onValidateList(List<DMCategory> list, Response.Status<List<DMCategory>> callback);
 
+    public abstract void onNetworkRequestCompleted();
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(getLayoutContentView(), container, false);
@@ -86,6 +88,11 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
                 if (mList.size() == 0) {
                     BaseUtil.showNoData(layoutNoData, View.VISIBLE);
                 }
+            }
+
+            @Override
+            public void onRequestCompleted() {
+                onNetworkRequestCompleted();
             }
         });
     }

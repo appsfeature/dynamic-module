@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onGetCategory(View view) {
-        new DMNetworkManager(this).getCategory(0, new Response.Callback<List<DMCategory>>() {
+        new DMNetworkManager(this).getCategory(0, new DynamicCallback.Listener<List<DMCategory>>() {
             @Override
             public void onSuccess(List<DMCategory> response) {
 //                TaskRunner.getInstance().executeAsync(new Callable<Boolean>() {

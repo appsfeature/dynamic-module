@@ -27,5 +27,8 @@ public interface DynamicCallback {
         }
 
         void onFailure(Exception e);
+
+        default void onRequestCompleted() {
+        }
     }
 }

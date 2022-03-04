@@ -21,5 +21,8 @@ public interface NetworkCallback {
 
         default void onError(int responseCode, Exception e) {
         }
+
+        default void onRequestCompleted() {
+        }
     }
 }

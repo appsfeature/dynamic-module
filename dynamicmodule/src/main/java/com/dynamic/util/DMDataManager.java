@@ -39,7 +39,7 @@ public class DMDataManager {
     }
 
     public void getContent(int catId, DynamicCallback.Listener<List<DMContent>> callback) {
-        networkManager.getContent(catId, new Response.Callback<List<DMContent>>() {
+        networkManager.getContent(catId, new DynamicCallback.Listener<List<DMContent>>() {
             @Override
             public void onSuccess(List<DMContent> response) {
                 callback.onValidate(arraySortContent(response), new Response.Status<List<DMContent>>() {
@@ -54,6 +54,11 @@ public class DMDataManager {
             public void onFailure(Exception e) {
                 callback.onFailure(e);
             }
+
+            @Override
+            public void onRequestCompleted() {
+                callback.onRequestCompleted();
+            }
         });
     }
 
@@ -63,7 +68,7 @@ public class DMDataManager {
 
     public void getDynamicData(int catId, List<DMCategory> staticList, DynamicCallback.Listener<List<DMCategory>> callback) {
         dbManager.getDynamicData(catId, staticList, callback);
-        networkManager.getDataBySubCategory(catId, new Response.Callback<List<DMCategory>>() {
+        networkManager.getDataBySubCategory(catId, new DynamicCallback.Listener<List<DMCategory>>() {
             @Override
             public void onSuccess(List<DMCategory> response) {
                 dbManager.saveDynamicData(catId, response);
@@ -82,12 +87,17 @@ public class DMDataManager {
             public void onFailure(Exception e) {
                 callback.onFailure(e);
             }
+
+            @Override
+            public void onRequestCompleted() {
+                callback.onRequestCompleted();
+            }
         });
     }
 
     public void getDataByCategory(int catId, DynamicCallback.Listener<List<DMContent>> callback) {
         dbManager.getDataByCategory(catId, callback);
-        networkManager.getDataByCategory(catId, new Response.Callback<List<DMContent>>() {
+        networkManager.getDataByCategory(catId, new DynamicCallback.Listener<List<DMContent>>() {
             @Override
             public void onSuccess(List<DMContent> response) {
                 dbManager.insertData(response);
@@ -102,6 +112,11 @@ public class DMDataManager {
             @Override
             public void onFailure(Exception e) {
                 callback.onFailure(e);
+            }
+
+            @Override
+            public void onRequestCompleted() {
+                callback.onRequestCompleted();
             }
         });
     }

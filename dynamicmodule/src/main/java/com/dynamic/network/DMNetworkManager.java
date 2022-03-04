@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.dynamic.DynamicModule;
 import com.dynamic.listeners.ApiRequestType;
 import com.dynamic.listeners.DMApiConstants;
+import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.util.DMPreferences;
@@ -32,7 +33,7 @@ public class DMNetworkManager extends BaseNetworkManager {
         this.gson = new Gson();
     }
 
-    public void insertCategory(DMCategory category, Response.Callback<NetworkModel> callback) {
+    public void insertCategory(DMCategory category, DynamicCallback.Listener<NetworkModel> callback) {
         Map<String, String> params = new HashMap<>();
         params.put("pkg_name", context.getPackageName());
         params.put("sub_cat_id", category.getSubCatId() + "");
@@ -60,7 +61,7 @@ public class DMNetworkManager extends BaseNetworkManager {
         });
     }
 
-    public void getCategory(int catId, Response.Callback<List<DMCategory>> callback) {
+    public void getCategory(int catId, DynamicCallback.Listener<List<DMCategory>> callback) {
         Map<String, String> params = new HashMap<>();
         params.put("cat_id", catId + "");
         params.put("pkg_name", context.getPackageName());
@@ -88,10 +89,15 @@ public class DMNetworkManager extends BaseNetworkManager {
             public void onFailure(Call<NetworkModel> call, Exception e) {
                 callback.onFailure(e);
             }
+
+            @Override
+            public void onRequestCompleted() {
+                callback.onRequestCompleted();
+            }
         });
     }
 
-    public void getDataBySubCategory(int catId, Response.Callback<List<DMCategory>> callback) {
+    public void getDataBySubCategory(int catId, DynamicCallback.Listener<List<DMCategory>> callback) {
         Map<String, String> params = new HashMap<>();
         params.put("pkg_name", context.getPackageName());
         params.put("cat_id", catId + "");
@@ -122,10 +128,15 @@ public class DMNetworkManager extends BaseNetworkManager {
             public void onFailure(Call<NetworkModel> call, Exception e) {
                 callback.onFailure(e);
             }
+
+            @Override
+            public void onRequestCompleted() {
+                callback.onRequestCompleted();
+            }
         });
     }
 
-    public void getDataByCategory(int catId, Response.Callback<List<DMContent>> callback) {
+    public void getDataByCategory(int catId, DynamicCallback.Listener<List<DMContent>> callback) {
         Map<String, String> params = new HashMap<>();
         params.put("pkg_name", context.getPackageName());
         params.put("cat_id", catId + "");
@@ -153,14 +164,19 @@ public class DMNetworkManager extends BaseNetworkManager {
             public void onFailure(Call<NetworkModel> call, Exception e) {
                 callback.onFailure(e);
             }
+
+            @Override
+            public void onRequestCompleted() {
+                callback.onRequestCompleted();
+            }
         });
     }
 
-    public void getContent(Integer catId, Response.Callback<List<DMContent>> callback) {
+    public void getContent(Integer catId, DynamicCallback.Listener<List<DMContent>> callback) {
         getContent(null, catId, callback);
     }
 
-    public void getContent(Integer id, Integer parentId, Response.Callback<List<DMContent>> callback) {
+    public void getContent(Integer id, Integer parentId, DynamicCallback.Listener<List<DMContent>> callback) {
         Map<String, String> params = getValidContentParams(id, parentId);
         getData(ApiRequestType.GET, DMApiConstants.GET_CONTENT, params, new NetworkCallback.Response<NetworkModel>() {
             @Override
@@ -185,6 +201,11 @@ public class DMNetworkManager extends BaseNetworkManager {
             @Override
             public void onFailure(Call<NetworkModel> call, Exception e) {
                 callback.onFailure(e);
+            }
+
+            @Override
+            public void onRequestCompleted() {
+                callback.onRequestCompleted();
             }
         });
     }

@@ -62,11 +62,21 @@ public class ResponseCallBack<T> implements Callback<T> {
         } else {
             notifyCallback(call, responseCode, new Throwable("Invalid response code"));
         }
+        if(!isRequestCompletedCalled) {
+            isRequestCompletedCalled = true;
+            onNetworkCall.onRequestCompleted();
+        }
     }
+
+    private boolean isRequestCompletedCalled = false;
 
     @Override
     public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
         notifyCallback(call, ResponseStatusCode.BAD_REQUEST, t);
+        if(!isRequestCompletedCalled) {
+            isRequestCompletedCalled = true;
+            onNetworkCall.onRequestCompleted();
+        }
     }
 
     private void notifyCallback(Call<T> call, int responseCode, Throwable t) {
