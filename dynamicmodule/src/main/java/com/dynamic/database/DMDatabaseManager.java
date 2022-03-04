@@ -210,13 +210,26 @@ public class DMDatabaseManager {
 //        }
 //    });
 
-    public void saveDynamicData(int catId, List<DMCategory> response) {
-        if (isDisableCaching) return;
+    public void saveDynamicData(int catId, List<DMCategory> response, Response.Status<Boolean> callback) {
+        if (isDisableCaching){
+            callback.onSuccess(true);
+            return;
+        }
         TaskRunner.getInstance().executeAsync(() -> {
             String jsonData = gson.toJson(response, new TypeToken<List<DMCategory>>() {
             }.getType());
             DMPreferences.setDynamicData(context, catId, jsonData);
             return true;
+        }, new TaskRunner.CallbackWithError<Boolean>() {
+            @Override
+            public void onComplete(Boolean result) {
+                callback.onSuccess(true);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                callback.onSuccess(false);
+            }
         });
     }
 

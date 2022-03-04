@@ -64,14 +64,18 @@ public class DMDataManager {
         networkManager.getDataBySubCategory(catId, new DynamicCallback.Listener<List<DMCategory>>() {
             @Override
             public void onSuccess(List<DMCategory> response) {
-                dbManager.saveDynamicData(catId, response);
-                if(staticList != null && staticList.size() > 0){
-                    response.addAll(staticList);
-                }
-                callback.onValidate(arraySortCategory(response), new Response.Status<List<DMCategory>>() {
+                dbManager.saveDynamicData(catId, response, new Response.Status<Boolean>() {
                     @Override
-                    public void onSuccess(List<DMCategory> response) {
-                        callback.onSuccess(response);
+                    public void onSuccess(Boolean res) {
+                        if(staticList != null && staticList.size() > 0){
+                            response.addAll(staticList);
+                        }
+                        callback.onValidate(arraySortCategory(response), new Response.Status<List<DMCategory>>() {
+                            @Override
+                            public void onSuccess(List<DMCategory> response) {
+                                callback.onSuccess(response);
+                            }
+                        });
                     }
                 });
             }
