@@ -72,7 +72,7 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
     }
 
     private void getDataFromServer() {
-        dataManager.getDynamicData(catId, getStaticList(), new DynamicCallback.Listener<List<DMCategory>>() {
+        dataManager.getDataBySubCategory(catId, getStaticList(), new DynamicCallback.Listener<List<DMCategory>>() {
             @Override
             public void onSuccess(List<DMCategory> response) {
                 loadList(response);

@@ -1,7 +1,6 @@
 package com.dynamic.util;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.dynamic.database.DMDatabaseManager;
 import com.dynamic.listeners.DynamicCallback;
@@ -10,16 +9,10 @@ import com.dynamic.model.DMContent;
 import com.dynamic.network.DMNetworkManager;
 import com.google.gson.Gson;
 import com.helper.callback.Response;
-import com.helper.task.TaskRunner;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.Callable;
 
 public class DMDataManager {
     private final Context context;
@@ -62,11 +55,11 @@ public class DMDataManager {
         });
     }
 
-    public void getDynamicData(int catId, DynamicCallback.Listener<List<DMCategory>> callback) {
-        getDynamicData(catId, null, callback);
+    public void getDataBySubCategory(int catId, DynamicCallback.Listener<List<DMCategory>> callback) {
+        getDataBySubCategory(catId, null, callback);
     }
 
-    public void getDynamicData(int catId, List<DMCategory> staticList, DynamicCallback.Listener<List<DMCategory>> callback) {
+    public void getDataBySubCategory(int catId, List<DMCategory> staticList, DynamicCallback.Listener<List<DMCategory>> callback) {
         dbManager.getDynamicData(catId, staticList, callback);
         networkManager.getDataBySubCategory(catId, new DynamicCallback.Listener<List<DMCategory>>() {
             @Override
@@ -122,7 +115,7 @@ public class DMDataManager {
     }
 
 
-    private List<DMCategory> arraySortCategory(List<DMCategory> list) {
+    public List<DMCategory> arraySortCategory(List<DMCategory> list) {
         Collections.sort(list, new Comparator<DMCategory>() {
             @Override
             public int compare(DMCategory item, DMCategory item2) {
@@ -134,7 +127,7 @@ public class DMDataManager {
         return list;
     }
 
-    private List<DMContent> arraySortContent(List<DMContent> list) {
+    public List<DMContent> arraySortContent(List<DMContent> list) {
         Collections.sort(list, new Comparator<DMContent>() {
             @Override
             public int compare(DMContent item, DMContent item2) {

@@ -210,7 +210,7 @@ public class DMNetworkManager extends BaseNetworkManager {
         });
     }
 
-    private Map<String, String> getValidContentParams(Integer id, Integer parentId) {
+    public Map<String, String> getValidContentParams(Integer id, Integer parentId) {
         Map<String, String> params = new HashMap<>();
         params.put("pkg_name", context.getPackageName());
         if(id != null && id > 0)

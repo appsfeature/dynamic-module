@@ -220,7 +220,7 @@ public class DMDatabaseManager {
         });
     }
 
-    private List<DMCategory> arraySortCategory(List<DMCategory> list) {
+    public List<DMCategory> arraySortCategory(List<DMCategory> list) {
         Collections.sort(list, new Comparator<DMCategory>() {
             @Override
             public int compare(DMCategory item, DMCategory item2) {
@@ -232,7 +232,7 @@ public class DMDatabaseManager {
         return list;
     }
 
-    private List<DMContent> arraySortContent(List<DMContent> list) {
+    public List<DMContent> arraySortContent(List<DMContent> list) {
         Collections.sort(list, new Comparator<DMContent>() {
             @Override
             public int compare(DMContent item, DMContent item2) {
