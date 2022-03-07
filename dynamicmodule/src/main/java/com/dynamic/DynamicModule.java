@@ -63,7 +63,7 @@ public class DynamicModule {
     }
 
     public DynamicModule addBaseUrlHost(Context context, String hostName, String value) {
-        getConfigManager(context).addHostUrl(hostName, value);
+        ConfigManager.getInstance(context).addHostUrl(hostName, value);
         return this;
     }
     
@@ -108,11 +108,6 @@ public class DynamicModule {
     public DMDatabaseManager getDatabaseManager(Context context) {
         if(databaseManager == null) databaseManager = new DMDatabaseManager(context);
         return databaseManager;
-    }
-
-    public ConfigManager getConfigManager(Context context) {
-        if(configManager == null) configManager = ConfigManager.getInstance(context);
-        return configManager;
     }
 
     public void init(Context context) {

@@ -3,14 +3,12 @@ package com.dynamic.network;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.dynamic.DynamicModule;
 import com.dynamic.listeners.ApiHost;
 import com.dynamic.listeners.ApiRequestType;
 import com.dynamic.listeners.DMApiConstants;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
-import com.dynamic.util.DMConstants;
 import com.dynamic.util.DMPreferences;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
@@ -28,7 +26,7 @@ public class DMNetworkManager {
     private final ConfigManager configManager;
 
     public DMNetworkManager(Context context) {
-        this.configManager = DynamicModule.getInstance().getConfigManager(context);
+        this.configManager = ConfigManager.getInstance(context);
         this.context = context;
     }
 
