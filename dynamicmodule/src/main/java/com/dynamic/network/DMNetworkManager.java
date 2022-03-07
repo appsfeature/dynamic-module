@@ -4,11 +4,13 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.dynamic.DynamicModule;
+import com.dynamic.listeners.ApiHost;
 import com.dynamic.listeners.ApiRequestType;
 import com.dynamic.listeners.DMApiConstants;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
+import com.dynamic.util.DMConstants;
 import com.dynamic.util.DMPreferences;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
@@ -20,12 +22,13 @@ import java.util.Map;
 
 import retrofit2.Call;
 
-public class DMNetworkManager extends BaseNetworkManager {
+public class DMNetworkManager {
 
     private final Context context;
+    private final ConfigManager configManager;
 
     public DMNetworkManager(Context context) {
-        super(context, DynamicModule.getInstance().getBaseUrl(context));
+        this.configManager = DynamicModule.getInstance().getConfigManager(context);
         this.context = context;
     }
 
@@ -40,7 +43,7 @@ public class DMNetworkManager extends BaseNetworkManager {
         params.put("visibility", category.getVisibility() + "");
         params.put("json_data", category.getJsonData() + "");
         params.put("other_property", category.getOtherProperty() + "");
-        getData(ApiRequestType.POST, DMApiConstants.INSERT_CATEGORY, params, new NetworkCallback.Response<NetworkModel>() {
+        configManager.getData(ApiRequestType.POST, DMApiConstants.INSERT_CATEGORY, params, new NetworkCallback.Response<NetworkModel>() {
             @Override
             public void onComplete(boolean status, NetworkModel data) {
                 if (status && data != null && data.getStatus() != null && data.getStatus().equalsIgnoreCase(BaseConstants.SUCCESS)) {
@@ -61,7 +64,7 @@ public class DMNetworkManager extends BaseNetworkManager {
         Map<String, String> params = new HashMap<>();
         params.put("cat_id", catId + "");
         params.put("pkg_name", context.getPackageName());
-        getData(ApiRequestType.GET, DMApiConstants.GET_CATEGORY, params, new NetworkCallback.Response<NetworkModel>() {
+        configManager.getData(ApiRequestType.GET, DMApiConstants.GET_CATEGORY, params, new NetworkCallback.Response<NetworkModel>() {
             @Override
             public void onComplete(boolean status, NetworkModel data) {
                 try {
@@ -97,7 +100,7 @@ public class DMNetworkManager extends BaseNetworkManager {
         Map<String, String> params = new HashMap<>();
         params.put("pkg_name", context.getPackageName());
         params.put("cat_id", catId + "");
-        getData(ApiRequestType.GET, DMApiConstants.GET_DATA_BY_SUB_CATEGORY, params, new NetworkCallback.Response<NetworkModel>() {
+        configManager.getData(ApiRequestType.GET, DMApiConstants.GET_DATA_BY_SUB_CATEGORY, params, new NetworkCallback.Response<NetworkModel>() {
             @Override
             public void onComplete(boolean status, NetworkModel data) {
                 try {
@@ -105,7 +108,7 @@ public class DMNetworkManager extends BaseNetworkManager {
                         List<DMCategory> list = data.getData(new TypeToken<List<DMCategory>>() {
                         });
                         if (!TextUtils.isEmpty(data.getImagePath())) {
-                            DMPreferences.setImageBaseUrl(context, data.getImagePath());
+                            DMPreferences.setImageBaseUrl(context, ApiHost.HOST_DEFAULT, data.getImagePath());
                         }
                         if (list != null && list.size() > 0) {
                             callback.onSuccess(list);
@@ -136,7 +139,7 @@ public class DMNetworkManager extends BaseNetworkManager {
         Map<String, String> params = new HashMap<>();
         params.put("pkg_name", context.getPackageName());
         params.put("cat_id", catId + "");
-        getData(ApiRequestType.GET, DMApiConstants.GET_DATA_BY_CATEGORY, params, new NetworkCallback.Response<NetworkModel>() {
+        configManager.getData(ApiRequestType.GET, DMApiConstants.GET_DATA_BY_CATEGORY, params, new NetworkCallback.Response<NetworkModel>() {
             @Override
             public void onComplete(boolean status, NetworkModel data) {
                 try {
@@ -174,7 +177,7 @@ public class DMNetworkManager extends BaseNetworkManager {
 
     public void getContent(Integer id, Integer parentId, DynamicCallback.Listener<List<DMContent>> callback) {
         Map<String, String> params = getValidContentParams(id, parentId);
-        getData(ApiRequestType.GET, DMApiConstants.GET_CONTENT, params, new NetworkCallback.Response<NetworkModel>() {
+        configManager.getData(ApiRequestType.GET, DMApiConstants.GET_CONTENT, params, new NetworkCallback.Response<NetworkModel>() {
             @Override
             public void onComplete(boolean status, NetworkModel data) {
                 try {

@@ -16,6 +16,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 
 import com.dynamic.model.DMContent;
 import com.helper.util.BaseConstants;
@@ -122,5 +123,30 @@ public class DMUtility {
                 .setTitle(item.getTitle())
                 .setItemType(item.getItemType())
                 .setOtherProperty(item.getOtherProperty());
+    }
+
+    /**
+     * @apiNote throw new IllegalArgumentException();
+     */
+    public static void logIntegration(String tag, String... s){
+        Log.e(tag, ".     |  |");
+        Log.e(tag, ".     |  |");
+        Log.e(tag, ".     |  |");
+        Log.e(tag, ".   \\ |  | /");
+        Log.e(tag, ".    \\    /");
+        Log.e(tag, ".     \\  /");
+        Log.e(tag, ".      \\/");
+        Log.e(tag, ".");
+        for (String message : s) {
+            Log.e(tag, message);
+        }
+        Log.e(tag, ".");
+        Log.e(tag, ".      /\\");
+        Log.e(tag, ".     /  \\");
+        Log.e(tag, ".    /    \\");
+        Log.e(tag, ".   / |  | \\");
+        Log.e(tag, ".     |  |");
+        Log.e(tag, ".     |  |");
+        Log.e(tag, ".");
     }
 }

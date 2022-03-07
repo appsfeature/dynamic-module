@@ -2,12 +2,12 @@ package com.dynamic.util;
 
 import android.content.Context;
 
+import com.dynamic.DynamicModule;
 import com.dynamic.database.DMDatabaseManager;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.network.DMNetworkManager;
-import com.google.gson.Gson;
 import com.helper.callback.Response;
 
 import java.util.Collections;
@@ -15,16 +15,18 @@ import java.util.Comparator;
 import java.util.List;
 
 public class DMDataManager {
-    private final Context context;
-    private final Gson gson;
+    private static DMDataManager instance;
     private final DMNetworkManager networkManager;
     private final DMDatabaseManager dbManager;
 
-    public DMDataManager(Context context) {
-        this.context = context;
-        this.gson = new Gson();
-        this.dbManager = new DMDatabaseManager(context);
-        this.networkManager = new DMNetworkManager(context);
+    private DMDataManager(Context context) {
+        this.dbManager = DynamicModule.getInstance().getDatabaseManager(context);
+        this.networkManager = DynamicModule.getInstance().getNetworkManager(context);
+    }
+
+    public static DMDataManager get(Context context) {
+        if(instance == null) instance = new DMDataManager(context);
+        return instance;
     }
 
     public void setDisableCaching(boolean disableCaching) {

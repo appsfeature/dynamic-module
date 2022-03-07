@@ -3,6 +3,7 @@ package com.sample.dynamicmodule;
 import android.view.View;
 
 import com.dynamic.DynamicModule;
+import com.dynamic.listeners.ApiHost;
 import com.dynamic.listeners.DMContentType;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMContent;
@@ -12,8 +13,7 @@ import com.helper.util.BaseUtil;
 public class AppApplication extends BaseApplication {
 
 
-    private static final String BASE_URL = "http://appsfeature.com/apps/api/v1/database/";
-    private static final String BASE_IMAGE_URL = "http://appsfeature.com/apps/public/uploads/images/";
+    private static final String BASE_URL = "http://droidapps.com/apps/api/v1/database/";
     private static AppApplication instance;
 
     public static AppApplication getInstance() {
@@ -31,8 +31,6 @@ public class AppApplication extends BaseApplication {
         instance = this;
         DynamicModule.getInstance()
                 .setDebugMode(isDebugMode())
-                .setBaseUrl(getInstance(), BASE_URL)
-                .setImageBaseUrl(getInstance(), BASE_IMAGE_URL)
                 .addListClickListener(instance.hashCode(), new DynamicCallback.OnDynamicListListener() {
                     @Override
                     public void onItemClicked(View view, DMContent item) {
@@ -46,7 +44,7 @@ public class AppApplication extends BaseApplication {
                             BaseUtil.showToast(view.getContext(), "Action Update Later");
                         }
                     }
-                });
+                }).init(getInstance());
     }
 
 }

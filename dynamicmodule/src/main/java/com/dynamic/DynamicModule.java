@@ -4,8 +4,13 @@ import android.content.Context;
 import android.view.View;
 
 import com.dynamic.database.DMDatabase;
+import com.dynamic.database.DMDatabaseManager;
+import com.dynamic.listeners.ApiHost;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMContent;
+import com.dynamic.network.ConfigManager;
+import com.dynamic.network.DMNetworkManager;
+import com.dynamic.util.DMConstants;
 import com.dynamic.util.DMPreferences;
 
 import java.util.HashMap;
@@ -15,6 +20,9 @@ public class DynamicModule {
 
     private static volatile DynamicModule instance;
     private boolean isEnableDebugMode = false;
+    private DMNetworkManager networkManager;
+    private DMDatabaseManager databaseManager;
+    private ConfigManager configManager;
 
     private DynamicModule() { }
 
@@ -45,24 +53,19 @@ public class DynamicModule {
         return this;
     }
 
-    public DynamicModule setImageBaseUrl(Context context, String value) {
-        DMPreferences.setImageBaseUrl(context, value);
+    public DynamicModule setImageBaseUrl(Context context, String hostName, String value) {
+        DMPreferences.setImageBaseUrl(context, hostName, value);
         return this;
     }
 
     public String getImageBaseUrl(Context context) {
-        return DMPreferences.getImageBaseUrl(context);
+        return DMPreferences.getImageBaseUrl(context, ApiHost.HOST_DEFAULT);
     }
 
-    public DynamicModule setBaseUrl(Context context, String value) {
-        DMPreferences.setBaseUrl(context, value);
+    public DynamicModule addBaseUrlHost(Context context, String hostName, String value) {
+        getConfigManager(context).addHostUrl(hostName, value);
         return this;
     }
-
-    public String getBaseUrl(Context context) {
-        return DMPreferences.getBaseUrl(context);
-    }
-
     
     private final HashMap<Integer, DynamicCallback.OnDynamicListListener> mListClickListener = new HashMap<>();
     
@@ -95,5 +98,25 @@ public class DynamicModule {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public DMNetworkManager getNetworkManager(Context context) {
+        if(networkManager == null) networkManager = new DMNetworkManager(context);
+        return networkManager;
+    }
+
+    public DMDatabaseManager getDatabaseManager(Context context) {
+        if(databaseManager == null) databaseManager = new DMDatabaseManager(context);
+        return databaseManager;
+    }
+
+    public ConfigManager getConfigManager(Context context) {
+        if(configManager == null) configManager = ConfigManager.getInstance(context);
+        return configManager;
+    }
+
+    public void init(Context context) {
+        addBaseUrlHost(context, ApiHost.HOST_DEFAULT, DMConstants.DEFAULT_BASE_URL);
+        setImageBaseUrl(context, ApiHost.HOST_DEFAULT, DMConstants.DEFAULT_BASE_IMAGE_URL);
     }
 }

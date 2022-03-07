@@ -21,7 +21,7 @@ public class DMBaseFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = getActivity();
-        dataManager = new DMDataManager(activity);
+        dataManager = DMDataManager.get(activity);
         initDataFromArguments();
     }
 

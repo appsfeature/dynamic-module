@@ -76,7 +76,7 @@ public class DMDatabaseManager {
 
     @WorkerThread
     public List<DMCategory> getAllCategories(Map<String, String> whereClause) {
-        String query = "SELECT * FROM Flashcards WHERE category = ? OR category = ? ORDER BY RANDOM() LIMIT 1";
+//        String query = "SELECT * FROM Flashcards WHERE category = ? OR category = ? ORDER BY RANDOM() LIMIT 1";
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT * FROM dm_category WHERE ");
         List<Object> args = new ArrayList<>();
