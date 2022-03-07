@@ -10,10 +10,8 @@ import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.util.DMPreferences;
-import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import com.helper.callback.Response;
 import com.helper.util.BaseConstants;
 
 import java.util.HashMap;
@@ -25,12 +23,10 @@ import retrofit2.Call;
 public class DMNetworkManager extends BaseNetworkManager {
 
     private final Context context;
-    private final Gson gson;
 
     public DMNetworkManager(Context context) {
         super(context, DynamicModule.getInstance().getBaseUrl(context));
         this.context = context;
-        this.gson = new Gson();
     }
 
     public void insertCategory(DMCategory category, DynamicCallback.Listener<NetworkModel> callback) {
@@ -47,9 +43,9 @@ public class DMNetworkManager extends BaseNetworkManager {
         getData(ApiRequestType.POST, DMApiConstants.INSERT_CATEGORY, params, new NetworkCallback.Response<NetworkModel>() {
             @Override
             public void onComplete(boolean status, NetworkModel data) {
-                if(status && data != null && data.getStatus() != null && data.getStatus().equalsIgnoreCase(BaseConstants.SUCCESS)) {
+                if (status && data != null && data.getStatus() != null && data.getStatus().equalsIgnoreCase(BaseConstants.SUCCESS)) {
                     callback.onSuccess(data);
-                }else {
+                } else {
                     callback.onFailure(new Exception(data != null ? data.getMessage() : BaseConstants.NO_DATA));
                 }
             }
@@ -69,15 +65,15 @@ public class DMNetworkManager extends BaseNetworkManager {
             @Override
             public void onComplete(boolean status, NetworkModel data) {
                 try {
-                    if(status && !TextUtils.isEmpty(data.getData())) {
-                        List<DMCategory> list = gson.fromJson(data.getData(), new TypeToken<List<DMCategory>>() {
-                        }.getType());
+                    if (status && !TextUtils.isEmpty(data.getData())) {
+                        List<DMCategory> list = data.getData(new TypeToken<List<DMCategory>>() {
+                        });
                         if (list != null && list.size() > 0) {
                             callback.onSuccess(list);
                         } else {
                             callback.onFailure(new Exception(BaseConstants.NO_DATA));
                         }
-                    }else {
+                    } else {
                         callback.onFailure(new Exception(data != null ? data.getMessage() : BaseConstants.NO_DATA));
                     }
                 } catch (JsonSyntaxException e) {
@@ -105,10 +101,10 @@ public class DMNetworkManager extends BaseNetworkManager {
             @Override
             public void onComplete(boolean status, NetworkModel data) {
                 try {
-                    if(status && !TextUtils.isEmpty(data.getData())) {
-                        List<DMCategory> list = gson.fromJson(data.getData(), new TypeToken<List<DMCategory>>() {
-                        }.getType());
-                        if(!TextUtils.isEmpty(data.getImagePath())){
+                    if (status && !TextUtils.isEmpty(data.getData())) {
+                        List<DMCategory> list = data.getData(new TypeToken<List<DMCategory>>() {
+                        });
+                        if (!TextUtils.isEmpty(data.getImagePath())) {
                             DMPreferences.setImageBaseUrl(context, data.getImagePath());
                         }
                         if (list != null && list.size() > 0) {
@@ -116,7 +112,7 @@ public class DMNetworkManager extends BaseNetworkManager {
                         } else {
                             callback.onFailure(new Exception(BaseConstants.NO_DATA));
                         }
-                    }else {
+                    } else {
                         callback.onFailure(new Exception(data != null ? data.getMessage() : BaseConstants.NO_DATA));
                     }
                 } catch (JsonSyntaxException e) {
@@ -144,15 +140,15 @@ public class DMNetworkManager extends BaseNetworkManager {
             @Override
             public void onComplete(boolean status, NetworkModel data) {
                 try {
-                    if(status && !TextUtils.isEmpty(data.getData())) {
-                        List<DMContent> list = gson.fromJson(data.getData(), new TypeToken<List<DMContent>>() {
-                        }.getType());
+                    if (status && !TextUtils.isEmpty(data.getData())) {
+                        List<DMContent> list = data.getData(new TypeToken<List<DMContent>>() {
+                        });
                         if (list != null && list.size() > 0) {
                             callback.onSuccess(list);
                         } else {
                             callback.onFailure(new Exception(BaseConstants.NO_DATA));
                         }
-                    }else {
+                    } else {
                         callback.onFailure(new Exception(data != null ? data.getMessage() : BaseConstants.NO_DATA));
                     }
                 } catch (JsonSyntaxException e) {
@@ -182,15 +178,15 @@ public class DMNetworkManager extends BaseNetworkManager {
             @Override
             public void onComplete(boolean status, NetworkModel data) {
                 try {
-                    if(status && !TextUtils.isEmpty(data.getData())) {
-                        List<DMContent> list = gson.fromJson(data.getData(), new TypeToken<List<DMContent>>() {
-                        }.getType());
+                    if (status && !TextUtils.isEmpty(data.getData())) {
+                        List<DMContent> list = data.getData(new TypeToken<List<DMContent>>() {
+                        });
                         if (list != null && list.size() > 0) {
                             callback.onSuccess(list);
                         } else {
                             callback.onFailure(new Exception(BaseConstants.NO_DATA));
                         }
-                    }else {
+                    } else {
                         callback.onFailure(new Exception(data != null ? data.getMessage() : BaseConstants.NO_DATA));
                     }
                 } catch (JsonSyntaxException e) {
@@ -213,9 +209,9 @@ public class DMNetworkManager extends BaseNetworkManager {
     public Map<String, String> getValidContentParams(Integer id, Integer parentId) {
         Map<String, String> params = new HashMap<>();
         params.put("pkg_name", context.getPackageName());
-        if(id != null && id > 0)
+        if (id != null && id > 0)
             params.put("id", id + "");
-        if(parentId != null && parentId > 0)
+        if (parentId != null && parentId > 0)
             params.put("sub_cat_id", parentId + "");
         return params;
     }

@@ -4,12 +4,15 @@ import android.content.Context;
 
 import com.dynamic.DynamicModule;
 import com.dynamic.listeners.ApiRequestType;
+import com.dynamic.model.DMCategory;
 import com.dynamic.util.DMUtility;
+import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.helper.model.base.BaseDataModel;
 import com.helper.util.BaseConstants;
 import com.helper.util.BaseUtil;
 import com.helper.util.GsonParser;
+import com.helper.util.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,6 +25,7 @@ public class BaseNetworkManager {
     public static String keyImagePath = BaseConstants.DEFAULT_KEY_IMAGE_PATH;
     public static String keyPdfPath = BaseConstants.DEFAULT_KEY_PDF_PATH;
     private final RetrofitApiInterface apiInterface;
+    private Gson gson;
 
     public BaseNetworkManager() {
         this.apiInterface = null;
@@ -45,6 +49,11 @@ public class BaseNetworkManager {
         void onSuccess(T t);
 
         void onFailure(Exception error);
+    }
+
+    public Gson getGson() {
+        if(gson == null) gson = new Gson();
+        return gson;
     }
 
     public static <T> List<T> addBaseUrlOnList(List<T> items, String imagePath, String pdfPath) {
@@ -135,6 +144,8 @@ public class BaseNetworkManager {
                 apiInterface.requestGet(endPoint, params)
                         .enqueue(new ResponseCallBack<>(callback));
             }
+        }else {
+            Logger.logIntegration(BaseNetworkManager.class.getSimpleName(), "BaseNetworkManager.apiInterface == null\n" + Logger.getClassPath(Thread.currentThread().getStackTrace()));
         }
     }
 }
