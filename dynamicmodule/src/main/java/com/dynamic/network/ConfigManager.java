@@ -87,6 +87,14 @@ public class ConfigManager {
         return apiHostUrlHashMap.get(hostName);
     }
 
+    public void addHostUrl(Map<String, String> hostMap) {
+        for (Map.Entry<String,String> entry : hostMap.entrySet()) {
+          String hostName = entry.getKey();
+          String baseUrl = entry.getValue();
+          addHostUrl(hostName, baseUrl);
+        }
+    }
+
     public void addHostUrl(String hostName, String baseUrl) {
         if (apiHostUrlHashMap.get(hostName) == null) {
             apiHostUrlHashMap.put(hostName, baseUrl);

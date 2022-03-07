@@ -62,8 +62,12 @@ public class DynamicModule {
         return DMPreferences.getImageBaseUrl(context, ApiHost.HOST_DEFAULT);
     }
 
-    public DynamicModule addBaseUrlHost(Context context, String hostName, String value) {
-        ConfigManager.getInstance(context).addHostUrl(hostName, value);
+    public DynamicModule addBaseUrlHost(Context context, String hostName, String baseUrl) {
+        ConfigManager.getInstance(context).addHostUrl(hostName, baseUrl);
+        return this;
+    }
+    public DynamicModule addBaseUrlHost(Context context, Map<String, String> hostMap) {
+        ConfigManager.getInstance(context).addHostUrl(hostMap);
         return this;
     }
     
