@@ -53,15 +53,9 @@ public class DynamicModule {
         return this;
     }
 
-    public DynamicModule setImageBaseUrl(Context context, String hostName, String value) {
-        DMPreferences.setImageBaseUrl(context, hostName, value);
-        return this;
-    }
-
-    public String getImageBaseUrl(Context context) {
-        return DMPreferences.getImageBaseUrl(context, ApiHost.HOST_DEFAULT);
-    }
-
+    /**
+     * @apiNote : Must call this method after method setDebugMode.
+     */
     public DynamicModule addBaseUrlHost(Context context, String hostName, String baseUrl) {
         ConfigManager.getInstance(context).addHostUrl(hostName, baseUrl);
         return this;
@@ -69,6 +63,15 @@ public class DynamicModule {
     public DynamicModule addBaseUrlHost(Context context, Map<String, String> hostMap) {
         ConfigManager.getInstance(context).addHostUrl(hostMap);
         return this;
+    }
+
+    public DynamicModule setImageBaseUrl(Context context, String hostName, String value) {
+        DMPreferences.setImageBaseUrl(context, hostName, value);
+        return this;
+    }
+
+    public String getImageBaseUrl(Context context) {
+        return DMPreferences.getImageBaseUrl(context, ApiHost.HOST_DEFAULT);
     }
     
     private final HashMap<Integer, DynamicCallback.OnDynamicListListener> mListClickListener = new HashMap<>();
