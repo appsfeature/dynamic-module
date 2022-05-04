@@ -78,7 +78,7 @@ public class DynamicPagerFragment extends DMBaseFragment {
     private void openItemOnClicked(View view, DMContent item) {
         if(BaseUtil.isValidUrl(item.getLink())) {
             if (mClickListener != null) {
-                mClickListener.onItemClicked(view, item);
+                mClickListener.onItemClicked(activity, view, item);
             }
         }else {
             BaseUtil.showToast(activity, "Update later.");

@@ -1,5 +1,6 @@
 package com.dynamic;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
@@ -91,14 +92,14 @@ public class DynamicModule {
         }
     }
     
-    public void dispatchListClickListener(View view, DMContent item) {
+    public void dispatchListClickListener(Activity activity, View view, DMContent item) {
         try {
             if (mListClickListener.size() > 0) {
                 for (Map.Entry<Integer, DynamicCallback.OnDynamicListListener> entry : mListClickListener.entrySet()) {
                     Integer key = entry.getKey();
                     DynamicCallback.OnDynamicListListener callback = entry.getValue();
                     if (callback != null) {
-                        callback.onItemClicked(view, item);
+                        callback.onItemClicked(activity, view, item);
                     }
                 }
             }

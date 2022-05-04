@@ -1,5 +1,6 @@
 package com.sample.dynamicmodule;
 
+import android.app.Activity;
 import android.view.View;
 
 import com.dynamic.DynamicModule;
@@ -37,7 +38,7 @@ public class AppApplication extends BaseApplication {
                 .setDebugMode(isDebugMode())
                 .addListClickListener(instance.hashCode(), new DynamicCallback.OnDynamicListListener() {
                     @Override
-                    public void onItemClicked(View view, DMContent item) {
+                    public void onItemClicked(Activity activity, View view, DMContent item) {
                         if (item.getItemType() == DMContentType.TYPE_LINK) {
                             if (BaseUtil.isValidUrl(item.getLink())) {
                                 BaseUtil.showToast(view.getContext(), "Update Later!");

@@ -1,5 +1,6 @@
 package com.dynamic.activity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -10,12 +11,12 @@ import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.dynamic.DMClassUtil;
 import com.dynamic.DynamicModule;
 import com.dynamic.R;
 import com.dynamic.fragment.DynamicFragment;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMContent;
-import com.dynamic.DMClassUtil;
 import com.dynamic.util.DMUtility;
 
 
@@ -43,11 +44,11 @@ public class DynamicActivity extends DMBaseActivity implements DynamicCallback.O
     }
 
     @Override
-    public void onItemClicked(View view, DMContent item) {
+    public void onItemClicked(Activity activity, View view, DMContent item) {
         if(!item.isContent()){
             DMClassUtil.openDynamicListActivity(this, DMUtility.getProperty(property, item));
         }else {
-            DynamicModule.getInstance().dispatchListClickListener(view, item);
+            DynamicModule.getInstance().dispatchListClickListener(this, view, item);
         }
     }
 

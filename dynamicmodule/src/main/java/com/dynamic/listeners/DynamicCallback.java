@@ -1,5 +1,6 @@
 package com.dynamic.listeners;
 
+import android.app.Activity;
 import android.view.View;
 
 import androidx.annotation.MainThread;
@@ -11,11 +12,11 @@ import com.helper.callback.Response;
 public interface DynamicCallback {
 
     interface OnDynamicListListener {
-        void onItemClicked(View view, DMContent item);
+        void onItemClicked(Activity activity, View view, DMContent item);
     }
 
     interface OnDynamicPagerListener {
-        void onItemClicked(View view, DMContent item);
+        void onItemClicked(Activity activity, View view, DMContent item);
     }
 
     interface Listener<T> {

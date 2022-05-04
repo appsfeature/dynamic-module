@@ -1,5 +1,6 @@
 package com.dynamic.activity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -43,11 +44,11 @@ public class DynamicListActivity extends DMBaseActivity implements DynamicCallba
     }
 
     @Override
-    public void onItemClicked(View view, DMContent item) {
+    public void onItemClicked(Activity activity, View view, DMContent item) {
         if(!item.isContent()){
             DMClassUtil.openDynamicListActivity(this, DMUtility.getProperty(property, item));
         }else {
-            DynamicModule.getInstance().dispatchListClickListener(view, item);
+            DynamicModule.getInstance().dispatchListClickListener(this, view, item);
         }
     }
 
