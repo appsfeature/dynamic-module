@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dynamic.R;
 import com.dynamic.adapter.DynamicChildAdapter;
 import com.dynamic.adapter.holder.BaseCommonHolder;
+import com.dynamic.listeners.DMCategoryType;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
@@ -92,6 +93,15 @@ public class DynamicListFragment extends DMBaseFragment {
             @Override
             public void onSuccess(List<DMContent> response) {
                 loadList(response);
+            }
+
+            @Override
+            public void onValidate(List<DMContent> list, Response.Status<List<DMContent>> callback) {
+                if(property.getItemType() == DMCategoryType.TYPE_VIDEO_PLAYLIST) {
+                    dataManager.getMergeVideoDetail(list, callback);
+                }else {
+                    DynamicCallback.Listener.super.onValidate(list, callback);
+                }
             }
 
             @Override

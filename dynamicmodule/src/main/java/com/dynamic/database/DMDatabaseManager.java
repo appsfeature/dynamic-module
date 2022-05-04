@@ -9,6 +9,7 @@ import com.dynamic.DynamicModule;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
+import com.dynamic.model.DMVideo;
 import com.dynamic.util.DMPreferences;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -256,4 +257,63 @@ public class DMDatabaseManager {
         });
         return list;
     }
+
+    /**
+     * @apiNote Methods for handle videos
+     */
+    @WorkerThread
+    public List<Long> insertVideos(List<DMVideo> list) {
+        return database.dmVideoDao().insertVideos(list);
+    }
+
+    @WorkerThread
+    public Long insertVideo(DMVideo item) {
+        return database.dmVideoDao().insertVideo(item);
+    }
+
+    @WorkerThread
+    public List<DMVideo> getAllVideos() {
+        return database.dmVideoDao().getAllData();
+    }
+
+    @WorkerThread
+    public List<DMVideo> getAllVideos(String queryString, Object[] arguments) {
+        return database.dmVideoDao().getAllData(new SimpleSQLiteQuery(queryString, arguments));
+    }
+
+    @WorkerThread
+    public List<DMVideo> getAllVideos(List<String> catIds) {
+        return database.dmVideoDao().getAllData(catIds);
+    }
+
+    @WorkerThread
+    public List<DMVideo> getAllVideos(Map<String, String> whereClause) {
+//        String query = "SELECT * FROM Flashcards WHERE Video = ? OR category = ? ORDER BY RANDOM() LIMIT 1";
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT * FROM dm_category WHERE ");
+        List<Object> args = new ArrayList<>();
+        int i = 0;
+        for (Map.Entry<String, String> entry : whereClause.entrySet()) {
+            sb.append(entry.getKey());
+            sb.append(" = ? ");
+            args.add(entry.getValue());
+            if (i < whereClause.size() - 1) {
+                sb.append(" AND ");
+            }
+            i++;
+        }
+        sb.append("ORDER BY cat_id DESC");
+        return database.dmVideoDao().getAllData(new SimpleSQLiteQuery(sb.toString(), args.toArray()));
+    }
+
+    @WorkerThread
+    public void deleteVideo(String videoId) {
+        database.dmVideoDao().delete(videoId);
+    }
+
+    @WorkerThread
+    public void clearAllVideos() {
+        database.dmVideoDao().clearAllRecords();
+    }
+
 }

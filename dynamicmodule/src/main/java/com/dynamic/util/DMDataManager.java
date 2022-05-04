@@ -7,12 +7,16 @@ import com.dynamic.database.DMDatabaseManager;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
+import com.dynamic.model.DMVideo;
 import com.dynamic.network.DMNetworkManager;
 import com.helper.callback.Response;
+import com.helper.task.TaskRunner;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 public class DMDataManager {
     private static DMDataManager instance;
@@ -143,5 +147,55 @@ public class DMDataManager {
             }
         });
         return list;
+    }
+
+    public void insertVideo(DMVideo videoDetail) {
+        insertVideo(videoDetail, null);
+    }
+    public void insertVideo(DMVideo videoDetail, Response.Status<Boolean> callback) {
+        TaskRunner.getInstance().executeAsync(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                dbManager.insertVideo(videoDetail);
+                return true;
+            }
+        }, new TaskRunner.Callback<Boolean>() {
+            @Override
+            public void onComplete(Boolean result) {
+                if (callback != null) {
+                    callback.onSuccess(true);
+                }
+            }
+        });
+    }
+
+    public void getMergeVideoDetail(List<DMContent> list, Response.Status<List<DMContent>> callback) {
+        TaskRunner.getInstance().executeAsync(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                List<DMVideo> videos = dbManager.getAllVideos();
+                HashMap<String, DMVideo> hashMap = new HashMap<>();
+                for (DMVideo item : videos){
+                    hashMap.put(item.getVideoId(), item);
+                }
+                for (DMContent content: list){
+                    if (content.getLink() != null) {
+                        DMVideo mCon = hashMap.get(content.getLink());
+                        if(mCon != null){
+                            content.setVideoTime(mCon.getVideoTime());
+                            content.setVideoDuration(mCon.getVideoDuration());
+                        }
+                    }
+                }
+                return true;
+            }
+        }, new TaskRunner.Callback<Boolean>() {
+            @Override
+            public void onComplete(Boolean result) {
+                if (callback != null) {
+                    callback.onSuccess(list);
+                }
+            }
+        });
     }
 }

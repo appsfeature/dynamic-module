@@ -13,9 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dynamic.DynamicModule;
@@ -79,6 +82,8 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
                 return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_title_only, parent, false));
             case DMCategoryType.TYPE_TITLE_WITH_COUNT:
                 return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_title_with_count, parent, false));
+            case DMCategoryType.TYPE_VIDEO_PLAYLIST:
+                return new VideoViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_video_play_list, parent, false));
             default:
                 return onCreateViewHolderDynamic(parent, viewType);
         }
@@ -88,7 +93,10 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder viewHolder, int position) {
-        if (viewHolder instanceof CommonViewHolder) {
+        if (viewHolder instanceof VideoViewHolder) {
+            VideoViewHolder holder = (VideoViewHolder) viewHolder;
+            holder.setData(mList.get(position), position);
+        }else if (viewHolder instanceof CommonViewHolder) {
             CommonViewHolder holder = (CommonViewHolder) viewHolder;
             holder.setData(mList.get(position), position);
         }else {
@@ -170,6 +178,66 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
                 }
 
             }
+        }
+    }
+
+    public class VideoViewHolder extends CommonViewHolder implements View.OnClickListener {
+        private final ImageView ivPic;
+        private final TextView tvWatchTime;
+        private final ProgressBar progressBar;
+        private final CardView cardView;
+
+        public VideoViewHolder(View v) {
+            super(v);
+            cardView = v.findViewById(R.id.card_view);
+            ivPic = v.findViewById(R.id.pic);
+            tvWatchTime = v.findViewById(R.id.watch_time);
+            progressBar = itemView.findViewById(R.id.progress_bar);
+        }
+
+        public void setData(DMContent item, int pos) {
+            super.setData(item, pos);
+            if(!TextUtils.isEmpty(item.getLink())) {
+                String videoPreviewUrl = getYoutubePlaceholderImage(getVideoIdFromUrl(item.getLink()));
+                Picasso.get().load(videoPreviewUrl)
+                        .placeholder(R.drawable.ic_yt_placeholder)
+                        .error(R.drawable.ic_yt_placeholder)
+                        .into(ivPic);
+                ivPic.setVisibility(View.VISIBLE);
+            }else {
+                ivPic.setVisibility(View.GONE);
+            }
+            cardView.setCardBackgroundColor(ContextCompat.getColor(itemView.getContext(), item.getVideoDuration() > 0 ? R.color.yt_color_video_watched : R.color.themeBackgroundCardColor));
+            if(item.getVideoDuration() > 0) {
+                progressBar.setMax(item.getVideoDuration());
+                progressBar.setProgress(item.getVideoTime());
+                progressBar.setVisibility(View.VISIBLE);
+            }else {
+                progressBar.setVisibility(View.GONE);
+            }
+//            if (item.getVideoTime() > 0 && !TextUtils.isEmpty(item.getVideoTimeFormatted())) {
+//                viewHolder.tvWatchTime.setText("Watched: " + mList.get(i).getVideoTimeFormatted());
+//                viewHolder.tvWatchTime.setVisibility(View.VISIBLE);
+//            }else {
+//                viewHolder.tvWatchTime.setVisibility(View.GONE);
+//            }
+        }
+    }
+
+    private String getYoutubePlaceholderImage(String videoId) {
+        return "https://i.ytimg.com/vi/"+ videoId +"/mqdefault.jpg";
+    }
+
+    public String getVideoIdFromUrl(String lectureVideo) {
+        try {
+            if (!TextUtils.isEmpty(lectureVideo) && BaseUtil.isValidUrl(lectureVideo)) {
+                return lectureVideo.substring(lectureVideo.lastIndexOf("/") + 1);
+            }else {
+                return lectureVideo;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return lectureVideo;
         }
     }
 

@@ -83,6 +83,10 @@ public class DMContent implements Cloneable, Serializable {
     private boolean isContent;
     @Ignore
     private int imageRes;
+    @Ignore
+    private int videoTime = 0;
+    @Ignore
+    private int videoDuration = 0;
 
     public int getId() {
         return id;
@@ -218,6 +222,22 @@ public class DMContent implements Cloneable, Serializable {
 
     public void setImageRes(int imageRes) {
         this.imageRes = imageRes;
+    }
+
+    public int getVideoTime() {
+        return videoTime;
+    }
+
+    public void setVideoTime(int videoTime) {
+        this.videoTime = videoTime;
+    }
+
+    public int getVideoDuration() {
+        return videoDuration;
+    }
+
+    public void setVideoDuration(int videoDuration) {
+        this.videoDuration = videoDuration;
     }
 
     @NonNull

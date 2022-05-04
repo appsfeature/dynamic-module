@@ -11,4 +11,5 @@ public interface DMCategoryType {
     int TYPE_GRID_CARD = 8;                     // list card child simple
     int TYPE_TITLE_ONLY = 9;                    // Showing title only
     int TYPE_TITLE_WITH_COUNT = 10;             // Showing title with count
+    int TYPE_VIDEO_PLAYLIST = 11;               // Showing youtube videos list
 }
