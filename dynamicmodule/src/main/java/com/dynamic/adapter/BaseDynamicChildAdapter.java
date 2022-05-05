@@ -42,6 +42,7 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
     protected final DMCategory category;
     private final Context context;
     private final DMOtherProperty otherProperty;
+    private final boolean isPortrait;
 
     public BaseDynamicChildAdapter(Context context, int itemType, DMCategory category, List<DMContent> mList, Response.OnClickListener<DMContent> clickListener) {
         this.imageUrl = DynamicModule.getInstance().getImageBaseUrl(context);
@@ -51,6 +52,7 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
         this.mList = mList;
         this.clickListener = clickListener;
         this.otherProperty = category != null ? category.getOtherPropertyModel() : null;
+        this.isPortrait = otherProperty == null || otherProperty.isPortrait();
     }
 
     @Override
@@ -176,7 +178,16 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
                         setColorFilter(ivIcon, getSequentialColor(pos));
                     }
                 }
-
+                if(ivIcon != null && itemType == DMCategoryType.TYPE_HORIZONTAL_CARD_SCROLL){
+                    ViewGroup.LayoutParams params = ivIcon.getLayoutParams();
+                    if (otherProperty.getWidth() > 0) {
+                        params.width = dpToPx(otherProperty.getWidth());
+                    }
+                    if (otherProperty.getHeight() > 0) {
+                        params.height = dpToPx(otherProperty.getHeight());
+                    }
+                    ivIcon.setLayoutParams(params);
+                }
             }
         }
     }
@@ -247,7 +258,11 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
             case DMCategoryType.TYPE_VIEWPAGER_AUTO_SLIDER_NO_TITLE:
                 return R.drawable.ic_dm_placeholder_slider;
             case DMCategoryType.TYPE_HORIZONTAL_CARD_SCROLL:
-                return R.drawable.ic_dm_placeholder_graphic;
+                if(isPortrait){
+                    return R.drawable.ic_dm_placeholder_slider_portrait;
+                }else {
+                    return R.drawable.ic_dm_placeholder_graphic;
+                }
             default:
                 return R.drawable.ic_dm_placeholder_icon;
         }
@@ -282,5 +297,9 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
             }
             return Color.parseColor(colors[0]);
         }
+    }
+
+    public int dpToPx(float dp) {
+        return (int) (dp * context.getResources().getDisplayMetrics().density);
     }
 }

@@ -28,6 +28,18 @@ public class DMOtherProperty {
     @SerializedName(value="hide_title")
     private boolean hideTitle;
 
+    @Expose
+    @SerializedName(value="width")
+    private int width;
+
+    @Expose
+    @SerializedName(value="height")
+    private int height;
+
+    @Expose
+    @SerializedName(value="is_portrait")
+    private boolean isPortrait = true;
+
     public int getGridCount() {
         return gridCount;
     }
@@ -66,5 +78,29 @@ public class DMOtherProperty {
 
     public void setHideTitle(boolean hideTitle) {
         this.hideTitle = hideTitle;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public boolean isPortrait() {
+        return isPortrait;
+    }
+
+    public void setPortrait(boolean portrait) {
+        isPortrait = portrait;
     }
 }
