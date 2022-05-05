@@ -80,7 +80,7 @@ public class DynamicListFragment extends DMBaseFragment {
 
     private void openItemOnClicked(View view, DMContent item) {
         if (mClickListener != null) {
-            mClickListener.onItemClicked(activity, view, item);
+            mClickListener.onItemClicked(activity, view, property, item);
         }else {
             if(!BaseUtil.isValidUrl(item.getLink())) {
                 BaseUtil.showToast(activity, "Update later.");

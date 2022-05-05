@@ -13,6 +13,7 @@ import com.dynamic.network.ConfigManager;
 import com.dynamic.network.DMNetworkManager;
 import com.dynamic.util.DMConstants;
 import com.dynamic.util.DMPreferences;
+import com.dynamic.util.DMProperty;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -92,14 +93,14 @@ public class DynamicModule {
         }
     }
     
-    public void dispatchListClickListener(Activity activity, View view, DMContent item) {
+    public void dispatchListClickListener(Activity activity, View view, DMProperty parent, DMContent item) {
         try {
             if (mListClickListener.size() > 0) {
                 for (Map.Entry<Integer, DynamicCallback.OnDynamicListListener> entry : mListClickListener.entrySet()) {
                     Integer key = entry.getKey();
                     DynamicCallback.OnDynamicListListener callback = entry.getValue();
                     if (callback != null) {
-                        callback.onItemClicked(activity, view, item);
+                        callback.onItemClicked(activity, view, parent, item);
                     }
                 }
             }

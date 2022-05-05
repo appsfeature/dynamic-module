@@ -49,7 +49,7 @@ public class DynamicFragment extends BaseDynamicFragment {
             public void onItemClicked(View view, DMContent item) {
                 if(item.getItemType() != DMContentType.TYPE_NO_ACTION) {
                     if (mClickListener != null) {
-                        mClickListener.onItemClicked(activity, view, item);
+                        mClickListener.onItemClicked(activity, view, property, item);
                     }else {
                         BaseUtil.showToast(activity, "Invalid Listener!");
                     }

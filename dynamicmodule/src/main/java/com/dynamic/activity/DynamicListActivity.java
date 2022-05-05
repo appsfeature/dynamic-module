@@ -17,6 +17,7 @@ import com.dynamic.fragment.DynamicListFragment;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMContent;
 import com.dynamic.DMClassUtil;
+import com.dynamic.util.DMProperty;
 import com.dynamic.util.DMUtility;
 
 
@@ -44,11 +45,11 @@ public class DynamicListActivity extends DMBaseActivity implements DynamicCallba
     }
 
     @Override
-    public void onItemClicked(Activity activity, View view, DMContent item) {
+    public void onItemClicked(Activity activity, View view, DMProperty parent, DMContent item) {
         if(!item.isContent()){
-            DMClassUtil.openDynamicListActivity(this, DMUtility.getProperty(property, item));
+            DMClassUtil.openDynamicListActivity(this, DMUtility.getProperty(parent, item));
         }else {
-            DynamicModule.getInstance().dispatchListClickListener(this, view, item);
+            DynamicModule.getInstance().dispatchListClickListener(this, view, parent, item);
         }
     }
 

@@ -5,14 +5,14 @@ import android.view.View;
 
 import androidx.annotation.MainThread;
 
-import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
+import com.dynamic.util.DMProperty;
 import com.helper.callback.Response;
 
 public interface DynamicCallback {
 
     interface OnDynamicListListener {
-        void onItemClicked(Activity activity, View view, DMContent item);
+        void onItemClicked(Activity activity, View view, DMProperty parent, DMContent item);
     }
 
     interface OnDynamicPagerListener {

@@ -4,16 +4,12 @@ import android.app.Activity;
 import android.view.View;
 
 import com.dynamic.DynamicModule;
-import com.dynamic.listeners.ApiHost;
 import com.dynamic.listeners.DMContentType;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMContent;
-import com.dynamic.util.DMConstants;
+import com.dynamic.util.DMProperty;
 import com.helper.application.BaseApplication;
 import com.helper.util.BaseUtil;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class AppApplication extends BaseApplication {
 
@@ -38,7 +34,7 @@ public class AppApplication extends BaseApplication {
                 .setDebugMode(isDebugMode())
                 .addListClickListener(instance.hashCode(), new DynamicCallback.OnDynamicListListener() {
                     @Override
-                    public void onItemClicked(Activity activity, View view, DMContent item) {
+                    public void onItemClicked(Activity activity, View view, DMProperty parent, DMContent item) {
                         if (item.getItemType() == DMContentType.TYPE_LINK) {
                             if (BaseUtil.isValidUrl(item.getLink())) {
                                 BaseUtil.showToast(view.getContext(), "Update Later!");
