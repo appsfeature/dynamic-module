@@ -9,6 +9,7 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.dynamic.R;
 import com.dynamic.listeners.DynamicCallback;
@@ -25,6 +26,7 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
     protected RecyclerView.Adapter<RecyclerView.ViewHolder> adapter;
     protected final List<DMCategory> mList = new ArrayList<>();
     protected RecyclerView rvList;
+    private SwipeRefreshLayout swipeRefresh;
 
     @LayoutRes
     public abstract int getLayoutContentView();
@@ -65,16 +67,29 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
     private void initView(View view) {
         onInitViews(view);
         layoutNoData = view.findViewById(R.id.ll_no_data);
+        swipeRefresh = view.findViewById(R.id.swipe_refresh);
         rvList = view.findViewById(R.id.recycler_view);
         rvList.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
         adapter = getAdapter();
         rvList.setAdapter(adapter);
+
+        if(swipeRefresh != null) {
+            showProgress(false);
+            swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                        @Override
+                        public void onRefresh() {
+                            getDataFromServer();
+                        }
+                    }
+            );
+        }
     }
 
     private void getDataFromServer() {
         dataManager.getDataBySubCategory(catId, getStaticList(), new DynamicCallback.Listener<List<DMCategory>>() {
             @Override
             public void onSuccess(List<DMCategory> response) {
+                showProgress(false);
                 loadList(response);
             }
 
@@ -88,13 +103,21 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
                 if (mList.size() == 0) {
                     BaseUtil.showNoData(layoutNoData, View.VISIBLE);
                 }
+                showProgress(false);
             }
 
             @Override
             public void onRequestCompleted() {
                 onNetworkRequestCompleted();
+                showProgress(false);
             }
         });
+    }
+
+    protected void showProgress(boolean isShow) {
+        if (swipeRefresh != null) {
+            swipeRefresh.setRefreshing(isShow);
+        }
     }
 
     protected void loadList(List<DMCategory> list) {

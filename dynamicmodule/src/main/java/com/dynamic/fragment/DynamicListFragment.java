@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.dynamic.R;
 import com.dynamic.adapter.DynamicChildAdapter;
@@ -32,6 +33,7 @@ public class DynamicListFragment extends DMBaseFragment {
     private Activity activity;
     private RecyclerView rvList;
     private DynamicCallback.OnDynamicListListener mClickListener;
+    private SwipeRefreshLayout swipeRefresh;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -64,6 +66,7 @@ public class DynamicListFragment extends DMBaseFragment {
 
     private void initView(View view) {
         layoutNoData = view.findViewById(R.id.ll_no_data);
+        swipeRefresh = view.findViewById(R.id.swipe_refresh);
         rvList = view.findViewById(R.id.recycler_view);
         DMCategory item = getCategoryItem();
         BaseCommonHolder holder = new BaseCommonHolder(new View(activity));
@@ -76,6 +79,16 @@ public class DynamicListFragment extends DMBaseFragment {
             }
         });
         rvList.setAdapter(adapter);
+
+        if(swipeRefresh != null) {
+            showProgress(false);
+            swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    loadData();
+                }
+            });
+        }
     }
 
     private void openItemOnClicked(View view, DMContent item) {
@@ -92,6 +105,7 @@ public class DynamicListFragment extends DMBaseFragment {
         dataManager.getDataByCategory(catId, new DynamicCallback.Listener<List<DMContent>>() {
             @Override
             public void onSuccess(List<DMContent> response) {
+                showProgress(false);
                 loadList(response);
             }
 
@@ -106,9 +120,15 @@ public class DynamicListFragment extends DMBaseFragment {
 
             @Override
             public void onFailure(Exception e) {
+                showProgress(false);
                 if(mList.size() == 0) {
                     BaseUtil.showNoData(layoutNoData, View.VISIBLE);
                 }
+            }
+
+            @Override
+            public void onRequestCompleted() {
+                showProgress(false);
             }
         });
     }
@@ -132,5 +152,11 @@ public class DynamicListFragment extends DMBaseFragment {
         item.setOtherProperty(property.getOtherProperty());
         item.setChildList(mList);
         return item;
+    }
+
+    protected void showProgress(boolean isShow) {
+        if (swipeRefresh != null) {
+            swipeRefresh.setRefreshing(isShow);
+        }
     }
 }

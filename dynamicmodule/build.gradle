@@ -30,7 +30,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$rootProject.ext.appcompat"
     implementation "androidx.recyclerview:recyclerview:$rootProject.ext.recyclerview"
     implementation "com.google.android.material:material:$rootProject.ext.material"
-
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$rootProject.ext.swiperefreshlayout"
     implementation "androidx.room:room-runtime:$rootProject.ext.room_version"
     annotationProcessor "androidx.room:room-compiler:$rootProject.ext.room_version"
 
