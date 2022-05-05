@@ -55,7 +55,7 @@ public class AppApplication extends BaseApplication {
                 .setImageBaseUrl(getInstance(), BASE_IMAGE_URL)
                 .addListClickListener(instance.hashCode(), new DynamicCallback.OnDynamicListListener() {
                     @Override
-                    public void onItemClicked(View view, DMContent item) {
+                    public void onItemClicked(Activity activity, View view, DMProperty parent, DMContent item) {
                         if (item.getItemType() == DMContentType.TYPE_LINK) {
                             if (BaseUtil.isValidUrl(item.getLink())) {
                                 BaseUtil.showToast(view.getContext(), "Update Later!");
