@@ -39,7 +39,7 @@
                 android:maxLines="2"
                 android:lines="2"
                 android:ellipsize="end"
-                android:textSize="@dimen/dm_slot_text_size"
+                android:textSize="@dimen/dm_slot_title_size"
                 android:padding="4dp"
                 android:textColor="@color/dynamicThemeTextColor" />
         </LinearLayout>
