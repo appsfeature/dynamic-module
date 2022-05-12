@@ -99,19 +99,24 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
         }
 
         public void setData(DMCategory item, int position) {
-            viewPager.setAdapter(getDynamicChildAdapter(item.getItemType(), item, item.getChildList()));
-            indicatorView.setViewPager2(viewPager);
-            viewPager.setVisibility(View.VISIBLE);
-            indicatorView.setVisibility(mList.size() > 1 ? View.VISIBLE : View.GONE);
-            viewPager.setOffscreenPageLimit(mList.size());
-            viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-                @Override
-                public void onPageSelected(int position) {
-                    super.onPageSelected(position);
-                    sliderHandler.removeCallbacks(sliderRunnable);
-                    sliderHandler.postDelayed(sliderRunnable, SLIDER_DELAY_TIME_IN_MILLIS);
-                }
-            });
+            if(item.getChildList() != null && item.getChildList().size() > 0) {
+                viewPager.setAdapter(getDynamicChildAdapter(item.getItemType(), item, item.getChildList()));
+                indicatorView.setViewPager2(viewPager);
+                viewPager.setVisibility(View.VISIBLE);
+                indicatorView.setVisibility(item.getChildList().size() > 1 ? View.VISIBLE : View.GONE);
+                viewPager.setOffscreenPageLimit(item.getChildList().size());
+                viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        super.onPageSelected(position);
+                        sliderHandler.removeCallbacks(sliderRunnable);
+                        sliderHandler.postDelayed(sliderRunnable, SLIDER_DELAY_TIME_IN_MILLIS);
+                    }
+                });
+            }else {
+                viewPager.setVisibility(View.GONE);
+                indicatorView.setVisibility(View.GONE);
+            }
         }
 
         private final Handler sliderHandler = new Handler(Looper.myLooper());
@@ -150,7 +155,7 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
                 }
             }
             if(recyclerView != null) {
-                if (item.getChildList() != null) {
+                if (item.getChildList() != null && item.getChildList().size() > 0) {
                     adapter = getDynamicChildAdapter(item.getItemType(), item, item.getChildList());
                     recyclerView.setLayoutManager(getLayoutManager(item));
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
