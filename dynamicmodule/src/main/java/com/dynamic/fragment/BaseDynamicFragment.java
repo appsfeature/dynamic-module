@@ -154,6 +154,12 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
         if (list == null || list.size() <= 0) {
             BaseUtil.showNoData(layoutNoData, View.VISIBLE);
         }
-        adapter.notifyDataSetChanged();
+        if(onUpdateWhenListCountChanged()){
+            if(list != null && list.size() != mList.size()) {
+                adapter.notifyDataSetChanged();
+            }
+        }else {
+            adapter.notifyDataSetChanged();
+        }
     }
 }
