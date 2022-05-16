@@ -86,4 +86,9 @@ public class DynamicFragment extends BaseDynamicFragment {
     @Override
     public void onNetworkRequestCompleted() {
     }
+
+    @Override
+    public boolean onUpdateWhenListCountChanged() {
+        return false;
+    }
 }

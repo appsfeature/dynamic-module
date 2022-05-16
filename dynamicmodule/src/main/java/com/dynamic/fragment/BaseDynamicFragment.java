@@ -45,6 +45,8 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
 
     public abstract void onNetworkRequestCompleted();
 
+    public abstract boolean onUpdateWhenListCountChanged();
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(getLayoutContentView(), container, false);
@@ -131,9 +133,23 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
     private void updateList(List<DMCategory> list, boolean isClear) {
         rvList.setVisibility(View.VISIBLE);
         BaseUtil.showNoData(layoutNoData, View.GONE);
-        if (isClear) mList.clear();
+        if (isClear) {
+            if(onUpdateWhenListCountChanged()){
+                if(list != null && list.size() != mList.size()) {
+                    mList.clear();
+                }
+            }else {
+                mList.clear();
+            }
+        }
         if (list != null && list.size() > 0) {
-            mList.addAll(list);
+            if(onUpdateWhenListCountChanged()){
+                if(list.size() != mList.size()) {
+                    mList.addAll(list);
+                }
+            }else {
+                mList.addAll(list);
+            }
         }
         if (list == null || list.size() <= 0) {
             BaseUtil.showNoData(layoutNoData, View.VISIBLE);
