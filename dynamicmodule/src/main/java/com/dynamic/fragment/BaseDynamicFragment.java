@@ -170,17 +170,21 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
                 return true;
             }else if(list.size() != mList.size()){
                 return true;
-            }else {
-                for (DMCategory category : mList){
-                    for (DMCategory lCat : list){
-                        if(category.getChildList() != null && lCat.getChildList() != null
+            }else if(list.size() == mList.size()){
+                try {
+                    for (int i = 0; i < mList.size(); i++) {
+                        DMCategory category = mList.get(i);
+                        DMCategory lCat = list.get(i);
+                        if (category.getChildList() != null && lCat.getChildList() != null
                                 && category.getChildList().size() != lCat.getChildList().size()) {
                             return true;
-                        }else if(category.getChildCategoryList() != null && lCat.getChildCategoryList() != null
+                        } else if (category.getChildCategoryList() != null && lCat.getChildCategoryList() != null
                                 && category.getChildCategoryList().size() != lCat.getChildCategoryList().size()) {
                             return true;
                         }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
