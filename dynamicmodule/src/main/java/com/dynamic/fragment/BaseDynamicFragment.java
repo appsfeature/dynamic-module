@@ -133,9 +133,10 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
     private void updateList(List<DMCategory> list, boolean isClear) {
         rvList.setVisibility(View.VISIBLE);
         BaseUtil.showNoData(layoutNoData, View.GONE);
+        boolean isSizeChanged = isSizeChanged(list);
         if (isClear) {
             if(onUpdateWhenListCountChanged()){
-                if(list != null && list.size() != mList.size()) {
+                if(list != null && isSizeChanged) {
                     mList.clear();
                 }
             }else {
@@ -144,7 +145,7 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
         }
         if (list != null && list.size() > 0) {
             if(onUpdateWhenListCountChanged()){
-                if(list.size() != mList.size()) {
+                if(isSizeChanged) {
                     mList.addAll(list);
                 }
             }else {
@@ -155,11 +156,34 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
             BaseUtil.showNoData(layoutNoData, View.VISIBLE);
         }
         if(onUpdateWhenListCountChanged()){
-            if(list != null && list.size() != mList.size()) {
+            if(list != null && isSizeChanged) {
                 adapter.notifyDataSetChanged();
             }
         }else {
             adapter.notifyDataSetChanged();
         }
+    }
+
+    private boolean isSizeChanged(List<DMCategory> list) {
+        if(list != null){
+            if(list.size() == 0){
+                return true;
+            }else if(list.size() != mList.size()){
+                return true;
+            }else {
+                for (DMCategory category : mList){
+                    for (DMCategory lCat : list){
+                        if(category.getChildList() != null && lCat.getChildList() != null
+                                && category.getChildList().size() != lCat.getChildList().size()) {
+                            return true;
+                        }else if(category.getChildCategoryList() != null && lCat.getChildCategoryList() != null
+                                && category.getChildCategoryList().size() != lCat.getChildCategoryList().size()) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 }
