@@ -29,6 +29,7 @@ import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.model.DMOtherProperty;
 import com.helper.callback.Response;
+import com.helper.model.common.BaseTimeViewHolder;
 import com.helper.util.BaseUtil;
 import com.squareup.picasso.Picasso;
 
@@ -119,7 +120,7 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
         return imageUrl + appImage;
     }
 
-    public class CommonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class CommonViewHolder extends BaseTimeViewHolder implements View.OnClickListener {
         private final TextView tvTitle, tvTitleTag, tvCreatedAt;
         private final ImageView ivIcon;
         private final View cardView;
@@ -152,7 +153,7 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
             }
             if (tvCreatedAt != null) {
                 if(!TextUtils.isEmpty(item.getCreatedAt()) && item.getItemType() == DMContentType.TYPE_HTML_VIEW) {
-                    tvCreatedAt.setText(item.getCreatedAt());
+                    tvCreatedAt.setText(getTimeInDaysAgoFormat(item.getCreatedAt()));
                     tvCreatedAt.setVisibility(View.VISIBLE);
                 }else {
                     tvCreatedAt.setVisibility(View.GONE);
