@@ -5,8 +5,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application>
         <activity android:name=".activity.DynamicActivity"
-            android:theme="@style/ActivityTheme.ActionBar"/>
+            android:theme="@style/ActivityTheme.ActionBar"
+            android:exported="true"/>
         <activity android:name=".activity.DynamicListActivity"
-            android:theme="@style/ActivityTheme.ActionBar"/>
+            android:theme="@style/ActivityTheme.ActionBar"
+            android:exported="true"/>
     </application>
 </manifest>

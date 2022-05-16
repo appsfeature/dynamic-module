@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dynamic.DynamicModule;
 import com.dynamic.R;
 import com.dynamic.listeners.DMCategoryType;
+import com.dynamic.listeners.DMContentType;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.model.DMOtherProperty;
@@ -119,7 +120,7 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
     }
 
     public class CommonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private final TextView tvTitle, tvTitleTag;
+        private final TextView tvTitle, tvTitleTag, tvCreatedAt;
         private final ImageView ivIcon;
         private final View cardView;
 
@@ -129,6 +130,7 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
             ivIcon = v.findViewById(R.id.iv_icon);
             tvTitle = v.findViewById(R.id.tv_title);
             tvTitleTag = v.findViewById(R.id.tv_title_tag);
+            tvCreatedAt = v.findViewById(R.id.tv_created_at);
             itemView.setOnClickListener(this);
         }
 
@@ -146,6 +148,14 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
                     tvTitle.setVisibility(View.VISIBLE);
                 }else {
                     tvTitle.setVisibility(View.GONE);
+                }
+            }
+            if (tvCreatedAt != null) {
+                if(!TextUtils.isEmpty(item.getCreatedAt()) && item.getItemType() == DMContentType.TYPE_HTML_VIEW) {
+                    tvCreatedAt.setText(item.getCreatedAt());
+                    tvCreatedAt.setVisibility(View.VISIBLE);
+                }else {
+                    tvCreatedAt.setVisibility(View.GONE);
                 }
             }
             if (tvTitleTag != null) {
