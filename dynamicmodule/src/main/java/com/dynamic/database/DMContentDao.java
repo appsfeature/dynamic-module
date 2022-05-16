@@ -61,6 +61,9 @@ public interface DMContentDao {
     @Query("DELETE FROM dm_content WHERE id ==:id")
     void delete(int id);
 
+    @Query("DELETE FROM dm_content WHERE cat_id ==:catId")
+    void deleteContentsByCatId(int catId);
+
     @Query("DELETE FROM dm_content")
     void clearAllRecords();
 

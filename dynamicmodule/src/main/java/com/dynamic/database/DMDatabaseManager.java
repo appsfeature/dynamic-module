@@ -120,11 +120,12 @@ public class DMDatabaseManager {
     }
 
     //Contains both category and content
-    public void insertData(List<DMContent> response) {
+    public void insertData(int catId, List<DMContent> response) {
         if (isDisableCaching) return;
         TaskRunner.getInstance().executeAsync(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
+                deleteContentsByCatId(catId);
                 insertContents(response);
                 return true;
             }
@@ -150,6 +151,12 @@ public class DMDatabaseManager {
     @WorkerThread
     public void deleteContent(int id) {
         database.dmContentDao().delete(id);
+    }
+
+
+    @WorkerThread
+    public void deleteContentsByCatId(int catId) {
+        database.dmContentDao().deleteContentsByCatId(catId);
     }
 
     @WorkerThread

@@ -103,7 +103,7 @@ public class DMDataManager {
         networkManager.getDataByCategory(catId, new DynamicCallback.Listener<List<DMContent>>() {
             @Override
             public void onSuccess(List<DMContent> response) {
-                dbManager.insertData(response);
+                dbManager.insertData(catId, response);
                 callback.onValidate(arraySortContent(response), new Response.Status<List<DMContent>>() {
                     @Override
                     public void onSuccess(List<DMContent> response) {
