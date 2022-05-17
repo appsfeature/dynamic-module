@@ -39,7 +39,8 @@ public class DynamicAdapter extends BaseDynamicAdapter {
 
     @Override
     protected RecyclerView.Adapter<RecyclerView.ViewHolder> getDynamicChildAdapter(int itemType, DMCategory category, List<DMContent> childList) {
-        return new DynamicChildAdapter(context, itemType, category, childList, listener);
+        return new DynamicChildAdapter(context, itemType, category, childList, listener)
+                .setMediumVideoPlaceholderQuality(false);
     }
 
 

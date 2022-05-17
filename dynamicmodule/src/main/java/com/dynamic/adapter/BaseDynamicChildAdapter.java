@@ -45,6 +45,7 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
     private final Context context;
     private final DMOtherProperty otherProperty;
     private final boolean isPortrait;
+    private boolean isMediumVideoPlaceholderQuality = false;
 
     public BaseDynamicChildAdapter(Context context, int itemType, DMCategory category, List<DMContent> mList, Response.OnClickListener<DMContent> clickListener) {
         this.imageUrl = DynamicModule.getInstance().getImageBaseUrl(context);
@@ -246,8 +247,12 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
         }
     }
 
+    /**
+     * @apiNote image quality: default.jpg, mqdefault.jpg, hqdefault.jpg, maxresdefault.jpg
+     */
     private String getYoutubePlaceholderImage(String videoId) {
-        return "https://i.ytimg.com/vi/"+ videoId +"/mqdefault.jpg";
+        String quality = isMediumVideoPlaceholderQuality ? "mqdefault.jpg" : "maxresdefault.jpg";
+        return "https://i.ytimg.com/vi/" + videoId + "/" + quality;
     }
 
     public String getVideoIdFromUrl(String lectureVideo) {
@@ -312,5 +317,10 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
 
     public int dpToPx(float dp) {
         return (int) (dp * context.getResources().getDisplayMetrics().density);
+    }
+
+    public BaseDynamicChildAdapter setMediumVideoPlaceholderQuality(boolean mediumVideoPlaceholderQuality) {
+        isMediumVideoPlaceholderQuality = mediumVideoPlaceholderQuality;
+        return this;
     }
 }
