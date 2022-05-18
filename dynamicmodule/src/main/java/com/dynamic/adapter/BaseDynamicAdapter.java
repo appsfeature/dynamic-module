@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -43,6 +44,10 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
         return mList.get(position).getItemType();
     }
 
+    public void resetFlags() {
+        this.mSlotWidth = 0;
+    }
+
     protected abstract RecyclerView.ViewHolder onCreateViewHolderDynamic(@NonNull ViewGroup parent, int viewType);
 
     @NonNull
@@ -52,10 +57,11 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
             case DMCategoryType.TYPE_LIST:
             case DMCategoryType.TYPE_GRID:
             case DMCategoryType.TYPE_GRID_HORIZONTAL:
-            case DMCategoryType.TYPE_HORIZONTAL_CARD_SCROLL:
             case DMCategoryType.TYPE_TITLE_ONLY:
             case DMCategoryType.TYPE_TITLE_WITH_COUNT:
                 return new CommonHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dm_parent_slot_list, viewGroup, false));
+            case DMCategoryType.TYPE_HORIZONTAL_CARD_SCROLL:
+                return new HorizontalCardScrollHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dm_parent_slot_list, viewGroup, false));
             case DMCategoryType.TYPE_LIST_CARD:
             case DMCategoryType.TYPE_GRID_CARD:
                 return new CommonHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dm_parent_slot_list_card, viewGroup, false));
@@ -140,6 +146,8 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
 
     public class CommonHolder extends BaseCommonHolder {
 
+        protected int mListSize = 0;
+
         public CommonHolder(View view) {
             super(view);
         }
@@ -165,8 +173,129 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
                     recyclerView.setVisibility(View.GONE);
                 }
             }
+            mListSize = item.getChildList() != null ? item.getChildList().size() : 0;
 
             applyStyle(item);
+        }
+    }
+
+    private int mSlotWidth = 0;
+
+    public class HorizontalCardScrollHolder extends CommonHolder {
+
+        private boolean isScrollStateIdle = true;
+        private boolean isStateChange = false;
+
+        public HorizontalCardScrollHolder(View view) {
+            super(view);
+        }
+
+        @Override
+        public void setData(DMCategory item, int position) {
+            super.setData(item, position);
+            try {
+                if(isEnableAutoScroll){
+                    mHandler.postDelayed(mRunnable, mScrollSpeed);
+                    if (recyclerView != null) {
+                        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                            @Override
+                            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                                super.onScrollStateChanged(recyclerView, newState);
+                                switch (newState) {
+                                    case RecyclerView.SCROLL_STATE_IDLE:
+                                        isScrollStateIdle = true;
+                                        if(isEnableAutoScroll) {
+                                            mHandler.removeCallbacksAndMessages(null);
+                                            mHandler.postDelayed(mRunnable, mScrollSpeed);
+                                        }
+                                        break;
+                                    case RecyclerView.SCROLL_STATE_DRAGGING:
+                                        isStateChange = true;
+                                        isScrollStateIdle = false;
+                                        break;
+                                    case RecyclerView.SCROLL_STATE_SETTLING:
+                                        break;
+                                }
+                            }
+                        });
+                    }
+                }else {
+                    mHandler.removeCallbacksAndMessages(null);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        private final Handler mHandler = new Handler(Looper.getMainLooper());
+        private final Runnable mRunnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (isScrollStateIdle) {
+                        int lastPos = -2;
+                        if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+                            lastPos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                        }
+                        if (lastPos < mListSize - 1) {
+                            smoothScrollRecyclerView();
+                            mHandler.removeCallbacksAndMessages(null);
+                            mHandler.postDelayed(this, mScrollSpeed);
+                        } else {
+                            recyclerView.smoothScrollToPosition(0);
+                            mHandler.removeCallbacksAndMessages(null);
+                            mHandler.postDelayed(this, mScrollSpeed);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        private void smoothScrollRecyclerView() {
+            try {
+                if (recyclerView != null) {
+                    if (isStateChange) {
+                        isStateChange = false;
+                        int currentPos = -1;
+                        if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+                            currentPos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                        }
+                        if (currentPos >= 0) {
+                            RecyclerView.ViewHolder currViewHolder = recyclerView.findViewHolderForLayoutPosition(currentPos);
+                            if (currViewHolder != null) {
+                                recyclerView.smoothScrollBy((int) currViewHolder.itemView.getX(), 0);
+                            }
+                        }
+                    } else {
+                        if(mSlotWidth == 0){
+                            mSlotWidth = getSlotWidth();
+                        }
+                        recyclerView.smoothScrollBy(mSlotWidth, 0);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        private int getSlotWidth() {
+            try {
+                int currentPos = -1;
+                if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+                    currentPos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                }
+                if (currentPos >= 0) {
+                    RecyclerView.ViewHolder currViewHolder = recyclerView.findViewHolderForLayoutPosition(currentPos);
+                    if (currViewHolder != null) {
+                        return currViewHolder.itemView.getMeasuredWidth();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return 0;
         }
     }
 }

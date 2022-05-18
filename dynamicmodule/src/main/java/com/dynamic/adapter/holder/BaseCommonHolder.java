@@ -18,6 +18,8 @@ public class BaseCommonHolder extends RecyclerView.ViewHolder{
     protected final RecyclerView recyclerView;
     protected DMOtherProperty otherProperty;
     protected static final int defaultGridCount = 2;
+    protected int mScrollSpeed = 5000;
+    protected boolean isEnableAutoScroll = false;
 
     public BaseCommonHolder(View view) {
         super(view);
@@ -25,8 +27,12 @@ public class BaseCommonHolder extends RecyclerView.ViewHolder{
         recyclerView = view.findViewById(R.id.recycler_view);
     }
 
-    public void setOtherProperty(DMOtherProperty otherProperty) {
-        this.otherProperty = otherProperty;
+    public void setOtherProperty(DMOtherProperty mOtherProperty) {
+        this.otherProperty = mOtherProperty;
+        if (otherProperty != null) {
+            isEnableAutoScroll = otherProperty.isEnableAutoScroll();
+            mScrollSpeed = otherProperty.getScrollSpeed();
+        }
     }
 
     public void applyStyle(DMCategory item) {

@@ -40,6 +40,14 @@ public class DMOtherProperty {
     @SerializedName(value="is_portrait")
     private boolean isPortrait = true;
 
+    @Expose
+    @SerializedName(value="scroll_speed")
+    private int scrollSpeed;
+
+    @Expose
+    @SerializedName(value="is_enable_auto_scroll")
+    private boolean isEnableAutoScroll = false;
+
     public int getGridCount() {
         return gridCount;
     }
@@ -102,5 +110,21 @@ public class DMOtherProperty {
 
     public void setPortrait(boolean portrait) {
         isPortrait = portrait;
+    }
+
+    public int getScrollSpeed() {
+        return scrollSpeed;
+    }
+
+    public void setScrollSpeed(int scrollSpeed) {
+        this.scrollSpeed = scrollSpeed;
+    }
+
+    public boolean isEnableAutoScroll() {
+        return isEnableAutoScroll;
+    }
+
+    public void setEnableAutoScroll(boolean enableAutoScroll) {
+        isEnableAutoScroll = enableAutoScroll;
     }
 }

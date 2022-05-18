@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.dynamic.R;
+import com.dynamic.adapter.BaseDynamicAdapter;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
 import com.helper.callback.Response;
@@ -157,9 +158,15 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
         }
         if(onUpdateWhenListCountChanged()){
             if(list != null && isSizeChanged) {
+                if(adapter instanceof BaseDynamicAdapter) {
+                    ((BaseDynamicAdapter) adapter).resetFlags();
+                }
                 adapter.notifyDataSetChanged();
             }
         }else {
+            if(adapter instanceof BaseDynamicAdapter) {
+                ((BaseDynamicAdapter) adapter).resetFlags();
+            }
             adapter.notifyDataSetChanged();
         }
     }
