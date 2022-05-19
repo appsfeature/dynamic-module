@@ -18,6 +18,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
+import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.helper.util.BaseConstants;
 import com.helper.util.BaseUtil;
@@ -123,6 +124,15 @@ public class DMUtility {
                 .setTitle(item.getTitle())
                 .setItemType(item.getItemType())
                 .setOtherProperty(item.getOtherProperty());
+    }
+
+    public static DMCategory getCategory(DMProperty property) {
+        DMCategory category = new DMCategory();
+        category.setCatId(property.getCatId());
+        category.setTitle(property.getTitle());
+        category.setItemType(property.getItemType());
+        category.setOtherProperty(property.getOtherProperty());
+        return category;
     }
 
     /**

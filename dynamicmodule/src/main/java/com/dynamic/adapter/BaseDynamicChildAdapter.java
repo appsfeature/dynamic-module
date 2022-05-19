@@ -207,7 +207,7 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
                         setColorFilter(ivIcon, getSequentialColor(pos));
                     }
                 }
-                if(ivIcon != null && itemType == DMCategoryType.TYPE_HORIZONTAL_CARD_SCROLL){
+                if(ivIcon != null){
                     ViewGroup.LayoutParams params = ivIcon.getLayoutParams();
                     if (otherProperty.getWidth() > 0) {
                         params.width = dpToPx(otherProperty.getWidth());
