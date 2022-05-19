@@ -25,13 +25,13 @@ public class DynamicChildAdapter extends BaseDynamicChildAdapter {
     @Override
     @NonNull
     public RecyclerView.ViewHolder onCreateViewHolderDynamic(@NonNull ViewGroup parent, int viewType) {
-        return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_list_card_view, parent, false));
+        return new CommonChildHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_list_card_view, parent, false));
     }
 
     @Override
     public void onBindViewHolderDynamic(@NonNull final RecyclerView.ViewHolder viewHolder, int position) {
-        if (viewHolder instanceof CommonViewHolder) {// this viewHolder is always on the bottom
-            CommonViewHolder holder = (CommonViewHolder) viewHolder;
+        if (viewHolder instanceof CommonChildHolder) {// this viewHolder is always on the bottom
+            CommonChildHolder holder = (CommonChildHolder) viewHolder;
             holder.setData(mList.get(position), position);
         }
     }

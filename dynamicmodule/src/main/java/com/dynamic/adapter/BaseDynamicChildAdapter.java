@@ -72,22 +72,22 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
         switch (viewType) {
             case DMCategoryType.TYPE_LIST:
             case DMCategoryType.TYPE_GRID_HORIZONTAL:
-                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_list_card_view, parent, false));
+                return new CommonChildHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_list_card_view, parent, false));
             case DMCategoryType.TYPE_LIST_CARD:
-                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_list_view, parent, false));
+                return new CommonChildHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_list_view, parent, false));
             case DMCategoryType.TYPE_GRID:
-                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_grid_card_view, parent, false));
+                return new CommonChildHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_grid_card_view, parent, false));
             case DMCategoryType.TYPE_GRID_CARD:
-                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_grid_view, parent, false));
+                return new CommonChildHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_grid_view, parent, false));
             case DMCategoryType.TYPE_HORIZONTAL_CARD_SCROLL:
-                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_scroll_view, parent, false));
+                return new CommonChildHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_scroll_view, parent, false));
             case DMCategoryType.TYPE_VIEWPAGER_AUTO_SLIDER:
             case DMCategoryType.TYPE_VIEWPAGER_AUTO_SLIDER_NO_TITLE:
-                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_slider, parent, false));
+                return new CommonChildHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_slider, parent, false));
             case DMCategoryType.TYPE_TITLE_ONLY:
-                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_title_only, parent, false));
+                return new CommonChildHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_title_only, parent, false));
             case DMCategoryType.TYPE_TITLE_WITH_COUNT:
-                return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_title_with_count, parent, false));
+                return new CommonChildHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_title_with_count, parent, false));
             case DMCategoryType.TYPE_VIDEO_PLAYLIST:
                 return new VideoViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_video_play_list, parent, false));
             case DMCategoryType.TYPE_VIDEO_CHANNEL:
@@ -121,12 +121,12 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
         return imageUrl + appImage;
     }
 
-    public class CommonViewHolder extends BaseTimeViewHolder implements View.OnClickListener {
+    public class CommonChildHolder extends BaseTimeViewHolder implements View.OnClickListener {
         private final TextView tvTitle, tvTitleTag, tvCreatedAt;
         private final ImageView ivIcon;
         private final View cardView;
 
-        public CommonViewHolder(View v) {
+        public CommonChildHolder(View v) {
             super(v);
             cardView = v.findViewById(R.id.card_view);
             ivIcon = v.findViewById(R.id.iv_icon);
@@ -223,7 +223,7 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
         }
     }
 
-    public class VideoViewHolder extends CommonViewHolder implements View.OnClickListener {
+    public class VideoViewHolder extends CommonChildHolder implements View.OnClickListener {
         private final ImageView ivPic;
         private final TextView tvWatchTime;
         private final ProgressBar progressBar;
@@ -304,7 +304,7 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
     }
 
     @SuppressWarnings("deprecation")
-    public static void setColorFilter(@NonNull Object drawable, int color) {
+    public void setColorFilter(@NonNull Object drawable, int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if(drawable instanceof ImageView) {
                 ((ImageView)drawable).setColorFilter(new BlendModeColorFilter(color, BlendMode.SRC_ATOP));
