@@ -217,6 +217,11 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
                     }
                     ivIcon.setLayoutParams(params);
                 }
+                if(tvTitle != null){
+                    if (otherProperty.getTextSize() > 0) {
+                        tvTitle.setTextSize(otherProperty.getTextSize());
+                    }
+                }
             }
         }
     }

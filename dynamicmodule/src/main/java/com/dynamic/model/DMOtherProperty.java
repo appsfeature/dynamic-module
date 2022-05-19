@@ -48,6 +48,10 @@ public class DMOtherProperty {
     @SerializedName(value="is_enable_auto_scroll")
     private boolean isEnableAutoScroll = false;
 
+    @Expose
+    @SerializedName(value="text_size")
+    private int textSize;
+
     public int getGridCount() {
         return gridCount;
     }
@@ -126,5 +130,13 @@ public class DMOtherProperty {
 
     public void setEnableAutoScroll(boolean enableAutoScroll) {
         isEnableAutoScroll = enableAutoScroll;
+    }
+
+    public int getTextSize() {
+        return textSize;
+    }
+
+    public void setTextSize(int textSize) {
+        this.textSize = textSize;
     }
 }
