@@ -34,6 +34,7 @@ import com.helper.util.BaseUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Locale;
 
 public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -89,6 +90,8 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
                 return new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_title_with_count, parent, false));
             case DMCategoryType.TYPE_VIDEO_PLAYLIST:
                 return new VideoViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_video_play_list, parent, false));
+            case DMCategoryType.TYPE_VIDEO_CHANNEL:
+                return new VideoViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_video_channel, parent, false));
             default:
                 return onCreateViewHolderDynamic(parent, viewType);
         }
@@ -153,15 +156,19 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
                 }
             }
             if (tvCreatedAt != null) {
-                if(!TextUtils.isEmpty(item.getCreatedAt()) && item.getItemType() == DMContentType.TYPE_HTML_VIEW) {
-                    tvCreatedAt.setText(getTimeInDaysAgoFormat(item.getCreatedAt()));
-                    tvCreatedAt.setVisibility(View.VISIBLE);
+                if(!TextUtils.isEmpty(item.getCreatedAt())) {
+                    if(item.getItemType() == DMContentType.TYPE_HTML_VIEW || item.getItemType() == DMContentType.TYPE_VIDEOS) {
+                        tvCreatedAt.setText(getTimeInDaysAgoFormat(item.getCreatedAt()));
+                        tvCreatedAt.setVisibility(View.VISIBLE);
+                    }else {
+                        tvCreatedAt.setVisibility(View.GONE);
+                    }
                 }else {
                     tvCreatedAt.setVisibility(View.GONE);
                 }
             }
             if (tvTitleTag != null) {
-                tvTitleTag.setText("" + (pos + 1));
+                tvTitleTag.setText(String.format(Locale.ENGLISH, "%d", pos + 1));
                 setColorFilter(tvTitleTag.getBackground(), getSequentialColor(pos));
             }
             if(ivIcon != null) {
@@ -171,6 +178,16 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
                     Picasso.get().load(imagePath)
                             .placeholder(placeHolder)
                             .into(ivIcon);
+                } else if (item.getItemType() == DMContentType.TYPE_VIDEOS){
+                    if(!TextUtils.isEmpty(item.getLink())) {
+                        String videoPreviewUrl = getYoutubePlaceholderImage(getVideoIdFromUrl(item.getLink()));
+                        Picasso.get().load(videoPreviewUrl)
+                                .placeholder(R.drawable.ic_yt_placeholder)
+                                .error(R.drawable.ic_yt_placeholder)
+                                .into(ivIcon);
+                    }else {
+                        ivIcon.setImageResource(placeHolder);
+                    }
                 } else {
                     ivIcon.setImageResource(placeHolder);
                 }

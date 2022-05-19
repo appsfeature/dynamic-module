@@ -12,4 +12,5 @@ public interface DMCategoryType {
     int TYPE_TITLE_ONLY = 9;                    // Showing title only
     int TYPE_TITLE_WITH_COUNT = 10;             // Showing title with count
     int TYPE_VIDEO_PLAYLIST = 11;               // Showing youtube videos list
+    int TYPE_VIDEO_CHANNEL = 12;                // Showing youtube channel list
 }

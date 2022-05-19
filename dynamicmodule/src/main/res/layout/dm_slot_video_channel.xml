@@ -17,11 +17,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:padding="12dp"
+            android:orientation="horizontal">
 
             <RelativeLayout
-                android:layout_width="match_parent"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content">
 
                 <ImageView
@@ -45,50 +45,41 @@
             </RelativeLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:maxLines="3"
+                    android:ellipsize="end"
+                    android:textColor="@color/themeTextColor"
+                    android:textSize="@dimen/dm_slot_title_size"
+                    android:text="Title" />
 
-                    <TextView
-                        android:id="@+id/tv_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:maxLines="2"
-                        android:ellipsize="end"
-                        android:textColor="@color/themeTextColor"
-                        android:textSize="@dimen/dm_slot_title_size"
-                        android:text="Title" />
+                <TextView
+                    android:id="@+id/watch_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:textColor="@color/themeHintColor"
+                    android:textSize="14sp" />
 
 
-                    <TextView
-                        android:id="@+id/watch_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:textColor="@color/themeHintColor"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/tv_created_at"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textColor="@color/themeHintColor"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
+                <TextView
+                    android:id="@+id/tv_created_at"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|bottom"
+                    android:textColor="@color/themeHintColor"
+                    android:textSize="14sp" />
             </LinearLayout>
+
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
