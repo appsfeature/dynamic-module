@@ -1,32 +1,26 @@
 package com.dynamic.adapter;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.dynamic.DynamicModule;
 import com.dynamic.R;
-import com.dynamic.adapter.holder.BaseCommonHolder;
+import com.dynamic.adapter.holder.DMAutoSliderViewHolder;
+import com.dynamic.adapter.holder.DMHorizontalCardScrollHolder;
+import com.dynamic.adapter.holder.base.DynamicCommonHolder;
 import com.dynamic.listeners.DMCategoryType;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.helper.callback.Response;
-import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
 
 import java.util.List;
 
 public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    protected static final long SLIDER_DELAY_TIME_IN_MILLIS = 3000;
     protected final Response.OnClickListener<DMContent> listener;
     protected final List<DMCategory> mList;
     protected final String imageUrl;
@@ -78,224 +72,70 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int position) {
         DMCategory item = mList.get(position);
-        if (viewHolder instanceof CommonHolder) {
-            CommonHolder holder = (CommonHolder) viewHolder;
-            holder.setData(item, position);
-        }else if (viewHolder instanceof AutoSliderViewHolder) {
+        if (viewHolder instanceof AutoSliderViewHolder) {
             AutoSliderViewHolder holder = (AutoSliderViewHolder) viewHolder;
             holder.setData(item, position);
-        }else {
+        } else if (viewHolder instanceof HorizontalCardScrollHolder) {
+            HorizontalCardScrollHolder holder = (HorizontalCardScrollHolder) viewHolder;
+            holder.setData(item, position);
+        } else {
             onBindViewHolderDynamic(viewHolder, position);
         }
     }
+
+    protected abstract RecyclerView.Adapter<RecyclerView.ViewHolder> getDynamicChildAdapter(int itemType, DMCategory category, List<DMContent> childList);
 
     @Override
     public int getItemCount() {
         return mList.size();
     }
 
-    public class AutoSliderViewHolder extends RecyclerView.ViewHolder{
-        private final ViewPager2 viewPager;
-        private final WormDotsIndicator indicatorView;
+    public class AutoSliderViewHolder extends DMAutoSliderViewHolder {
+
+        @Override
+        protected RecyclerView.Adapter<RecyclerView.ViewHolder> getChildAdapter(int itemType, DMCategory category, List<DMContent> childList) {
+            return getDynamicChildAdapter(itemType, category, childList);
+        }
 
         AutoSliderViewHolder(View view) {
             super(view);
-            viewPager = view.findViewById(R.id.view_pager);
-            indicatorView = view.findViewById(R.id.indicator_view);
         }
-
-        public void setData(DMCategory item, int position) {
-            if(item.getChildList() != null && item.getChildList().size() > 0) {
-                viewPager.setAdapter(getDynamicChildAdapter(item.getItemType(), item, item.getChildList()));
-                indicatorView.setViewPager2(viewPager);
-                viewPager.setVisibility(View.VISIBLE);
-                indicatorView.setVisibility(item.getChildList().size() > 1 ? View.VISIBLE : View.GONE);
-                viewPager.setOffscreenPageLimit(item.getChildList().size());
-                viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-                    @Override
-                    public void onPageSelected(int position) {
-                        super.onPageSelected(position);
-                        sliderHandler.removeCallbacks(sliderRunnable);
-                        sliderHandler.postDelayed(sliderRunnable, SLIDER_DELAY_TIME_IN_MILLIS);
-                    }
-                });
-            }else {
-                viewPager.setVisibility(View.GONE);
-                indicatorView.setVisibility(View.GONE);
-            }
-        }
-
-        private final Handler sliderHandler = new Handler(Looper.myLooper());
-
-        private final Runnable sliderRunnable = new Runnable() {
-            @Override
-            public void run() {
-                int nextPos = viewPager.getCurrentItem() + 1;
-                if(viewPager.getAdapter() != null && viewPager.getAdapter().getItemCount() > 0) {
-                    if(viewPager.getAdapter().getItemCount() > nextPos) {
-                        viewPager.setCurrentItem(nextPos);
-                    }else{
-                        viewPager.setCurrentItem(0);
-                    }
-                }
-            }
-        };
     }
 
-    protected abstract RecyclerView.Adapter<RecyclerView.ViewHolder> getDynamicChildAdapter(int itemType, DMCategory category, List<DMContent> childList);
 
-    public class CommonHolder extends BaseCommonHolder {
-
-        protected int mListSize = 0;
+    public class CommonHolder extends DynamicCommonHolder {
 
         public CommonHolder(View view) {
             super(view);
         }
 
-        public void setData(DMCategory item, int position) {
-            setOtherProperty(item.getOtherPropertyModel());
-            if(tvTitle != null) {
-                if (!TextUtils.isEmpty(item.getTitle())) {
-                    tvTitle.setText(item.getTitle());
-                    tvTitle.setVisibility(View.VISIBLE);
-                } else {
-                    tvTitle.setVisibility(View.GONE);
-                }
-            }
-            if(recyclerView != null) {
-                if (item.getChildList() != null && item.getChildList().size() > 0) {
-                    adapter = getDynamicChildAdapter(item.getItemType(), item, item.getChildList());
-                    recyclerView.setLayoutManager(getLayoutManager(item));
-                    recyclerView.setItemAnimator(new DefaultItemAnimator());
-                    recyclerView.setAdapter(adapter);
-                    recyclerView.setVisibility(View.VISIBLE);
-                } else {
-                    recyclerView.setVisibility(View.GONE);
-                }
-            }
-            mListSize = item.getChildList() != null ? item.getChildList().size() : 0;
-
-            applyStyle(item);
+        @Override
+        protected RecyclerView.Adapter<RecyclerView.ViewHolder> getChildAdapter(int itemType, DMCategory category, List<DMContent> childList) {
+            return getDynamicChildAdapter(itemType, category, childList);
         }
     }
 
     private int mSlotWidth = 0;
 
-    public class HorizontalCardScrollHolder extends CommonHolder {
-
-        private boolean isScrollStateIdle = true;
-        private boolean isStateChange = false;
+    public class HorizontalCardScrollHolder extends DMHorizontalCardScrollHolder {
 
         public HorizontalCardScrollHolder(View view) {
             super(view);
         }
 
         @Override
-        public void setData(DMCategory item, int position) {
-            super.setData(item, position);
-            try {
-                if(isEnableAutoScroll){
-                    mHandler.postDelayed(mRunnable, mScrollSpeed);
-                    if (recyclerView != null) {
-                        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                            @Override
-                            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                                super.onScrollStateChanged(recyclerView, newState);
-                                switch (newState) {
-                                    case RecyclerView.SCROLL_STATE_IDLE:
-                                        isScrollStateIdle = true;
-                                        if(isEnableAutoScroll) {
-                                            mHandler.removeCallbacksAndMessages(null);
-                                            mHandler.postDelayed(mRunnable, mScrollSpeed);
-                                        }
-                                        break;
-                                    case RecyclerView.SCROLL_STATE_DRAGGING:
-                                        isStateChange = true;
-                                        isScrollStateIdle = false;
-                                        break;
-                                    case RecyclerView.SCROLL_STATE_SETTLING:
-                                        break;
-                                }
-                            }
-                        });
-                    }
-                }else {
-                    mHandler.removeCallbacksAndMessages(null);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        protected int getLayoutSlotWidth() {
+            return mSlotWidth;
         }
 
-        private final Handler mHandler = new Handler(Looper.getMainLooper());
-        private final Runnable mRunnable = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (isScrollStateIdle) {
-                        int lastPos = -2;
-                        if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
-                            lastPos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-                        }
-                        if (lastPos < mListSize - 1) {
-                            smoothScrollRecyclerView();
-                            mHandler.removeCallbacksAndMessages(null);
-                            mHandler.postDelayed(this, mScrollSpeed);
-                        } else {
-                            recyclerView.smoothScrollToPosition(0);
-                            mHandler.removeCallbacksAndMessages(null);
-                            mHandler.postDelayed(this, mScrollSpeed);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        private void smoothScrollRecyclerView() {
-            try {
-                if (recyclerView != null) {
-                    if (isStateChange) {
-                        isStateChange = false;
-                        int currentPos = -1;
-                        if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
-                            currentPos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-                        }
-                        if (currentPos >= 0) {
-                            RecyclerView.ViewHolder currViewHolder = recyclerView.findViewHolderForLayoutPosition(currentPos);
-                            if (currViewHolder != null) {
-                                recyclerView.smoothScrollBy((int) currViewHolder.itemView.getX(), 0);
-                            }
-                        }
-                    } else {
-                        if(mSlotWidth == 0){
-                            mSlotWidth = getSlotWidth();
-                        }
-                        recyclerView.smoothScrollBy(mSlotWidth, 0);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        @Override
+        protected void setLayoutSlotWidth(int layoutWidth) {
+            mSlotWidth = layoutWidth;
         }
 
-        private int getSlotWidth() {
-            try {
-                int currentPos = -1;
-                if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
-                    currentPos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-                }
-                if (currentPos >= 0) {
-                    RecyclerView.ViewHolder currViewHolder = recyclerView.findViewHolderForLayoutPosition(currentPos);
-                    if (currViewHolder != null) {
-                        return currViewHolder.itemView.getMeasuredWidth();
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return 0;
+        @Override
+        protected RecyclerView.Adapter<RecyclerView.ViewHolder> getChildAdapter(int itemType, DMCategory category, List<DMContent> childList) {
+            return getDynamicChildAdapter(itemType, category, childList);
         }
     }
 }

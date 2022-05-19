@@ -29,10 +29,10 @@ public class DynamicChildAdapter extends BaseDynamicChildAdapter {
     }
 
     @Override
-    public void onBindViewHolderDynamic(@NonNull final RecyclerView.ViewHolder viewHolder, int i) {
-        if (viewHolder instanceof CommonViewHolder) {
+    public void onBindViewHolderDynamic(@NonNull final RecyclerView.ViewHolder viewHolder, int position) {
+        if (viewHolder instanceof CommonViewHolder) {// this viewHolder is always on the bottom
             CommonViewHolder holder = (CommonViewHolder) viewHolder;
-            holder.setData(mList.get(i), i);
+            holder.setData(mList.get(position), position);
         }
     }
 

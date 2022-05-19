@@ -104,9 +104,6 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
         if (viewHolder instanceof VideoViewHolder) {
             VideoViewHolder holder = (VideoViewHolder) viewHolder;
             holder.setData(mList.get(position), position);
-        }else if (viewHolder instanceof CommonViewHolder) {
-            CommonViewHolder holder = (CommonViewHolder) viewHolder;
-            holder.setData(mList.get(position), position);
         }else {
             onBindViewHolderDynamic(viewHolder, position);
         }

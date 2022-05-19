@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dynamic.R;
-import com.dynamic.adapter.holder.BaseCommonHolder;
+import com.dynamic.adapter.holder.base.BaseCommonHolder;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.helper.callback.Response;
@@ -31,7 +31,7 @@ public class DynamicAdapter extends BaseDynamicAdapter {
     @Override
     protected void onBindViewHolderDynamic(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         DMCategory item = mList.get(position);
-        if (viewHolder instanceof CommonHolder) {
+        if (viewHolder instanceof CommonHolder) {// this viewHolder is always on the bottom
             CommonHolder holder = (CommonHolder) viewHolder;
             holder.setData(item, position);
         }

@@ -1,4 +1,4 @@
-package com.dynamic.adapter.holder;
+package com.dynamic.adapter.holder.base;
 
 import android.view.View;
 import android.widget.TextView;

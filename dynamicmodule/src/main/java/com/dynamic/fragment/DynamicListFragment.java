@@ -13,7 +13,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.dynamic.R;
 import com.dynamic.adapter.DynamicChildAdapter;
-import com.dynamic.adapter.holder.BaseCommonHolder;
+import com.dynamic.adapter.holder.base.BaseCommonHolder;
 import com.dynamic.listeners.DMCategoryType;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
