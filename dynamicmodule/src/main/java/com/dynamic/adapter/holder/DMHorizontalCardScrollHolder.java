@@ -29,6 +29,7 @@ public abstract class DMHorizontalCardScrollHolder extends DynamicCommonHolder {
         super.setData(item, position);
         try {
             if(isEnableAutoScroll){
+                mHandler.removeCallbacksAndMessages(null);
                 mHandler.postDelayed(mRunnable, mScrollSpeed);
                 if (recyclerView != null) {
                     recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -58,6 +59,7 @@ public abstract class DMHorizontalCardScrollHolder extends DynamicCommonHolder {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            mHandler.removeCallbacksAndMessages(null);
         }
     }
 
