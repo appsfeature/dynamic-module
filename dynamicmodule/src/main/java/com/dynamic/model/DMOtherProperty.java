@@ -4,8 +4,10 @@ import com.dynamic.util.DMConstants;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 
-public class DMOtherProperty {
+
+public class DMOtherProperty implements Serializable {
 
     @Expose
     @SerializedName(value="grid_count")
@@ -50,6 +52,10 @@ public class DMOtherProperty {
     @Expose
     @SerializedName(value="text_size")
     private int textSize;
+
+    @Expose
+    @SerializedName(value="padding")
+    private DMPadding padding;
 
     public int getGridCount() {
         return gridCount;
@@ -137,5 +143,13 @@ public class DMOtherProperty {
 
     public void setTextSize(int textSize) {
         this.textSize = textSize;
+    }
+
+    public DMPadding getPadding() {
+        return padding;
+    }
+
+    public void setPadding(DMPadding padding) {
+        this.padding = padding;
     }
 }

@@ -28,6 +28,7 @@ import com.dynamic.listeners.DMContentType;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.model.DMOtherProperty;
+import com.dynamic.model.DMPadding;
 import com.helper.callback.Response;
 import com.helper.model.common.BaseTimeViewHolder;
 import com.helper.util.BaseUtil;
@@ -211,6 +212,10 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
                     }
                     if (otherProperty.getHeight() > 0) {
                         params.height = dpToPx(otherProperty.getHeight());
+                    }
+                    DMPadding padding = otherProperty.getPadding();
+                    if(padding != null) {
+                        ivIcon.setPadding(padding.getLeft(), padding.getTop(), padding.getRight(), padding.getBottom());
                     }
                     ivIcon.setLayoutParams(params);
                 }

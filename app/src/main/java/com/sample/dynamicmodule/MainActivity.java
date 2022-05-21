@@ -26,7 +26,8 @@ import java.util.concurrent.Callable;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int DASHBOARD_ID = 125;
+//    private static final int DASHBOARD_ID = 125; // home id
+    private static final int DASHBOARD_ID = 165; // demo1 id
     private DMDataManager dataManager;
     private DMDatabaseManager databaseManager;
 
