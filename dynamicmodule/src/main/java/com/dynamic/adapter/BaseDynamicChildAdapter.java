@@ -205,6 +205,12 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
                         setColorFilter(ivIcon, getSequentialColor(pos));
                     }
                 }
+                if (otherProperty.isRemoveCard()) {
+                    if(cardView != null && cardView instanceof CardView) {
+                        ((CardView) cardView).setCardBackgroundColor(Color.TRANSPARENT);
+                        ((CardView) cardView).setCardElevation(0);
+                    }
+                }
                 if(ivIcon != null){
                     ViewGroup.LayoutParams params = ivIcon.getLayoutParams();
                     if (otherProperty.getWidth() > 0) {

@@ -57,6 +57,10 @@ public class DMOtherProperty implements Serializable {
     @SerializedName(value="padding")
     private DMPadding padding;
 
+    @Expose
+    @SerializedName(value="is_remove_card")
+    private boolean isRemoveCard = false;
+
     public int getGridCount() {
         return gridCount;
     }
@@ -151,5 +155,13 @@ public class DMOtherProperty implements Serializable {
 
     public void setPadding(DMPadding padding) {
         this.padding = padding;
+    }
+
+    public boolean isRemoveCard() {
+        return isRemoveCard;
+    }
+
+    public void setRemoveCard(boolean removeCard) {
+        isRemoveCard = removeCard;
     }
 }
