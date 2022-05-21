@@ -123,9 +123,9 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
     }
 
     public class CommonChildHolder extends BaseTimeViewHolder implements View.OnClickListener {
-        private final TextView tvTitle, tvTitleTag, tvCreatedAt;
-        private final ImageView ivIcon;
-        private final View cardView;
+        protected TextView tvTitle, tvTitleTag, tvCreatedAt;
+        protected ImageView ivIcon;
+        protected View cardView;
 
         public CommonChildHolder(View v) {
             super(v);
@@ -229,15 +229,13 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
     }
 
     public class VideoViewHolder extends CommonChildHolder implements View.OnClickListener {
-        private final ImageView ivPic;
         private final TextView tvWatchTime;
         private final ProgressBar progressBar;
-        private final CardView cardView;
 
         public VideoViewHolder(View v) {
             super(v);
             cardView = v.findViewById(R.id.card_view);
-            ivPic = v.findViewById(R.id.pic);
+            ivIcon = v.findViewById(R.id.iv_icon);
             tvWatchTime = v.findViewById(R.id.watch_time);
             progressBar = itemView.findViewById(R.id.progress_bar);
         }
@@ -249,12 +247,16 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
                 Picasso.get().load(videoPreviewUrl)
                         .placeholder(R.drawable.ic_yt_placeholder)
                         .error(R.drawable.ic_yt_placeholder)
-                        .into(ivPic);
-                ivPic.setVisibility(View.VISIBLE);
+                        .into(ivIcon);
+                ivIcon.setVisibility(View.VISIBLE);
             }else {
-                ivPic.setVisibility(View.GONE);
+                if(TextUtils.isEmpty(item.getImage())) {
+                    ivIcon.setVisibility(View.GONE);
+                }
             }
-            cardView.setCardBackgroundColor(ContextCompat.getColor(itemView.getContext(), item.getVideoDuration() > 0 ? R.color.yt_color_video_watched : R.color.themeBackgroundCardColor));
+            if(cardView != null && cardView instanceof CardView) {
+                ((CardView) cardView).setCardBackgroundColor(ContextCompat.getColor(itemView.getContext(), item.getVideoDuration() > 0 ? R.color.yt_color_video_watched : R.color.themeBackgroundCardColor));
+            }
             if(item.getVideoDuration() > 0) {
                 progressBar.setMax(item.getVideoDuration());
                 progressBar.setProgress(item.getVideoTime());
