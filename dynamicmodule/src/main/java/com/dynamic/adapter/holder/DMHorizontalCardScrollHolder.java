@@ -26,8 +26,9 @@ public abstract class DMHorizontalCardScrollHolder extends DynamicCommonHolder {
         super.setData(item, position);
         try {
             if (isEnableAutoScroll) {
+                getRunnable();
                 clearRunnable();
-                DynamicModule.getInstance().getHandler().postDelayed(mRunnable, mScrollSpeed);
+                DynamicModule.getInstance().getHandler().postDelayed(getRunnable(), mScrollSpeed);
                 if (recyclerView != null) {
                     recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override
@@ -38,7 +39,7 @@ public abstract class DMHorizontalCardScrollHolder extends DynamicCommonHolder {
                                     isScrollStateIdle = true;
                                     if (isEnableAutoScroll) {
                                         clearRunnable();
-                                        DynamicModule.getInstance().getHandler().postDelayed(mRunnable, mScrollSpeed);
+                                        DynamicModule.getInstance().getHandler().postDelayed(getRunnable(), mScrollSpeed);
                                     }
                                     break;
                                 case RecyclerView.SCROLL_STATE_DRAGGING:
@@ -59,64 +60,75 @@ public abstract class DMHorizontalCardScrollHolder extends DynamicCommonHolder {
             clearRunnable();
         }
     }
+    private Runnable mRunnable;
+
+    private Runnable getRunnable() {
+        if(mRunnable == null) {
+            mRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        if (isScrollStateIdle) {
+                            int lastPos = -2;
+                            if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+                                lastPos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                            }
+                            if (!isMoveToFirst && lastPos < mListSize) {
+                                isMoveToFirst = (lastPos + 1) == mListSize;
+                                smoothScrollRecyclerView(false);
+                                clearRunnable();
+                                DynamicModule.getInstance().getHandler().postDelayed(this, mScrollSpeed);
+                            } else {
+                                isMoveToFirst = false;
+                                smoothScrollRecyclerView(true);
+                                clearRunnable();
+                                DynamicModule.getInstance().getHandler().postDelayed(this, mScrollSpeed);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+        }
+        return mRunnable;
+    }
 
     private void clearRunnable() {
         if (DynamicModule.getInstance().getHandler() != null) {
-            DynamicModule.getInstance().getHandler().removeCallbacks(mRunnable);
+            DynamicModule.getInstance().getHandler().removeCallbacks(getRunnable());
         }
     }
 
     private boolean isMoveToFirst = false;
 
-    private final Runnable mRunnable = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                if (isScrollStateIdle) {
-                    int lastPos = -2;
-                    if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
-                        lastPos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-                    }
-                    if (!isMoveToFirst && lastPos < mListSize) {
-                        isMoveToFirst = (lastPos + 1) == mListSize;
-                        smoothScrollRecyclerView();
-                        clearRunnable();
-                        DynamicModule.getInstance().getHandler().postDelayed(this, mScrollSpeed);
-                    } else {
-                        isMoveToFirst = false;
-                        recyclerView.smoothScrollToPosition(0);
-                        clearRunnable();
-                        DynamicModule.getInstance().getHandler().postDelayed(this, mScrollSpeed);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    };
 
-    private void smoothScrollRecyclerView() {
+    private void smoothScrollRecyclerView(boolean isMoveToStart) {
         try {
             if (recyclerView != null) {
-                if (isStateChange) {
-                    isStateChange = false;
-                    int currentPos = -1;
-                    if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
-                        currentPos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-                    }
-                    if (currentPos >= 0) {
-                        RecyclerView.ViewHolder currViewHolder = recyclerView.findViewHolderForLayoutPosition(currentPos);
-                        if (currViewHolder != null) {
-                            Log.d("@Test", "smoothScrollBy.getX:" + (int) currViewHolder.itemView.getX());
-                            recyclerView.smoothScrollBy((int) currViewHolder.itemView.getX(), 0);
+                if(isMoveToStart){
+                    recyclerView.smoothScrollToPosition(0);
+                }else {
+                    if (isStateChange) {
+                        isStateChange = false;
+                        int currentPos = -1;
+                        if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+                            currentPos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
                         }
+                        if (currentPos >= 0) {
+                            RecyclerView.ViewHolder currViewHolder = recyclerView.findViewHolderForLayoutPosition(currentPos);
+                            if (currViewHolder != null) {
+                                Log.d("@Test", "smoothScrollBy.getX:" + (int) currViewHolder.itemView.getX());
+                                recyclerView.smoothScrollBy((int) currViewHolder.itemView.getX(), 0);
+                            }
+                        }
+                    } else {
+                        if (mSlotWidth == 0) {
+                            mSlotWidth = getSlotWidth();
+                        }
+                        Log.d("@Test", "smoothScrollBy:" + mSlotWidth);
+                        recyclerView.smoothScrollBy(mSlotWidth, 0);
                     }
-                } else {
-                    if (mSlotWidth == 0) {
-                        mSlotWidth = getSlotWidth();
-                    }
-                    Log.d("@Test", "smoothScrollBy:" + mSlotWidth);
-                    recyclerView.smoothScrollBy(mSlotWidth, 0);
                 }
             }
         } catch (Exception e) {
