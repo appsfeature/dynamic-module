@@ -1,13 +1,13 @@
 package com.dynamic.adapter.holder;
 
-import android.os.Handler;
-import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.dynamic.DynamicModule;
 import com.dynamic.adapter.holder.base.DynamicCommonHolder;
 import com.dynamic.model.DMCategory;
 
@@ -15,22 +15,19 @@ public abstract class DMHorizontalCardScrollHolder extends DynamicCommonHolder {
 
     private boolean isScrollStateIdle = true;
     private boolean isStateChange = false;
+    private int mSlotWidth = 0;
 
     public DMHorizontalCardScrollHolder(View view) {
         super(view);
     }
 
-    protected abstract int getLayoutSlotWidth();
-
-    protected abstract void setLayoutSlotWidth(int layoutWidth);
-
     @Override
     public void setData(DMCategory item, int position) {
         super.setData(item, position);
         try {
-            if(isEnableAutoScroll){
-                mHandler.removeCallbacksAndMessages(null);
-                mHandler.postDelayed(mRunnable, mScrollSpeed);
+            if (isEnableAutoScroll) {
+                clearRunnable();
+                DynamicModule.getInstance().getHandler().postDelayed(mRunnable, mScrollSpeed);
                 if (recyclerView != null) {
                     recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override
@@ -39,9 +36,9 @@ public abstract class DMHorizontalCardScrollHolder extends DynamicCommonHolder {
                             switch (newState) {
                                 case RecyclerView.SCROLL_STATE_IDLE:
                                     isScrollStateIdle = true;
-                                    if(isEnableAutoScroll) {
-                                        mHandler.removeCallbacksAndMessages(null);
-                                        mHandler.postDelayed(mRunnable, mScrollSpeed);
+                                    if (isEnableAutoScroll) {
+                                        clearRunnable();
+                                        DynamicModule.getInstance().getHandler().postDelayed(mRunnable, mScrollSpeed);
                                     }
                                     break;
                                 case RecyclerView.SCROLL_STATE_DRAGGING:
@@ -54,16 +51,23 @@ public abstract class DMHorizontalCardScrollHolder extends DynamicCommonHolder {
                         }
                     });
                 }
-            }else {
-                mHandler.removeCallbacksAndMessages(null);
+            } else {
+                clearRunnable();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            mHandler.removeCallbacksAndMessages(null);
+            clearRunnable();
         }
     }
 
-    private final Handler mHandler = new Handler(Looper.getMainLooper());
+    private void clearRunnable() {
+        if (DynamicModule.getInstance().getHandler() != null) {
+            DynamicModule.getInstance().getHandler().removeCallbacks(mRunnable);
+        }
+    }
+
+    private boolean isMoveToFirst = false;
+
     private final Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
@@ -73,14 +77,16 @@ public abstract class DMHorizontalCardScrollHolder extends DynamicCommonHolder {
                     if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
                         lastPos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
                     }
-                    if (lastPos < mListSize - 1) {
+                    if (!isMoveToFirst && lastPos < mListSize) {
+                        isMoveToFirst = (lastPos + 1) == mListSize;
                         smoothScrollRecyclerView();
-                        mHandler.removeCallbacksAndMessages(null);
-                        mHandler.postDelayed(this, mScrollSpeed);
+                        clearRunnable();
+                        DynamicModule.getInstance().getHandler().postDelayed(this, mScrollSpeed);
                     } else {
+                        isMoveToFirst = false;
                         recyclerView.smoothScrollToPosition(0);
-                        mHandler.removeCallbacksAndMessages(null);
-                        mHandler.postDelayed(this, mScrollSpeed);
+                        clearRunnable();
+                        DynamicModule.getInstance().getHandler().postDelayed(this, mScrollSpeed);
                     }
                 }
             } catch (Exception e) {
@@ -101,14 +107,16 @@ public abstract class DMHorizontalCardScrollHolder extends DynamicCommonHolder {
                     if (currentPos >= 0) {
                         RecyclerView.ViewHolder currViewHolder = recyclerView.findViewHolderForLayoutPosition(currentPos);
                         if (currViewHolder != null) {
+                            Log.d("@Test", "smoothScrollBy.getX:" + (int) currViewHolder.itemView.getX());
                             recyclerView.smoothScrollBy((int) currViewHolder.itemView.getX(), 0);
                         }
                     }
                 } else {
-                    if(getLayoutSlotWidth() == 0){
-                        setLayoutSlotWidth(getSlotWidth());
+                    if (mSlotWidth == 0) {
+                        mSlotWidth = getSlotWidth();
                     }
-                    recyclerView.smoothScrollBy(getLayoutSlotWidth(), 0);
+                    Log.d("@Test", "smoothScrollBy:" + mSlotWidth);
+                    recyclerView.smoothScrollBy(mSlotWidth, 0);
                 }
             }
         } catch (Exception e) {

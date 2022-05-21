@@ -2,6 +2,7 @@ package com.dynamic;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
 import android.view.View;
 
 import com.dynamic.database.DMDatabase;
@@ -122,5 +123,12 @@ public class DynamicModule {
     public void init(Context context) {
         addBaseUrlHost(context, ApiHost.HOST_DEFAULT, DMConstants.DEFAULT_BASE_URL);
         setImageBaseUrl(context, ApiHost.HOST_DEFAULT, DMConstants.DEFAULT_BASE_IMAGE_URL);
+    }
+
+    private Handler handler;
+
+    public Handler getHandler(){
+        if(handler == null) handler = new Handler();
+        return handler;
     }
 }

@@ -16,6 +16,7 @@ import com.dynamic.adapter.holder.base.DynamicCommonHolder;
 import com.dynamic.listeners.DMCategoryType;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
+import com.dynamic.util.DMUtility;
 import com.helper.callback.Response;
 
 import java.util.List;
@@ -39,7 +40,6 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     public void resetFlags() {
-        this.mSlotWidth = 0;
     }
 
     protected abstract RecyclerView.ViewHolder onCreateViewHolderDynamic(@NonNull ViewGroup parent, int viewType);
@@ -90,6 +90,10 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
         return mList.size();
     }
 
+    public void stopAnimation() {
+        DynamicModule.getInstance().getHandler().removeCallbacksAndMessages(null);
+    }
+
     public class AutoSliderViewHolder extends DMAutoSliderViewHolder {
 
         @Override
@@ -115,22 +119,11 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    private int mSlotWidth = 0;
 
     public class HorizontalCardScrollHolder extends DMHorizontalCardScrollHolder {
 
         public HorizontalCardScrollHolder(View view) {
             super(view);
-        }
-
-        @Override
-        protected int getLayoutSlotWidth() {
-            return mSlotWidth;
-        }
-
-        @Override
-        protected void setLayoutSlotWidth(int layoutWidth) {
-            mSlotWidth = layoutWidth;
         }
 
         @Override

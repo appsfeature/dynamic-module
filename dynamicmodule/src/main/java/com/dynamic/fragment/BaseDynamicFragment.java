@@ -171,6 +171,14 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(adapter != null && adapter instanceof BaseDynamicAdapter) {
+            ((BaseDynamicAdapter) adapter).stopAnimation();
+        }
+    }
+
     private boolean isSizeChanged(List<DMCategory> list) {
         if(list != null){
             if(list.size() == 0){
