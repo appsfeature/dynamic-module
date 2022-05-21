@@ -11,6 +11,7 @@ import com.dynamic.R;
 import com.dynamic.listeners.DMCategoryType;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMOtherProperty;
+import com.dynamic.util.DMConstants;
 
 public class BaseCommonHolder extends RecyclerView.ViewHolder{
     protected RecyclerView.Adapter<RecyclerView.ViewHolder> adapter;
@@ -18,7 +19,7 @@ public class BaseCommonHolder extends RecyclerView.ViewHolder{
     protected final RecyclerView recyclerView;
     protected DMOtherProperty otherProperty;
     protected static final int defaultGridCount = 2;
-    protected int mScrollSpeed = 5000;
+    protected int mScrollSpeed = DMConstants.DEFAULT_SCROLL_SPEED;
     protected boolean isEnableAutoScroll = false;
 
     public BaseCommonHolder(View view) {

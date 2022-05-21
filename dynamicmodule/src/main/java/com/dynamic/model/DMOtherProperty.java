@@ -1,9 +1,8 @@
 package com.dynamic.model;
 
+import com.dynamic.util.DMConstants;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.ArrayList;
 
 
 public class DMOtherProperty {
@@ -42,7 +41,7 @@ public class DMOtherProperty {
 
     @Expose
     @SerializedName(value="scroll_speed")
-    private int scrollSpeed;
+    private int scrollSpeed = DMConstants.DEFAULT_SCROLL_SPEED;
 
     @Expose
     @SerializedName(value="is_enable_auto_scroll")

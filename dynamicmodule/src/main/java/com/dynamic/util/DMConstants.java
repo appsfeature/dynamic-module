@@ -13,4 +13,6 @@ public interface DMConstants {
     String ITEM_TYPE = "item_type";
     String CATEGORY_PROPERTY = BaseConstants.CATEGORY_PROPERTY;
     String MSG_ERROR_PROPERTY = "Invalid Property!";
+
+    int DEFAULT_SCROLL_SPEED = 5000;
 }

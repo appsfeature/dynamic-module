@@ -25,7 +25,7 @@ public abstract class DMHorizontalCardScrollHolder extends DynamicCommonHolder {
     public void setData(DMCategory item, int position) {
         super.setData(item, position);
         try {
-            if (isEnableAutoScroll) {
+            if (isEnableAutoScroll && mListSize > 0) {
                 getRunnable();
                 clearRunnable();
                 DynamicModule.getInstance().getHandler().postDelayed(getRunnable(), mScrollSpeed);
