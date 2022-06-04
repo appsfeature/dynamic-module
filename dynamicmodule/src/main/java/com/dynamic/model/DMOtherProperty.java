@@ -61,6 +61,10 @@ public class DMOtherProperty implements Serializable {
     @SerializedName(value="is_remove_card")
     private boolean isRemoveCard = false;
 
+    @Expose
+    @SerializedName(value="is_order_by_asc")
+    private boolean isOrderByAsc = false;
+
     public int getGridCount() {
         return gridCount;
     }
@@ -163,5 +167,13 @@ public class DMOtherProperty implements Serializable {
 
     public void setRemoveCard(boolean removeCard) {
         isRemoveCard = removeCard;
+    }
+
+    public boolean isOrderByAsc() {
+        return isOrderByAsc;
+    }
+
+    public void setOrderByAsc(boolean orderByAsc) {
+        isOrderByAsc = orderByAsc;
     }
 }

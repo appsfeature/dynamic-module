@@ -14,6 +14,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.dynamic.R;
 import com.dynamic.adapter.DynamicChildAdapter;
 import com.dynamic.adapter.holder.base.BaseCommonHolder;
+import com.dynamic.fragment.base.DMBaseFragment;
 import com.dynamic.listeners.DMCategoryType;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
@@ -102,7 +103,7 @@ public class DynamicListFragment extends DMBaseFragment {
     }
 
     private void getDataFromServer() {
-        dataManager.getDataByCategory(catId, new DynamicCallback.Listener<List<DMContent>>() {
+        dataManager.getDataByCategory(catId, DMUtility.isOrderByAsc(property), new DynamicCallback.Listener<List<DMContent>>() {
             @Override
             public void onSuccess(List<DMContent> response) {
                 showProgress(false);

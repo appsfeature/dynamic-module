@@ -21,9 +21,11 @@ import android.util.Log;
 
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
+import com.dynamic.model.DMOtherProperty;
 import com.helper.task.TaskRunner;
 import com.helper.util.BaseConstants;
 import com.helper.util.BaseUtil;
+import com.helper.util.GsonParser;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -162,4 +164,20 @@ public class DMUtility {
         Log.e(tag, ".");
     }
 
+    public static boolean isOrderByAsc(DMProperty property) {
+        if(property != null) {
+            return getOtherProperty(property).isOrderByAsc();
+        }
+        return false;
+    }
+
+    public static DMOtherProperty getOtherProperty(DMProperty property) {
+        if(property != null) {
+            DMOtherProperty op = GsonParser.getGson().fromJson(property.getOtherProperty(), DMOtherProperty.class);
+            if(op != null){
+                return op;
+            }
+        }
+        return new DMOtherProperty();
+    }
 }

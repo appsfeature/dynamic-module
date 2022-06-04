@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public class DMDataManager {
+public class DMDataManager extends DMBaseSorting{
     private static DMDataManager instance;
     private final DMNetworkManager networkManager;
     private final DMDatabaseManager dbManager;
@@ -62,24 +62,24 @@ public class DMDataManager {
     }
 
     public void getDataBySubCategory(int catId, DynamicCallback.Listener<List<DMCategory>> callback) {
-        getDataBySubCategory(catId, null, callback);
+        getDataBySubCategory(catId, null, false, callback);
     }
 
-    public void getDataBySubCategory(int catId, List<DMCategory> staticList, DynamicCallback.Listener<List<DMCategory>> callback) {
-        dbManager.getDynamicData(catId, staticList, callback);
+    public void getDataBySubCategory(int catId, List<DMCategory> staticList, boolean isOrderByAsc, DynamicCallback.Listener<List<DMCategory>> callback) {
+        dbManager.getDynamicData(catId, staticList, isOrderByAsc, callback);
         networkManager.getDataBySubCategory(catId, new DynamicCallback.Listener<List<DMCategory>>() {
             @Override
             public void onSuccess(List<DMCategory> response) {
-                dbManager.saveDynamicData(catId, response, new Response.Status<Boolean>() {
+                dbManager.saveDynamicData(catId, response, isOrderByAsc, new Response.Status<List<DMCategory>>() {
                     @Override
-                    public void onSuccess(Boolean res) {
+                    public void onSuccess(List<DMCategory> result) {
                         if(staticList != null && staticList.size() > 0){
-                            response.addAll(staticList);
+                            result.addAll(staticList);
                         }
-                        callback.onValidate(arraySortCategory(response), new Response.Status<List<DMCategory>>() {
+                        callback.onValidate(arraySortCategory(result, isOrderByAsc), new Response.Status<List<DMCategory>>() {
                             @Override
-                            public void onSuccess(List<DMCategory> response) {
-                                callback.onSuccess(response);
+                            public void onSuccess(List<DMCategory> result) {
+                                callback.onSuccess(result);
                             }
                         });
                     }
@@ -98,18 +98,23 @@ public class DMDataManager {
         });
     }
 
-    public void getDataByCategory(int catId, DynamicCallback.Listener<List<DMContent>> callback) {
-        dbManager.getDataByCategory(catId, callback);
+    public void getDataByCategory(int catId, boolean isOrderByAsc, DynamicCallback.Listener<List<DMContent>> callback) {
+        dbManager.getDataByCategory(catId, isOrderByAsc, callback);
         networkManager.getDataByCategory(catId, new DynamicCallback.Listener<List<DMContent>>() {
             @Override
             public void onSuccess(List<DMContent> response) {
-                dbManager.insertData(catId, response);
-                callback.onValidate(arraySortContent(response), new Response.Status<List<DMContent>>() {
+                dbManager.insertData(catId, response, new TaskRunner.Callback<Boolean>() {
                     @Override
-                    public void onSuccess(List<DMContent> response) {
-                        callback.onSuccess(response);
+                    public void onComplete(Boolean result) {
+                        dbManager.getDataByCategory(catId, isOrderByAsc, callback);
                     }
                 });
+//                callback.onValidate(arraySortContent(response), new Response.Status<List<DMContent>>() {
+//                    @Override
+//                    public void onSuccess(List<DMContent> response) {
+//                        callback.onSuccess(response);
+//                    }
+//                });
             }
 
             @Override
@@ -122,31 +127,6 @@ public class DMDataManager {
                 callback.onRequestCompleted();
             }
         });
-    }
-
-
-    public List<DMCategory> arraySortCategory(List<DMCategory> list) {
-        Collections.sort(list, new Comparator<DMCategory>() {
-            @Override
-            public int compare(DMCategory item, DMCategory item2) {
-                Integer value = item.getRanking();
-                Integer value2 = item2.getRanking();
-                return value.compareTo(value2);
-            }
-        });
-        return list;
-    }
-
-    public List<DMContent> arraySortContent(List<DMContent> list) {
-        Collections.sort(list, new Comparator<DMContent>() {
-            @Override
-            public int compare(DMContent item, DMContent item2) {
-                Integer value = item.getRanking();
-                Integer value2 = item2.getRanking();
-                return value.compareTo(value2);
-            }
-        });
-        return list;
     }
 
     public void insertVideo(DMVideo videoDetail) {

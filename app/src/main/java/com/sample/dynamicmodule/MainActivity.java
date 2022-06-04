@@ -26,8 +26,8 @@ import java.util.concurrent.Callable;
 
 public class MainActivity extends AppCompatActivity {
 
-//    private static final int DASHBOARD_ID = 125; // home id
-    private static final int DASHBOARD_ID = 165; // demo1 id
+    private static final int DASHBOARD_ID = 125; // home id
+//    private static final int DASHBOARD_ID = 165; // demo1 id
     private DMDataManager dataManager;
     private DMDatabaseManager databaseManager;
 
@@ -37,6 +37,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         dataManager = DMDataManager.get(this);
         databaseManager = new DMDatabaseManager(this);
+    }
+
+    public void onOpenDMActivity(View view) {
+//        startActivity(new Intent(this, AppDynamicActivity.class));
+        DMClassUtil.openDynamicActivity(this, DMUtility.getProperty(DASHBOARD_ID, false));
     }
 
     public void onGetCategory(View view) {
@@ -149,10 +154,5 @@ public class MainActivity extends AppCompatActivity {
                 BaseUtil.showToast(MainActivity.this, "Success");
             }
         });
-    }
-
-    public void onOpenDMActivity(View view) {
-//        startActivity(new Intent(this, AppDynamicActivity.class));
-        DMClassUtil.openDynamicActivity(this, DMUtility.getProperty(DASHBOARD_ID, false));
     }
 }

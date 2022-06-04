@@ -1,4 +1,4 @@
-package com.dynamic.fragment;
+package com.dynamic.fragment.base;
 
 import android.app.Activity;
 import android.os.Bundle;

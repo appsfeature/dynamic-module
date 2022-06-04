@@ -1,6 +1,7 @@
 package com.dynamic.database;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import androidx.annotation.WorkerThread;
 import androidx.sqlite.db.SimpleSQLiteQuery;
@@ -10,20 +11,25 @@ import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.model.DMVideo;
+import com.dynamic.util.DMBaseSorting;
 import com.dynamic.util.DMPreferences;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.helper.callback.Response;
+import com.helper.model.common.BaseUtilityAdapter;
 import com.helper.task.TaskRunner;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-public class DMDatabaseManager {
+public class DMDatabaseManager extends DMBaseSorting {
     private final Context context;
     private final DMDatabase database;
     private boolean isDisableCaching;
@@ -120,7 +126,7 @@ public class DMDatabaseManager {
     }
 
     //Contains both category and content
-    public void insertData(int catId, List<DMContent> response) {
+    public void insertData(int catId, List<DMContent> response, TaskRunner.Callback<Boolean> callback) {
         if (isDisableCaching) return;
         TaskRunner.getInstance().executeAsync(new Callable<Boolean>() {
             @Override
@@ -129,7 +135,7 @@ public class DMDatabaseManager {
                 insertContents(response);
                 return true;
             }
-        });
+        }, callback);
     }
 
     @WorkerThread
@@ -164,25 +170,37 @@ public class DMDatabaseManager {
         database.dmContentDao().clearAllRecords();
     }
 
-    public void getDataByCategory(int catId, DynamicCallback.Listener<List<DMContent>> callback) {
+    public void getDataByCategory(int catId, boolean isOrderByAsc, DynamicCallback.Listener<List<DMContent>> callback) {
         if (isDisableCaching) return;
-        TaskRunner.getInstance().executeAsync(() -> database.dmContentDao().getDataBySubCategory(catId), result -> {
-            if (result != null && result.size() > 0) {
-                callback.onValidate(arraySortContent(result), new Response.Status<List<DMContent>>() {
-                    @Override
-                    public void onSuccess(List<DMContent> response) {
-                        callback.onSuccess(response);
-                    }
-                });
+        TaskRunner.getInstance().executeAsync(new Callable<List<DMContent>>() {
+            @Override
+            public List<DMContent> call() throws Exception {
+                if(isOrderByAsc){
+                    return database.dmContentDao().getDataBySubCategoryAsc(catId);
+                }else {
+                    return database.dmContentDao().getDataBySubCategory(catId);
+                }
+            }
+        }, new TaskRunner.Callback<List<DMContent>>() {
+            @Override
+            public void onComplete(List<DMContent> result) {
+                if (result != null && result.size() > 0) {
+                    callback.onValidate(DMDatabaseManager.this.arraySortContent(result), new Response.Status<List<DMContent>>() {
+                        @Override
+                        public void onSuccess(List<DMContent> response) {
+                            callback.onSuccess(response);
+                        }
+                    });
+                }
             }
         });
     }
 
     public void getDynamicData(int catId, DynamicCallback.Listener<List<DMCategory>> callback) {
-        getDynamicData(catId, null, callback);
+        getDynamicData(catId, null, false, callback);
     }
 
-    public void getDynamicData(int catId, List<DMCategory> staticList, DynamicCallback.Listener<List<DMCategory>> callback) {
+    public void getDynamicData(int catId, List<DMCategory> staticList, boolean isOrderByAsc, DynamicCallback.Listener<List<DMCategory>> callback) {
         if (isDisableCaching) return;
         List<DMCategory> list = gson.fromJson(DMPreferences.getDynamicData(context, catId), new TypeToken<List<DMCategory>>() {
         }.getType());
@@ -190,7 +208,7 @@ public class DMDatabaseManager {
             if(staticList != null && staticList.size() > 0){
                 list.addAll(staticList);
             }
-            callback.onValidate(arraySortCategory(list), new Response.Status<List<DMCategory>>() {
+            callback.onValidate(arraySortCategory(list, isOrderByAsc), new Response.Status<List<DMCategory>>() {
                 @Override
                 public void onSuccess(List<DMCategory> response) {
                     callback.onSuccess(response);
@@ -198,7 +216,7 @@ public class DMDatabaseManager {
             });
         }else {
             if(staticList != null && staticList.size() > 0){
-                callback.onValidate(arraySortCategory(staticList), new Response.Status<List<DMCategory>>() {
+                callback.onValidate(arraySortCategory(staticList, isOrderByAsc), new Response.Status<List<DMCategory>>() {
                     @Override
                     public void onSuccess(List<DMCategory> response) {
                         callback.onSuccess(response);
@@ -218,12 +236,13 @@ public class DMDatabaseManager {
 //        }
 //    });
 
-    public void saveDynamicData(int catId, List<DMCategory> response, Response.Status<Boolean> callback) {
+    public void saveDynamicData(int catId, List<DMCategory> response, boolean isOrderByAsc, Response.Status<List<DMCategory>> callback) {
         if (isDisableCaching){
-            callback.onSuccess(true);
+            callback.onSuccess(response);
             return;
         }
         TaskRunner.getInstance().executeAsync(() -> {
+            arraySortCategory(response, isOrderByAsc);
             String jsonData = gson.toJson(response, new TypeToken<List<DMCategory>>() {
             }.getType());
             DMPreferences.setDynamicData(context, catId, jsonData);
@@ -231,38 +250,14 @@ public class DMDatabaseManager {
         }, new TaskRunner.CallbackWithError<Boolean>() {
             @Override
             public void onComplete(Boolean result) {
-                callback.onSuccess(true);
+                callback.onSuccess(response);
             }
 
             @Override
             public void onError(Exception e) {
-                callback.onSuccess(false);
+                callback.onSuccess(response);
             }
         });
-    }
-
-    public List<DMCategory> arraySortCategory(List<DMCategory> list) {
-        Collections.sort(list, new Comparator<DMCategory>() {
-            @Override
-            public int compare(DMCategory item, DMCategory item2) {
-                Integer value = item.getRanking();
-                Integer value2 = item2.getRanking();
-                return value.compareTo(value2);
-            }
-        });
-        return list;
-    }
-
-    public List<DMContent> arraySortContent(List<DMContent> list) {
-        Collections.sort(list, new Comparator<DMContent>() {
-            @Override
-            public int compare(DMContent item, DMContent item2) {
-                Integer value = item.getRanking();
-                Integer value2 = item2.getRanking();
-                return value.compareTo(value2);
-            }
-        });
-        return list;
     }
 
     /**
@@ -322,5 +317,4 @@ public class DMDatabaseManager {
     public void clearAllVideos() {
         database.dmVideoDao().clearAllRecords();
     }
-
 }

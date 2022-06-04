@@ -1,4 +1,4 @@
-package com.dynamic.fragment;
+package com.dynamic.fragment.pager;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,17 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.dynamic.R;
 import com.dynamic.adapter.DynamicChildAdapter;
+import com.dynamic.fragment.base.DMBaseFragment;
 import com.dynamic.listeners.DMCategoryType;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMContent;
-import com.dynamic.util.DMConstants;
-import com.dynamic.util.DMDataManager;
-import com.dynamic.util.DMProperty;
 import com.dynamic.util.DMUtility;
 import com.helper.callback.Response;
 import com.helper.util.BaseUtil;
