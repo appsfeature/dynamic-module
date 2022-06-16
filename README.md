@@ -21,7 +21,7 @@ Add this to your project build.gradle
 [![](https://jitpack.io/v/appsfeature/dynamic-module.svg)](https://jitpack.io/#appsfeature/dynamic-module)
 ```gradle
 dependencies {
-        implementation 'com.github.appsfeature:dynamic-module:1.0'
+        implementation 'com.github.appsfeature:dynamic-module:1.1'
 }
 ```
 
