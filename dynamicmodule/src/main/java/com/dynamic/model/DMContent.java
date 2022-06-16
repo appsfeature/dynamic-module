@@ -1,11 +1,13 @@
 package com.dynamic.model;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.helper.util.GsonParser;
@@ -245,8 +247,14 @@ public class DMContent implements Cloneable, Serializable {
         return getOtherPropertyModel(DMOtherProperty.class);
     }
 
+    @Nullable
     public <T> T getOtherPropertyModel(Class<T> classOfT) {
-        return GsonParser.getGson().fromJson(otherProperty, classOfT);
+        try {
+            return GsonParser.getGson().fromJson(otherProperty, classOfT);
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @NonNull

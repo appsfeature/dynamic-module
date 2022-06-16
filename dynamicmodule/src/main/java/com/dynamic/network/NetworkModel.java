@@ -1,6 +1,9 @@
 package com.dynamic.network;
 
+import androidx.annotation.Nullable;
+
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
@@ -56,20 +59,33 @@ public class NetworkModel {
         this.imagePath = imagePath;
     }
 
+    @Nullable
     public String getData() {
-        return GsonParser.getGson().toJson(data);
+        try {
+            return GsonParser.getGson().toJson(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
      * @param classOfT : ModelName.class
      */
+    @Nullable
     public <T> T getData(Class<T> classOfT) {
-        return GsonParser.getGson().fromJson(getData(), classOfT);
+        try {
+            return GsonParser.getGson().fromJson(getData(), classOfT);
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
      * @param typeCast : new TypeToken<ModelName>() {}
      */
+    @Nullable
     public <T> T getData(TypeToken<T> typeCast) {
         return GsonParser.fromJson(getData(), typeCast);
     }

@@ -22,6 +22,7 @@ import android.util.Log;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.model.DMOtherProperty;
+import com.google.gson.JsonSyntaxException;
 import com.helper.task.TaskRunner;
 import com.helper.util.BaseConstants;
 import com.helper.util.BaseUtil;
@@ -173,7 +174,12 @@ public class DMUtility {
 
     public static DMOtherProperty getOtherProperty(DMProperty property) {
         if(property != null) {
-            DMOtherProperty op = GsonParser.getGson().fromJson(property.getOtherProperty(), DMOtherProperty.class);
+            DMOtherProperty op = null;
+            try {
+                op = GsonParser.getGson().fromJson(property.getOtherProperty(), DMOtherProperty.class);
+            } catch (JsonSyntaxException e) {
+                e.printStackTrace();
+            }
             if(op != null){
                 return op;
             }
