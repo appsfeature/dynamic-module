@@ -4,8 +4,11 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import com.dynamic.DynamicModule;
 import com.dynamic.adapter.holder.base.DynamicCommonHolder;
@@ -24,6 +27,10 @@ public abstract class DMHorizontalCardScrollHolder extends DynamicCommonHolder {
     @Override
     public void setData(DMCategory item, int position) {
         super.setData(item, position);
+        if(recyclerView != null) {
+            SnapHelper snapHelper = new LinearSnapHelper();
+            snapHelper.attachToRecyclerView(recyclerView);
+        }
         try {
             if (isEnableAutoScroll && mListSize > 0) {
                 getRunnable();
