@@ -22,8 +22,8 @@ import retrofit2.Call;
 
 public class DMNetworkManager {
 
-    private final Context context;
-    private final ConfigManager configManager;
+    protected final Context context;
+    protected final ConfigManager configManager;
 
     public DMNetworkManager(Context context) {
         this.configManager = ConfigManager.getInstance(context);

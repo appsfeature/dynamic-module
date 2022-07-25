@@ -30,10 +30,10 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 public class DMDatabaseManager extends DMBaseSorting {
-    private final Context context;
-    private final DMDatabase database;
-    private boolean isDisableCaching;
-    private final Gson gson;
+    protected final Context context;
+    protected final DMDatabase database;
+    protected boolean isDisableCaching;
+    protected final Gson gson;
 
     public DMDatabaseManager(Context context) {
         this.database = DynamicModule.getInstance().getDatabase(context);

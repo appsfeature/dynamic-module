@@ -20,10 +20,10 @@ import java.util.concurrent.Callable;
 
 public class DMDataManager extends DMBaseSorting{
     private static DMDataManager instance;
-    private final DMNetworkManager networkManager;
-    private final DMDatabaseManager dbManager;
+    protected final DMNetworkManager networkManager;
+    protected final DMDatabaseManager dbManager;
 
-    private DMDataManager(Context context) {
+    public DMDataManager(Context context) {
         this.dbManager = DynamicModule.getInstance().getDatabaseManager(context);
         this.networkManager = DynamicModule.getInstance().getNetworkManager(context);
     }
