@@ -49,7 +49,10 @@ public class BaseCommonHolder<T1> extends RecyclerView.ViewHolder{
     }
 
     public RecyclerView.LayoutManager getLayoutManager(T1 item) {
-        if(item instanceof DMCategory && ((DMCategory) item).getItemType() == DMCategoryType.TYPE_HORIZONTAL_CARD_SCROLL){
+        return getLayoutManager(item, false);
+    }
+    public RecyclerView.LayoutManager getLayoutManager(T1 item, boolean isHorizontalScroll) {
+        if(isHorizontalScroll || item instanceof DMCategory && ((DMCategory) item).getItemType() == DMCategoryType.TYPE_HORIZONTAL_CARD_SCROLL){
             return new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false);
         }else {
             return new GridLayoutManager(itemView.getContext(), getSpanCount(item));

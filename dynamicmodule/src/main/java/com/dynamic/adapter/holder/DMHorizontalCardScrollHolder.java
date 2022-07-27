@@ -30,7 +30,7 @@ public abstract class DMHorizontalCardScrollHolder<T1, T2> extends DynamicCommon
 
     @Override
     public void setData(T1 item, int position) {
-        super.setData(item, position);
+        super.setData(item, position, true);
         if(recyclerView != null && recyclerView.getOnFlingListener() == null) {
             try {
                 SnapHelper snapHelper = new LinearSnapHelper();

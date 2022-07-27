@@ -26,6 +26,9 @@ public abstract class DynamicCommonHolder<T1,T2> extends BaseCommonHolder<T1> {
     }
 
     public void setData(T1 mItem, int position) {
+        setData(mItem, position, false);
+    }
+    public void setData(T1 mItem, int position, boolean isHorizontalScroll) {
         if(mItem instanceof DMCategory) {
             DMCategory<DMContent> item = ((DMCategory) mItem);
 
@@ -41,7 +44,7 @@ public abstract class DynamicCommonHolder<T1,T2> extends BaseCommonHolder<T1> {
             if (recyclerView != null) {
                 if (item.getChildList() != null && item.getChildList().size() > 0) {
                     adapter = getChildAdapter(item.getItemType(), mItem, (List<T2>) item.getChildList());
-                    recyclerView.setLayoutManager(getLayoutManager(mItem));
+                    recyclerView.setLayoutManager(getLayoutManager(mItem, isHorizontalScroll));
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
                     recyclerView.setAdapter(adapter);
                     recyclerView.setVisibility(View.VISIBLE);
