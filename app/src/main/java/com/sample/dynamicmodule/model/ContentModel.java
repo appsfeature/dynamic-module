@@ -4,7 +4,7 @@ import com.dynamic.model.DMContent;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AppContent extends DMContent {
+public class ContentModel extends DMContent {
 
     @Expose
     @SerializedName(value="short_description")

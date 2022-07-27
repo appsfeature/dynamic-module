@@ -4,7 +4,7 @@ import com.dynamic.model.DMCategory;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AppCategory extends DMCategory<AppContent> {
+public class CategoryModel extends DMCategory<ContentModel> {
 
     @Expose
     @SerializedName(value="id")
