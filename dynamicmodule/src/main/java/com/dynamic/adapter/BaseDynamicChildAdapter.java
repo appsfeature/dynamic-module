@@ -135,9 +135,9 @@ public abstract class BaseDynamicChildAdapter<T1,T2> extends RecyclerView.Adapte
     }
 
     public class CommonChildHolder<T> extends BaseTimeViewHolder implements View.OnClickListener {
-        protected TextView tvTitle, tvTitleTag, tvCreatedAt;
-        protected ImageView ivIcon;
-        protected View cardView;
+        public TextView tvTitle, tvTitleTag, tvCreatedAt;
+        public ImageView ivIcon;
+        public View cardView;
 
         public CommonChildHolder(View v) {
             super(v);
@@ -249,9 +249,13 @@ public abstract class BaseDynamicChildAdapter<T1,T2> extends RecyclerView.Adapte
         }
     }
 
+
+    /**
+     * @param <T> : DMContent
+     */
     public class VideoViewHolder<T> extends CommonChildHolder<T> implements View.OnClickListener {
-        private final TextView tvWatchTime;
-        private final ProgressBar progressBar;
+        public final TextView tvWatchTime;
+        public final ProgressBar progressBar;
 
         public VideoViewHolder(View v) {
             super(v);

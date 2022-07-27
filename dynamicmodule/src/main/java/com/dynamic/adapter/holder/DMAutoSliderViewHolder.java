@@ -21,8 +21,8 @@ import java.util.List;
 public abstract class DMAutoSliderViewHolder<T1, T2> extends AbstractDynamicAdapter<T1, T2> {
     protected static final long SLIDER_DELAY_TIME_IN_MILLIS = 3000;
 
-    private final ViewPager2 viewPager;
-    private final WormDotsIndicator indicatorView;
+    public final ViewPager2 viewPager;
+    public final WormDotsIndicator indicatorView;
 
     public DMAutoSliderViewHolder(View view) {
         super(view);

@@ -18,13 +18,13 @@ import com.dynamic.util.DMConstants;
  * @param <T1> : DMCategory
  */
 public class BaseCommonHolder<T1> extends RecyclerView.ViewHolder{
-    protected RecyclerView.Adapter<RecyclerView.ViewHolder> adapter;
-    protected final TextView tvTitle;
-    protected final RecyclerView recyclerView;
-    protected DMOtherProperty otherProperty;
-    protected static final int defaultGridCount = 2;
-    protected int mScrollSpeed = DMConstants.DEFAULT_SCROLL_SPEED;
-    protected boolean isEnableAutoScroll = false;
+    public RecyclerView.Adapter<RecyclerView.ViewHolder> adapter;
+    public final TextView tvTitle;
+    public final RecyclerView recyclerView;
+    public DMOtherProperty otherProperty;
+    public static final int defaultGridCount = 2;
+    public int mScrollSpeed = DMConstants.DEFAULT_SCROLL_SPEED;
+    public boolean isEnableAutoScroll = false;
 
     public BaseCommonHolder(View view) {
         super(view);
