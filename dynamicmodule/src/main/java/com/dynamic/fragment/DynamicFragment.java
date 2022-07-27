@@ -1,5 +1,6 @@
 package com.dynamic.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
@@ -44,12 +45,12 @@ public class DynamicFragment extends BaseDynamicFragment {
 
     @Override
     public RecyclerView.Adapter<RecyclerView.ViewHolder> getAdapter() {
-        return new DynamicAdapter<>(activity, mList, new Response.OnClickListener<DMContent>() {
+        return new DynamicAdapter<>(activity, mList, new DynamicCallback.OnClickListener<DMCategory<DMContent>, DMContent>() {
             @Override
-            public void onItemClicked(View view, DMContent item) {
+            public void onItemClicked(View v, DMCategory<DMContent> category, DMContent item) {
                 if(item.getItemType() != DMContentType.TYPE_NO_ACTION) {
                     if (mClickListener != null) {
-                        mClickListener.onItemClicked(activity, view, property, item);
+                        mClickListener.onItemClicked(activity, v, property, item);
                     }else {
                         BaseUtil.showToast(activity, "Invalid Listener!");
                     }

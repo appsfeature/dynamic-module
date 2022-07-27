@@ -54,9 +54,9 @@ public abstract class DMAutoSliderViewHolder<T1, T2> extends AbstractDynamicAdap
         }
     }
 
-    private final Handler sliderHandler = new Handler(Looper.myLooper());
+    public final Handler sliderHandler = new Handler(Looper.myLooper());
 
-    private final Runnable sliderRunnable = new Runnable() {
+    public final Runnable sliderRunnable = new Runnable() {
         @Override
         public void run() {
             int nextPos = viewPager.getCurrentItem() + 1;

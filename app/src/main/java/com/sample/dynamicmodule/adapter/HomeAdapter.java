@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dynamic.adapter.BaseDynamicAdapter;
 import com.dynamic.adapter.holder.base.BaseCommonHolder;
+import com.dynamic.listeners.DynamicCallback;
 import com.helper.callback.Response;
 import com.sample.dynamicmodule.R;
 import com.sample.dynamicmodule.model.CategoryModel;
@@ -24,7 +25,7 @@ public class HomeAdapter extends BaseDynamicAdapter<CategoryModel, ContentModel>
 
     public static final int TYPE_LOGIN = 1001;
 
-    public HomeAdapter(Context context, List<CategoryModel> mList, Response.OnClickListener<ContentModel> listener) {
+    public HomeAdapter(Context context, List<CategoryModel> mList, DynamicCallback.OnClickListener<CategoryModel, ContentModel> listener) {
         super(context, mList, listener);
     }
 

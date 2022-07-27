@@ -72,9 +72,9 @@ public class DynamicMultiListFragment extends DMBaseFragment {
         swipeRefresh = view.findViewById(R.id.swipe_refresh);
         rvList = view.findViewById(R.id.recycler_view);
         rvList.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
-        adapter = new DynamicAdapter<>(activity, mList, new Response.OnClickListener<DMContent>() {
+        adapter = new DynamicAdapter<>(activity, mList, new DynamicCallback.OnClickListener<DMCategory<DMContent>, DMContent>() {
             @Override
-            public void onItemClicked(View view, DMContent item) {
+            public void onItemClicked(View v, DMCategory<DMContent> category, DMContent item) {
                 openItemOnClicked(view, item);
             }
         });

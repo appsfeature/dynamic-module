@@ -25,6 +25,7 @@ import com.dynamic.DynamicModule;
 import com.dynamic.R;
 import com.dynamic.listeners.DMCategoryType;
 import com.dynamic.listeners.DMContentType;
+import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.model.DMOtherProperty;
@@ -43,17 +44,17 @@ import java.util.Locale;
  */
 public abstract class BaseDynamicChildAdapter<T1,T2> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    protected final Response.OnClickListener<T2> clickListener;
-    protected final List<T2> mList;
-    protected final String imageUrl;
-    protected final int itemType;
-    protected final T1 category;
-    private final Context context;
-    private final DMOtherProperty otherProperty;
-    private final boolean isPortrait;
-    private boolean isMediumVideoPlaceholderQuality = false;
+    public final DynamicCallback.OnClickListener<T1, T2> clickListener;
+    public final List<T2> mList;
+    public final String imageUrl;
+    public final int itemType;
+    public final T1 category;
+    public final Context context;
+    public final DMOtherProperty otherProperty;
+    public final boolean isPortrait;
+    public boolean isMediumVideoPlaceholderQuality = false;
 
-    public BaseDynamicChildAdapter(Context context, int itemType, T1 category, List<T2> mList, Response.OnClickListener<T2> clickListener) {
+    public BaseDynamicChildAdapter(Context context, int itemType, T1 category, List<T2> mList, DynamicCallback.OnClickListener<T1, T2> clickListener) {
         this.imageUrl = DynamicModule.getInstance().getImageBaseUrl(context);
         this.context = context;
         this.itemType = itemType;
@@ -64,7 +65,7 @@ public abstract class BaseDynamicChildAdapter<T1,T2> extends RecyclerView.Adapte
         this.isPortrait = otherProperty == null || otherProperty.isPortrait();
     }
 
-    private DMOtherProperty getOtherProperty(T1 category) {
+    public DMOtherProperty getOtherProperty(T1 category) {
         if(category instanceof DMCategory){
             return ((DMCategory) category).getOtherPropertyModel();
         }else {
@@ -152,7 +153,7 @@ public abstract class BaseDynamicChildAdapter<T1,T2> extends RecyclerView.Adapte
         @Override
         public void onClick(View v) {
             if (getAbsoluteAdapterPosition() >= 0 && getAbsoluteAdapterPosition() < mList.size()) {
-                clickListener.onItemClicked(v, mList.get(getAbsoluteAdapterPosition()));
+                clickListener.onItemClicked(v, category, mList.get(getAbsoluteAdapterPosition()));
             }
         }
 
@@ -208,7 +209,7 @@ public abstract class BaseDynamicChildAdapter<T1,T2> extends RecyclerView.Adapte
             }
         }
 
-        private void applyStyle(DMContent item, int pos) {
+        public void applyStyle(DMContent item, int pos) {
             if (otherProperty != null) {
                 if (otherProperty.isRandomBGColor()) {
                     if(cardView != null){
@@ -304,7 +305,7 @@ public abstract class BaseDynamicChildAdapter<T1,T2> extends RecyclerView.Adapte
     /**
      * @apiNote image quality: default.jpg, mqdefault.jpg, hqdefault.jpg, maxresdefault.jpg
      */
-    private String getYoutubePlaceholderImage(String videoId) {
+    public String getYoutubePlaceholderImage(String videoId) {
         String quality = isMediumVideoPlaceholderQuality ? "mqdefault.jpg" : "maxresdefault.jpg";
         return "https://i.ytimg.com/vi/" + videoId + "/" + quality;
     }
@@ -322,7 +323,7 @@ public abstract class BaseDynamicChildAdapter<T1,T2> extends RecyclerView.Adapte
         }
     }
 
-    protected int getPlaceHolder() {
+    public int getPlaceHolder() {
         switch (itemType) {
             case DMCategoryType.TYPE_VIEWPAGER_AUTO_SLIDER:
             case DMCategoryType.TYPE_VIEWPAGER_AUTO_SLIDER_NO_TITLE:
@@ -355,7 +356,7 @@ public abstract class BaseDynamicChildAdapter<T1,T2> extends RecyclerView.Adapte
         }
     }
 
-    private int getSequentialColor(int position) {
+    public int getSequentialColor(int position) {
         String[] colors = context.getResources().getStringArray(R.array.dynamic_colors);
         if(position % colors.length == 0) {
             return Color.parseColor(colors[0]);

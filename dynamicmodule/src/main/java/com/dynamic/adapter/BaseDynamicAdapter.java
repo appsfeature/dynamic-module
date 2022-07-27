@@ -14,6 +14,7 @@ import com.dynamic.adapter.holder.DMAutoSliderViewHolder;
 import com.dynamic.adapter.holder.DMHorizontalCardScrollHolder;
 import com.dynamic.adapter.holder.base.DynamicCommonHolder;
 import com.dynamic.listeners.DMCategoryType;
+import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.helper.callback.Response;
@@ -25,12 +26,12 @@ import java.util.List;
  * @param <T2> : DMContent
  */
 public abstract class BaseDynamicAdapter<T1, T2> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    protected final Response.OnClickListener<T2> listener;
+    protected final DynamicCallback.OnClickListener<T1, T2> listener;
     protected final List<T1> mList;
     protected final String imageUrl;
     protected final Context context;
 
-    public BaseDynamicAdapter(Context context, List<T1> mList, Response.OnClickListener<T2> listener) {
+    public BaseDynamicAdapter(Context context, List<T1> mList, DynamicCallback.OnClickListener<T1, T2> listener) {
         this.context = context;
         this.listener = listener;
         this.mList = mList;

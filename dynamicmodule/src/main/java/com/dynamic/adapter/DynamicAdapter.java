@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dynamic.R;
 import com.dynamic.adapter.holder.base.BaseCommonHolder;
+import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.helper.callback.Response;
@@ -23,7 +24,7 @@ import java.util.List;
  */
 public class DynamicAdapter<T1, T2> extends BaseDynamicAdapter<T1,T2> {
 
-    public DynamicAdapter(Context context, List<T1> mList, Response.OnClickListener<T2> listener) {
+    public DynamicAdapter(Context context, List<T1> mList, DynamicCallback.OnClickListener<T1, T2> listener) {
         super(context, mList, listener);
     }
 

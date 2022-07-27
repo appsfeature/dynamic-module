@@ -73,9 +73,9 @@ public class DynamicListFragment extends DMBaseFragment {
         BaseCommonHolder<DMCategory<DMContent>> holder = new BaseCommonHolder<>(new View(activity));
         holder.setOtherProperty(item.getOtherPropertyModel());
         rvList.setLayoutManager(holder.getLayoutManager(item));
-        adapter = new DynamicChildAdapter<>(activity, property.getItemType(), DMUtility.getCategory(property), mList, new Response.OnClickListener<DMContent>() {
+        adapter = new DynamicChildAdapter<>(activity, property.getItemType(), DMUtility.getCategory(property), mList, new DynamicCallback.OnClickListener<DMCategory<DMContent>, DMContent>() {
             @Override
-            public void onItemClicked(View view, DMContent item) {
+            public void onItemClicked(View v, DMCategory<DMContent> category, DMContent item) {
                 openItemOnClicked(view, item);
             }
         });

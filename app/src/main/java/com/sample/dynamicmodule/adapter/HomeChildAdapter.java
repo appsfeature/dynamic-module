@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dynamic.adapter.BaseDynamicChildAdapter;
 import com.dynamic.adapter.holder.base.BaseCommonHolder;
+import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMContent;
 import com.helper.callback.Response;
 import com.sample.dynamicmodule.R;
@@ -23,7 +24,7 @@ import java.util.List;
 public class HomeChildAdapter extends BaseDynamicChildAdapter<CategoryModel, ContentModel> {
 
 
-    public HomeChildAdapter(Context context, int itemType, CategoryModel category, List<ContentModel> mList, Response.OnClickListener<ContentModel> clickListener) {
+    public HomeChildAdapter(Context context, int itemType, CategoryModel category, List<ContentModel> mList, DynamicCallback.OnClickListener<CategoryModel, ContentModel> clickListener) {
         super(context, itemType, category, mList, clickListener);
     }
 
@@ -63,7 +64,7 @@ public class HomeChildAdapter extends BaseDynamicChildAdapter<CategoryModel, Con
         @Override
         public void onClick(View view) {
             if (getAbsoluteAdapterPosition() >= 0 && getAbsoluteAdapterPosition() < mList.size()) {
-                clickListener.onItemClicked(view, mList.get(getAbsoluteAdapterPosition()));
+                clickListener.onItemClicked(view, category, mList.get(getAbsoluteAdapterPosition()));
             }
         }
     }

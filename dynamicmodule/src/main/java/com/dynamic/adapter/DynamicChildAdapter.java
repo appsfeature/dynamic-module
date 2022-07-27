@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dynamic.R;
+import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.helper.callback.Response;
@@ -22,7 +23,7 @@ import java.util.List;
 public class DynamicChildAdapter<T1,T2> extends BaseDynamicChildAdapter<T1, T2> {
 
 
-    public DynamicChildAdapter(Context context, int itemType, T1 category, List<T2> mList, Response.OnClickListener<T2> clickListener) {
+    public DynamicChildAdapter(Context context, int itemType, T1 category, List<T2> mList, DynamicCallback.OnClickListener<T1, T2> clickListener) {
         super(context, itemType, category, mList, clickListener);
     }
 

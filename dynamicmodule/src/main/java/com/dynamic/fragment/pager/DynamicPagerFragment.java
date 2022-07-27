@@ -17,6 +17,7 @@ import com.dynamic.adapter.DynamicChildAdapter;
 import com.dynamic.fragment.base.DMBaseFragment;
 import com.dynamic.listeners.DMCategoryType;
 import com.dynamic.listeners.DynamicCallback;
+import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.util.DMUtility;
 import com.helper.callback.Response;
@@ -118,10 +119,10 @@ public class DynamicPagerFragment extends DMBaseFragment {
         BaseUtil.showNoData(layoutNoData, View.GONE);
         mList.clear();
         mList.addAll(response);
-        viewPager.setAdapter(new DynamicChildAdapter<>(activity, DMCategoryType.TYPE_VIEWPAGER_AUTO_SLIDER, DMUtility.getCategory(property), mList, new Response.OnClickListener<DMContent>() {
+        viewPager.setAdapter(new DynamicChildAdapter<>(activity, DMCategoryType.TYPE_VIEWPAGER_AUTO_SLIDER, DMUtility.getCategory(property), mList, new DynamicCallback.OnClickListener<DMCategory<DMContent>, DMContent>() {
             @Override
-            public void onItemClicked(View view, DMContent item) {
-                openItemOnClicked(view, item);
+            public void onItemClicked(View v, DMCategory<DMContent> category, DMContent item) {
+                openItemOnClicked(v, item);
             }
         }));
         indicatorView.setViewPager2(viewPager);

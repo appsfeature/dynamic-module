@@ -20,9 +20,9 @@ import com.dynamic.model.DMCategory;
  */
 public abstract class DMHorizontalCardScrollHolder<T1, T2> extends DynamicCommonHolder<T1, T2> {
 
-    private boolean isScrollStateIdle = true;
-    private boolean isStateChange = false;
-    private int mSlotWidth = 0;
+    public boolean isScrollStateIdle = true;
+    public boolean isStateChange = false;
+    public int mSlotWidth = 0;
 
     public DMHorizontalCardScrollHolder(View view) {
         super(view);
@@ -76,9 +76,9 @@ public abstract class DMHorizontalCardScrollHolder<T1, T2> extends DynamicCommon
             clearRunnable();
         }
     }
-    private Runnable mRunnable;
+    public Runnable mRunnable;
 
-    private Runnable getRunnable() {
+    public Runnable getRunnable() {
         if(mRunnable == null) {
             mRunnable = new Runnable() {
                 @Override
@@ -110,16 +110,16 @@ public abstract class DMHorizontalCardScrollHolder<T1, T2> extends DynamicCommon
         return mRunnable;
     }
 
-    private void clearRunnable() {
+    public void clearRunnable() {
         if (DynamicModule.getInstance().getHandler() != null) {
             DynamicModule.getInstance().getHandler().removeCallbacks(getRunnable());
         }
     }
 
-    private boolean isMoveToFirst = false;
+    public boolean isMoveToFirst = false;
 
 
-    private void smoothScrollRecyclerView(boolean isMoveToStart) {
+    public void smoothScrollRecyclerView(boolean isMoveToStart) {
         try {
             if (recyclerView != null) {
                 if(isMoveToStart){
@@ -152,7 +152,7 @@ public abstract class DMHorizontalCardScrollHolder<T1, T2> extends DynamicCommon
         }
     }
 
-    private int getSlotWidth() {
+    public int getSlotWidth() {
         try {
             int currentPos = -1;
             if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {

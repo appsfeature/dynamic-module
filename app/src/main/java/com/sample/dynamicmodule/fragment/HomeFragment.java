@@ -72,9 +72,9 @@ public class HomeFragment extends DMBaseFragment {
         swipeRefresh = view.findViewById(R.id.swipe_refresh);
         rvList = view.findViewById(R.id.recycler_view);
         rvList.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
-        adapter = new HomeAdapter(activity, mList, new Response.OnClickListener<ContentModel>() {
+        adapter = new HomeAdapter(activity, mList, new DynamicCallback.OnClickListener<CategoryModel, ContentModel>() {
             @Override
-            public void onItemClicked(View view, ContentModel item) {
+            public void onItemClicked(View v, CategoryModel category, ContentModel item) {
                 openItemOnClicked(view, item);
             }
         });
