@@ -15,6 +15,7 @@ import com.dynamic.DMClassUtil;
 import com.dynamic.DynamicModule;
 import com.dynamic.R;
 import com.dynamic.fragment.DynamicFragment;
+import com.dynamic.fragment.DynamicMultiListFragment;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMContent;
 import com.dynamic.util.DMProperty;
