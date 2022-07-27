@@ -8,7 +8,7 @@ import androidx.room.RawQuery;
 import androidx.room.Update;
 import androidx.sqlite.db.SupportSQLiteQuery;
 
-import com.dynamic.model.DMCategory;
+import com.dynamic.model.DBCategory;
 
 import java.util.List;
 
@@ -16,25 +16,25 @@ import java.util.List;
 public interface DMCategoryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    List<Long> insertCategories(List<DMCategory> list);
+    List<Long> insertCategories(List<DBCategory> list);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    Long insertCategory(DMCategory record);
+    Long insertCategory(DBCategory record);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    int update(DMCategory record);
+    int update(DBCategory record);
 
     @Query("SELECT * FROM dm_category WHERE title IS NOT NULL AND title != '' order by datetime(created_at) DESC")
-    List<DMCategory> getAllData();
+    List<DBCategory> getAllData();
 
     @RawQuery
-    List<DMCategory> getAllData(SupportSQLiteQuery query);
+    List<DBCategory> getAllData(SupportSQLiteQuery query);
 
     @Query("SELECT * FROM dm_category WHERE cat_id IN (:catIds)")
-    List<DMCategory> getAllData(List<String> catIds);
+    List<DBCategory> getAllData(List<String> catIds);
 
     @Query("SELECT * FROM dm_category WHERE cat_id == :catId AND title ==:title")
-    DMCategory getItemByCatId(int catId, String title);
+    DBCategory getItemByCatId(int catId, String title);
 
 //    @Query("UPDATE dm_category SET bookmark_pages =:bookmarkPages, openPagePosition =:openPagePosition, updated_at =:updatedAt, last_update =:updatedAt WHERE id ==:id AND title ==:title")
 //    void updateBookmarkPages(int id, String title, String bookmarkPages, int openPagePosition, String updatedAt);

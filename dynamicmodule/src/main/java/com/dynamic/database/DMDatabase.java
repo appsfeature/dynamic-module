@@ -7,11 +7,11 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.dynamic.model.DMCategory;
+import com.dynamic.model.DBCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.model.DMVideo;
 
-@Database(entities = {DMCategory.class, DMContent.class, DMVideo.class}, version = 2, exportSchema = false)
+@Database(entities = {DBCategory.class, DMContent.class, DMVideo.class}, version = 2, exportSchema = false)
 public abstract class DMDatabase extends RoomDatabase {
     private static final String DB_NAME = "dynamic-module-db";
 

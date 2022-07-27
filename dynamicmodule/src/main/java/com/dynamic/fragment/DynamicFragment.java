@@ -44,7 +44,7 @@ public class DynamicFragment extends BaseDynamicFragment {
 
     @Override
     public RecyclerView.Adapter<RecyclerView.ViewHolder> getAdapter() {
-        return new DynamicAdapter(activity, mList, new Response.OnClickListener<DMContent>() {
+        return new DynamicAdapter<>(activity, mList, new Response.OnClickListener<DMContent>() {
             @Override
             public void onItemClicked(View view, DMContent item) {
                 if(item.getItemType() != DMContentType.TYPE_NO_ACTION) {
@@ -74,12 +74,12 @@ public class DynamicFragment extends BaseDynamicFragment {
     }
 
     @Override
-    public List<DMCategory> getStaticList() {
+    public List<DMCategory<DMContent>> getStaticList() {
         return null;
     }
 
     @Override
-    public void onValidateList(List<DMCategory> list, Response.Status<List<DMCategory>> callback) {
+    public void onValidateList(List<DMCategory<DMContent>> list, Response.Status<List<DMCategory<DMContent>>> callback) {
         callback.onSuccess(list);
     }
 

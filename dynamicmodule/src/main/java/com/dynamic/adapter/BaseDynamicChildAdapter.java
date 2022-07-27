@@ -37,27 +37,39 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 import java.util.Locale;
 
-public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+/**
+ * @param <T1> : DMCategory
+ * @param <T2> : DMContent
+ */
+public abstract class BaseDynamicChildAdapter<T1,T2> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    protected final Response.OnClickListener<DMContent> clickListener;
-    protected final List<DMContent> mList;
+    protected final Response.OnClickListener<T2> clickListener;
+    protected final List<T2> mList;
     protected final String imageUrl;
     protected final int itemType;
-    protected final DMCategory category;
+    protected final T1 category;
     private final Context context;
     private final DMOtherProperty otherProperty;
     private final boolean isPortrait;
     private boolean isMediumVideoPlaceholderQuality = false;
 
-    public BaseDynamicChildAdapter(Context context, int itemType, DMCategory category, List<DMContent> mList, Response.OnClickListener<DMContent> clickListener) {
+    public BaseDynamicChildAdapter(Context context, int itemType, T1 category, List<T2> mList, Response.OnClickListener<T2> clickListener) {
         this.imageUrl = DynamicModule.getInstance().getImageBaseUrl(context);
         this.context = context;
         this.itemType = itemType;
         this.category = category;
         this.mList = mList;
         this.clickListener = clickListener;
-        this.otherProperty = category != null ? category.getOtherPropertyModel() : null;
+        this.otherProperty = getOtherProperty(category);
         this.isPortrait = otherProperty == null || otherProperty.isPortrait();
+    }
+
+    private DMOtherProperty getOtherProperty(T1 category) {
+        if(category instanceof DMCategory){
+            return ((DMCategory) category).getOtherPropertyModel();
+        }else {
+            return null;
+        }
     }
 
     @Override
@@ -73,26 +85,26 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
         switch (viewType) {
             case DMCategoryType.TYPE_LIST:
             case DMCategoryType.TYPE_GRID_HORIZONTAL:
-                return new CommonChildHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_list_card_view, parent, false));
+                return new CommonChildHolder<>(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_list_card_view, parent, false));
             case DMCategoryType.TYPE_LIST_CARD:
-                return new CommonChildHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_list_view, parent, false));
+                return new CommonChildHolder<>(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_list_view, parent, false));
             case DMCategoryType.TYPE_GRID:
-                return new CommonChildHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_grid_card_view, parent, false));
+                return new CommonChildHolder<>(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_grid_card_view, parent, false));
             case DMCategoryType.TYPE_GRID_CARD:
-                return new CommonChildHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_grid_view, parent, false));
+                return new CommonChildHolder<>(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_grid_view, parent, false));
             case DMCategoryType.TYPE_HORIZONTAL_CARD_SCROLL:
-                return new CommonChildHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_scroll_view, parent, false));
+                return new CommonChildHolder<>(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_scroll_view, parent, false));
             case DMCategoryType.TYPE_VIEWPAGER_AUTO_SLIDER:
             case DMCategoryType.TYPE_VIEWPAGER_AUTO_SLIDER_NO_TITLE:
-                return new CommonChildHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_slider, parent, false));
+                return new CommonChildHolder<>(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_slider, parent, false));
             case DMCategoryType.TYPE_TITLE_ONLY:
-                return new CommonChildHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_title_only, parent, false));
+                return new CommonChildHolder<>(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_title_only, parent, false));
             case DMCategoryType.TYPE_TITLE_WITH_COUNT:
-                return new CommonChildHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_title_with_count, parent, false));
+                return new CommonChildHolder<>(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_title_with_count, parent, false));
             case DMCategoryType.TYPE_VIDEO_PLAYLIST:
-                return new VideoViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_video_play_list, parent, false));
+                return new VideoViewHolder<>(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_video_play_list, parent, false));
             case DMCategoryType.TYPE_VIDEO_CHANNEL:
-                return new VideoViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_video_channel, parent, false));
+                return new VideoViewHolder<>(LayoutInflater.from(parent.getContext()).inflate(R.layout.dm_slot_video_channel, parent, false));
             default:
                 return onCreateViewHolderDynamic(parent, viewType);
         }
@@ -103,7 +115,7 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder viewHolder, int position) {
         if (viewHolder instanceof VideoViewHolder) {
-            VideoViewHolder holder = (VideoViewHolder) viewHolder;
+            VideoViewHolder<T2> holder = (VideoViewHolder) viewHolder;
             holder.setData(mList.get(position), position);
         }else {
             onBindViewHolderDynamic(viewHolder, position);
@@ -122,7 +134,7 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
         return imageUrl + appImage;
     }
 
-    public class CommonChildHolder extends BaseTimeViewHolder implements View.OnClickListener {
+    public class CommonChildHolder<T> extends BaseTimeViewHolder implements View.OnClickListener {
         protected TextView tvTitle, tvTitleTag, tvCreatedAt;
         protected ImageView ivIcon;
         protected View cardView;
@@ -144,53 +156,56 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
             }
         }
 
-        public void setData(DMContent item, int pos) {
-            if (tvTitle != null) {
-                if(itemType != DMCategoryType.TYPE_VIEWPAGER_AUTO_SLIDER_NO_TITLE) {
-                    tvTitle.setText(item.getTitle());
-                    tvTitle.setVisibility(View.VISIBLE);
-                }else {
-                    tvTitle.setVisibility(View.GONE);
+        public void setData(T mItem, int pos) {
+            if(mItem instanceof DMContent) {
+                DMContent item = ((DMContent) mItem);
+                if (tvTitle != null) {
+                    if (itemType != DMCategoryType.TYPE_VIEWPAGER_AUTO_SLIDER_NO_TITLE) {
+                        tvTitle.setText(item.getTitle());
+                        tvTitle.setVisibility(View.VISIBLE);
+                    } else {
+                        tvTitle.setVisibility(View.GONE);
+                    }
                 }
-            }
-            if (tvCreatedAt != null) {
-                if(!TextUtils.isEmpty(item.getCreatedAt())) {
-                    if(item.getItemType() == DMContentType.TYPE_HTML_VIEW || item.getItemType() == DMContentType.TYPE_VIDEOS) {
-                        tvCreatedAt.setText(getTimeInDaysAgoFormat(item.getCreatedAt()));
-                        tvCreatedAt.setVisibility(View.VISIBLE);
-                    }else {
+                if (tvCreatedAt != null) {
+                    if (!TextUtils.isEmpty(item.getCreatedAt())) {
+                        if (item.getItemType() == DMContentType.TYPE_HTML_VIEW || item.getItemType() == DMContentType.TYPE_VIDEOS) {
+                            tvCreatedAt.setText(getTimeInDaysAgoFormat(item.getCreatedAt()));
+                            tvCreatedAt.setVisibility(View.VISIBLE);
+                        } else {
+                            tvCreatedAt.setVisibility(View.GONE);
+                        }
+                    } else {
                         tvCreatedAt.setVisibility(View.GONE);
                     }
-                }else {
-                    tvCreatedAt.setVisibility(View.GONE);
                 }
-            }
-            if (tvTitleTag != null) {
-                tvTitleTag.setText(String.format(Locale.ENGLISH, "%d", pos + 1));
-                setColorFilter(tvTitleTag.getBackground(), getSequentialColor(pos));
-            }
-            if(ivIcon != null) {
-                String imagePath = getUrl(item.getImage());
-                int placeHolder = getPlaceHolder();
-                if (BaseUtil.isValidUrl(imagePath)) {
-                    Picasso.get().load(imagePath)
-                            .placeholder(placeHolder)
-                            .into(ivIcon);
-                } else if (item.getItemType() == DMContentType.TYPE_VIDEOS){
-                    if(!TextUtils.isEmpty(item.getLink())) {
-                        String videoPreviewUrl = getYoutubePlaceholderImage(getVideoIdFromUrl(item.getLink()));
-                        Picasso.get().load(videoPreviewUrl)
-                                .placeholder(R.drawable.ic_yt_placeholder)
-                                .error(R.drawable.ic_yt_placeholder)
+                if (tvTitleTag != null) {
+                    tvTitleTag.setText(String.format(Locale.ENGLISH, "%d", pos + 1));
+                    setColorFilter(tvTitleTag.getBackground(), getSequentialColor(pos));
+                }
+                if (ivIcon != null) {
+                    String imagePath = getUrl(item.getImage());
+                    int placeHolder = getPlaceHolder();
+                    if (BaseUtil.isValidUrl(imagePath)) {
+                        Picasso.get().load(imagePath)
+                                .placeholder(placeHolder)
                                 .into(ivIcon);
-                    }else {
+                    } else if (item.getItemType() == DMContentType.TYPE_VIDEOS) {
+                        if (!TextUtils.isEmpty(item.getLink())) {
+                            String videoPreviewUrl = getYoutubePlaceholderImage(getVideoIdFromUrl(item.getLink()));
+                            Picasso.get().load(videoPreviewUrl)
+                                    .placeholder(R.drawable.ic_yt_placeholder)
+                                    .error(R.drawable.ic_yt_placeholder)
+                                    .into(ivIcon);
+                        } else {
+                            ivIcon.setImageResource(placeHolder);
+                        }
+                    } else {
                         ivIcon.setImageResource(placeHolder);
                     }
-                } else {
-                    ivIcon.setImageResource(placeHolder);
                 }
+                applyStyle(item, pos);
             }
-            applyStyle(item, pos);
         }
 
         private void applyStyle(DMContent item, int pos) {
@@ -234,7 +249,7 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
         }
     }
 
-    public class VideoViewHolder extends CommonChildHolder implements View.OnClickListener {
+    public class VideoViewHolder<T> extends CommonChildHolder<T> implements View.OnClickListener {
         private final TextView tvWatchTime;
         private final ProgressBar progressBar;
 
@@ -246,36 +261,39 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
             progressBar = itemView.findViewById(R.id.progress_bar);
         }
 
-        public void setData(DMContent item, int pos) {
-            super.setData(item, pos);
-            if(!TextUtils.isEmpty(item.getLink())) {
-                String videoPreviewUrl = getYoutubePlaceholderImage(getVideoIdFromUrl(item.getLink()));
-                Picasso.get().load(videoPreviewUrl)
-                        .placeholder(R.drawable.ic_yt_placeholder)
-                        .error(R.drawable.ic_yt_placeholder)
-                        .into(ivIcon);
-                ivIcon.setVisibility(View.VISIBLE);
-            }else {
-                if(TextUtils.isEmpty(item.getImage())) {
-                    ivIcon.setVisibility(View.GONE);
+        public void setData(T mItem, int pos) {
+            super.setData(mItem, pos);
+            if(mItem instanceof DMContent) {
+                DMContent item = ((DMContent) mItem);
+                if (!TextUtils.isEmpty(item.getLink())) {
+                    String videoPreviewUrl = getYoutubePlaceholderImage(getVideoIdFromUrl(item.getLink()));
+                    Picasso.get().load(videoPreviewUrl)
+                            .placeholder(R.drawable.ic_yt_placeholder)
+                            .error(R.drawable.ic_yt_placeholder)
+                            .into(ivIcon);
+                    ivIcon.setVisibility(View.VISIBLE);
+                } else {
+                    if (TextUtils.isEmpty(item.getImage())) {
+                        ivIcon.setVisibility(View.GONE);
+                    }
                 }
-            }
-            if(cardView != null && cardView instanceof CardView) {
-                ((CardView) cardView).setCardBackgroundColor(ContextCompat.getColor(itemView.getContext(), item.getVideoDuration() > 0 ? R.color.yt_color_video_watched : R.color.themeBackgroundCardColor));
-            }
-            if(item.getVideoDuration() > 0) {
-                progressBar.setMax(item.getVideoDuration());
-                progressBar.setProgress(item.getVideoTime());
-                progressBar.setVisibility(View.VISIBLE);
-            }else {
-                progressBar.setVisibility(View.GONE);
-            }
+                if (cardView != null && cardView instanceof CardView) {
+                    ((CardView) cardView).setCardBackgroundColor(ContextCompat.getColor(itemView.getContext(), item.getVideoDuration() > 0 ? R.color.yt_color_video_watched : R.color.themeBackgroundCardColor));
+                }
+                if (item.getVideoDuration() > 0) {
+                    progressBar.setMax(item.getVideoDuration());
+                    progressBar.setProgress(item.getVideoTime());
+                    progressBar.setVisibility(View.VISIBLE);
+                } else {
+                    progressBar.setVisibility(View.GONE);
+                }
 //            if (item.getVideoTime() > 0 && !TextUtils.isEmpty(item.getVideoTimeFormatted())) {
 //                viewHolder.tvWatchTime.setText("Watched: " + mList.get(i).getVideoTimeFormatted());
 //                viewHolder.tvWatchTime.setVisibility(View.VISIBLE);
 //            }else {
 //                viewHolder.tvWatchTime.setVisibility(View.GONE);
 //            }
+            }
         }
     }
 
@@ -351,7 +369,7 @@ public abstract class BaseDynamicChildAdapter extends RecyclerView.Adapter<Recyc
         return (int) (dp * context.getResources().getDisplayMetrics().density);
     }
 
-    public BaseDynamicChildAdapter setMediumVideoPlaceholderQuality(boolean mediumVideoPlaceholderQuality) {
+    public BaseDynamicChildAdapter<T1, T2> setMediumVideoPlaceholderQuality(boolean mediumVideoPlaceholderQuality) {
         isMediumVideoPlaceholderQuality = mediumVideoPlaceholderQuality;
         return this;
     }

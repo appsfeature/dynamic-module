@@ -9,9 +9,16 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.dynamic.R;
 import com.dynamic.adapter.holder.base.AbstractDynamicAdapter;
 import com.dynamic.model.DMCategory;
+import com.dynamic.model.DMContent;
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
 
-public abstract class DMAutoSliderViewHolder extends AbstractDynamicAdapter {
+import java.util.List;
+
+/**
+ * @param <T1> : DMCategory
+ * @param <T2> : DMContent
+ */
+public abstract class DMAutoSliderViewHolder<T1, T2> extends AbstractDynamicAdapter<T1, T2> {
     protected static final long SLIDER_DELAY_TIME_IN_MILLIS = 3000;
 
     private final ViewPager2 viewPager;
@@ -23,24 +30,27 @@ public abstract class DMAutoSliderViewHolder extends AbstractDynamicAdapter {
         indicatorView = view.findViewById(R.id.indicator_view);
     }
 
-    public void setData(DMCategory item, int position) {
-        if(item.getChildList() != null && item.getChildList().size() > 0) {
-            viewPager.setAdapter(getChildAdapter(item.getItemType(), item, item.getChildList()));
-            indicatorView.setViewPager2(viewPager);
-            viewPager.setVisibility(View.VISIBLE);
-            indicatorView.setVisibility(item.getChildList().size() > 1 ? View.VISIBLE : View.GONE);
-            viewPager.setOffscreenPageLimit(item.getChildList().size());
-            viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-                @Override
-                public void onPageSelected(int position) {
-                    super.onPageSelected(position);
-                    sliderHandler.removeCallbacks(sliderRunnable);
-                    sliderHandler.postDelayed(sliderRunnable, SLIDER_DELAY_TIME_IN_MILLIS);
-                }
-            });
-        }else {
-            viewPager.setVisibility(View.GONE);
-            indicatorView.setVisibility(View.GONE);
+    public void setData(T1 mItem, int position) {
+        if(mItem instanceof DMCategory) {
+            DMCategory<DMContent> item = ((DMCategory) mItem);
+            if (item.getChildList() != null && item.getChildList().size() > 0) {
+                viewPager.setAdapter(getChildAdapter(item.getItemType(), mItem, (List<T2>) item.getChildList()));
+                indicatorView.setViewPager2(viewPager);
+                viewPager.setVisibility(View.VISIBLE);
+                indicatorView.setVisibility(item.getChildList().size() > 1 ? View.VISIBLE : View.GONE);
+                viewPager.setOffscreenPageLimit(item.getChildList().size());
+                viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        super.onPageSelected(position);
+                        sliderHandler.removeCallbacks(sliderRunnable);
+                        sliderHandler.postDelayed(sliderRunnable, SLIDER_DELAY_TIME_IN_MILLIS);
+                    }
+                });
+            } else {
+                viewPager.setVisibility(View.GONE);
+                indicatorView.setVisibility(View.GONE);
+            }
         }
     }
 

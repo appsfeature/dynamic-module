@@ -8,6 +8,7 @@ import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import com.dynamic.DynamicModule;
 import com.dynamic.listeners.DynamicCallback;
+import com.dynamic.model.DBCategory;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.model.DMVideo;
@@ -57,32 +58,32 @@ public class DMDatabaseManager extends DMBaseSorting {
      * @apiNote Methods for handle categories
      */
     @WorkerThread
-    public List<Long> insertCategories(List<DMCategory> list) {
+    public List<Long> insertCategories(List<DBCategory> list) {
         return database.dmCategoryDao().insertCategories(list);
     }
 
     @WorkerThread
-    public Long insertCategory(DMCategory item) {
+    public Long insertCategory(DBCategory item) {
         return database.dmCategoryDao().insertCategory(item);
     }
 
     @WorkerThread
-    public List<DMCategory> getAllCategories() {
+    public List<DBCategory> getAllCategories() {
         return database.dmCategoryDao().getAllData();
     }
 
     @WorkerThread
-    public List<DMCategory> getAllCategories(String queryString, Object[] arguments) {
+    public List<DBCategory> getAllCategories(String queryString, Object[] arguments) {
         return database.dmCategoryDao().getAllData(new SimpleSQLiteQuery(queryString, arguments));
     }
 
     @WorkerThread
-    public List<DMCategory> getAllCategories(List<String> catIds) {
+    public List<DBCategory> getAllCategories(List<String> catIds) {
         return database.dmCategoryDao().getAllData(catIds);
     }
 
     @WorkerThread
-    public List<DMCategory> getAllCategories(Map<String, String> whereClause) {
+    public List<DBCategory> getAllCategories(Map<String, String> whereClause) {
 //        String query = "SELECT * FROM Flashcards WHERE category = ? OR category = ? ORDER BY RANDOM() LIMIT 1";
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT * FROM dm_category WHERE ");
@@ -196,29 +197,29 @@ public class DMDatabaseManager extends DMBaseSorting {
         });
     }
 
-    public void getDynamicData(int catId, DynamicCallback.Listener<List<DMCategory>> callback) {
+    public void getDynamicData(int catId, DynamicCallback.Listener<List<DMCategory<DMContent>>> callback) {
         getDynamicData(catId, null, false, callback);
     }
 
-    public void getDynamicData(int catId, List<DMCategory> staticList, boolean isOrderByAsc, DynamicCallback.Listener<List<DMCategory>> callback) {
+    public void getDynamicData(int catId, List<DMCategory<DMContent>> staticList, boolean isOrderByAsc, DynamicCallback.Listener<List<DMCategory<DMContent>>> callback) {
         if (isDisableCaching) return;
-        List<DMCategory> list = gson.fromJson(DMPreferences.getDynamicData(context, catId), new TypeToken<List<DMCategory>>() {
+        List<DMCategory<DMContent>> list = gson.fromJson(DMPreferences.getDynamicData(context, catId), new TypeToken<List<DMCategory<DMContent>>>() {
         }.getType());
         if (list != null && list.size() > 0) {
             if(staticList != null && staticList.size() > 0){
                 list.addAll(staticList);
             }
-            callback.onValidate(arraySortCategory(list, isOrderByAsc), new Response.Status<List<DMCategory>>() {
+            callback.onValidate(arraySortCategory(list, isOrderByAsc), new Response.Status<List<DMCategory<DMContent>>>() {
                 @Override
-                public void onSuccess(List<DMCategory> response) {
+                public void onSuccess(List<DMCategory<DMContent>> response) {
                     callback.onSuccess(response);
                 }
             });
         }else {
             if(staticList != null && staticList.size() > 0){
-                callback.onValidate(arraySortCategory(staticList, isOrderByAsc), new Response.Status<List<DMCategory>>() {
+                callback.onValidate(arraySortCategory(staticList, isOrderByAsc), new Response.Status<List<DMCategory<DMContent>>>() {
                     @Override
-                    public void onSuccess(List<DMCategory> response) {
+                    public void onSuccess(List<DMCategory<DMContent>> response) {
                         callback.onSuccess(response);
                     }
                 });
@@ -236,14 +237,14 @@ public class DMDatabaseManager extends DMBaseSorting {
 //        }
 //    });
 
-    public void saveDynamicData(int catId, List<DMCategory> response, boolean isOrderByAsc, Response.Status<List<DMCategory>> callback) {
+    public void saveDynamicData(int catId, List<DMCategory<DMContent>> response, boolean isOrderByAsc, Response.Status<List<DMCategory<DMContent>>> callback) {
         if (isDisableCaching){
             callback.onSuccess(response);
             return;
         }
         TaskRunner.getInstance().executeAsync(() -> {
             arraySortCategory(response, isOrderByAsc);
-            String jsonData = gson.toJson(response, new TypeToken<List<DMCategory>>() {
+            String jsonData = gson.toJson(response, new TypeToken<List<DMCategory<DMContent>>>() {
             }.getType());
             DMPreferences.setDynamicData(context, catId, jsonData);
             return true;

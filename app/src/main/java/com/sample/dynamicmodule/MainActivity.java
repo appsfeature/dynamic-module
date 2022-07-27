@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.dynamic.database.DMDatabaseConst;
 import com.dynamic.database.DMDatabaseManager;
 import com.dynamic.listeners.DynamicCallback;
+import com.dynamic.model.DBCategory;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.network.DMNetworkManager;
@@ -45,9 +46,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onGetCategory(View view) {
-        new DMNetworkManager(this).getCategory(0, new DynamicCallback.Listener<List<DMCategory>>() {
+        new DMNetworkManager(this).getCategory(0, new DynamicCallback.Listener<List<DMCategory<DMContent>>>() {
             @Override
-            public void onSuccess(List<DMCategory> response) {
+            public void onSuccess(List<DMCategory<DMContent>> response) {
 //                TaskRunner.getInstance().executeAsync(new Callable<Boolean>() {
 //                    @Override
 //                    public Boolean call() throws Exception {
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 Map<String, String> map = new HashMap<>();
                 map.put(DMDatabaseConst.SUB_CAT_ID, "0");
                 map.put(DMDatabaseConst.VISIBILITY, "0");
-                List<DMCategory> mCategories = databaseManager.getAllCategories(map);
+                List<DBCategory> mCategories = databaseManager.getAllCategories(map);
                 return mCategories.size();
             }
         }, new TaskRunner.CallbackWithError<Integer>() {
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         TaskRunner.getInstance().executeAsync(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                DMCategory item = new DMCategory();
+                DMCategory<DMContent> item = new DMCategory<DMContent>();
                 item.setTitle("Category " + getRandom());
                 databaseManager.insertCategory(item);
                 return true;
@@ -126,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         TaskRunner.getInstance().executeAsync(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                DMCategory item = new DMCategory();
+                DMCategory<DMContent> item = new DMCategory<>();
                 item.setCatId(10);
                 item.setTitle("Update Category");
                 databaseManager.insertCategory(item);

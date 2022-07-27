@@ -16,18 +16,21 @@ import com.dynamic.adapter.holder.base.DynamicCommonHolder;
 import com.dynamic.listeners.DMCategoryType;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
-import com.dynamic.util.DMUtility;
 import com.helper.callback.Response;
 
 import java.util.List;
 
-public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    protected final Response.OnClickListener<DMContent> listener;
-    protected final List<DMCategory> mList;
+/**
+ * @param <T1> : DMCategory
+ * @param <T2> : DMContent
+ */
+public abstract class BaseDynamicAdapter<T1, T2> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    protected final Response.OnClickListener<T2> listener;
+    protected final List<T1> mList;
     protected final String imageUrl;
     protected final Context context;
 
-    public BaseDynamicAdapter(Context context, List<DMCategory> mList, Response.OnClickListener<DMContent> listener) {
+    public BaseDynamicAdapter(Context context, List<T1> mList, Response.OnClickListener<T2> listener) {
         this.context = context;
         this.listener = listener;
         this.mList = mList;
@@ -36,7 +39,7 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemViewType(int position) {
-        return mList.get(position).getItemType();
+        return mList.get(position) instanceof DMCategory ? ((DMCategory) mList.get(position)).getItemType() : 0;
     }
 
     public void resetFlags() {
@@ -53,15 +56,15 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
             case DMCategoryType.TYPE_GRID_HORIZONTAL:
             case DMCategoryType.TYPE_TITLE_ONLY:
             case DMCategoryType.TYPE_TITLE_WITH_COUNT:
-                return new CommonHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dm_parent_slot_list, viewGroup, false));
+                return new CommonHolder<>(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dm_parent_slot_list, viewGroup, false));
             case DMCategoryType.TYPE_HORIZONTAL_CARD_SCROLL:
-                return new HorizontalCardScrollHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dm_parent_slot_list, viewGroup, false));
+                return new HorizontalCardScrollHolder<>(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dm_parent_slot_list, viewGroup, false));
             case DMCategoryType.TYPE_LIST_CARD:
             case DMCategoryType.TYPE_GRID_CARD:
-                return new CommonHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dm_parent_slot_list_card, viewGroup, false));
+                return new CommonHolder<>(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dm_parent_slot_list_card, viewGroup, false));
             case DMCategoryType.TYPE_VIEWPAGER_AUTO_SLIDER:
             case DMCategoryType.TYPE_VIEWPAGER_AUTO_SLIDER_NO_TITLE:
-                return new AutoSliderViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dm_parent_slot_auto_slider, viewGroup, false));
+                return new AutoSliderViewHolder<>(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dm_parent_slot_auto_slider, viewGroup, false));
             default:
                 return onCreateViewHolderDynamic(viewGroup, position);
         }
@@ -71,7 +74,7 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int position) {
-        DMCategory item = mList.get(position);
+        T1 item = mList.get(position);
         if (viewHolder instanceof AutoSliderViewHolder) {
             AutoSliderViewHolder holder = (AutoSliderViewHolder) viewHolder;
             holder.setData(item, position);
@@ -83,7 +86,7 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    protected abstract RecyclerView.Adapter<RecyclerView.ViewHolder> getDynamicChildAdapter(int itemType, DMCategory category, List<DMContent> childList);
+    protected abstract <T1, T2> RecyclerView.Adapter<RecyclerView.ViewHolder> getDynamicChildAdapter(int itemType, T1 category, List<T2> childList);
 
     @Override
     public int getItemCount() {
@@ -94,40 +97,44 @@ public abstract class BaseDynamicAdapter extends RecyclerView.Adapter<RecyclerVi
         DynamicModule.getInstance().getHandler().removeCallbacksAndMessages(null);
     }
 
-    public class AutoSliderViewHolder extends DMAutoSliderViewHolder {
+    public class AutoSliderViewHolder<T1, T2>  extends DMAutoSliderViewHolder<T1, T2> {
 
         @Override
-        protected RecyclerView.Adapter<RecyclerView.ViewHolder> getChildAdapter(int itemType, DMCategory category, List<DMContent> childList) {
+        protected RecyclerView.Adapter<RecyclerView.ViewHolder> getChildAdapter(int itemType, T1 category, List<T2> childList) {
             return getDynamicChildAdapter(itemType, category, childList);
         }
 
         AutoSliderViewHolder(View view) {
             super(view);
         }
+
+        public void setData(T1 mItem, int pos) {
+            super.setData(mItem, pos);
+        }
     }
 
 
-    public class CommonHolder extends DynamicCommonHolder {
+    public class CommonHolder<T1, T2>  extends DynamicCommonHolder<T1, T2> {
 
         public CommonHolder(View view) {
             super(view);
         }
 
         @Override
-        protected RecyclerView.Adapter<RecyclerView.ViewHolder> getChildAdapter(int itemType, DMCategory category, List<DMContent> childList) {
+        protected RecyclerView.Adapter<RecyclerView.ViewHolder> getChildAdapter(int itemType, T1 category, List<T2> childList) {
             return getDynamicChildAdapter(itemType, category, childList);
         }
     }
 
 
-    public class HorizontalCardScrollHolder extends DMHorizontalCardScrollHolder {
+    public class HorizontalCardScrollHolder<T1, T2>  extends DMHorizontalCardScrollHolder<T1, T2> {
 
         public HorizontalCardScrollHolder(View view) {
             super(view);
         }
 
         @Override
-        protected RecyclerView.Adapter<RecyclerView.ViewHolder> getChildAdapter(int itemType, DMCategory category, List<DMContent> childList) {
+        protected RecyclerView.Adapter<RecyclerView.ViewHolder> getChildAdapter(int itemType, T1 category, List<T2> childList) {
             return getDynamicChildAdapter(itemType, category, childList);
         }
     }

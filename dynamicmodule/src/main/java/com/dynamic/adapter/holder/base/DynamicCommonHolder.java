@@ -11,39 +11,47 @@ import com.dynamic.model.DMContent;
 
 import java.util.List;
 
-public abstract class DynamicCommonHolder extends BaseCommonHolder {
+/**
+ * @param <T1> : DMCategory
+ * @param <T2> : DMContent
+ */
+public abstract class DynamicCommonHolder<T1,T2> extends BaseCommonHolder<T1> {
 
     protected int mListSize = 0;
 
-    protected abstract RecyclerView.Adapter<RecyclerView.ViewHolder> getChildAdapter(int itemType, DMCategory category, List<DMContent> childList);
+    protected abstract RecyclerView.Adapter<RecyclerView.ViewHolder> getChildAdapter(int itemType, T1 category, List<T2> childList);
 
     public DynamicCommonHolder(View view) {
         super(view);
     }
 
-    public void setData(DMCategory item, int position) {
-        setOtherProperty(item.getOtherPropertyModel());
-        if(tvTitle != null) {
-            if (!TextUtils.isEmpty(item.getTitle())) {
-                tvTitle.setText(item.getTitle());
-                tvTitle.setVisibility(View.VISIBLE);
-            } else {
-                tvTitle.setVisibility(View.GONE);
-            }
-        }
-        if(recyclerView != null) {
-            if (item.getChildList() != null && item.getChildList().size() > 0) {
-                adapter = getChildAdapter(item.getItemType(), item, item.getChildList());
-                recyclerView.setLayoutManager(getLayoutManager(item));
-                recyclerView.setItemAnimator(new DefaultItemAnimator());
-                recyclerView.setAdapter(adapter);
-                recyclerView.setVisibility(View.VISIBLE);
-            } else {
-                recyclerView.setVisibility(View.GONE);
-            }
-        }
-        mListSize = item.getChildList() != null ? item.getChildList().size() : 0;
+    public void setData(T1 mItem, int position) {
+        if(mItem instanceof DMCategory) {
+            DMCategory<DMContent> item = ((DMCategory) mItem);
 
-        applyStyle(item);
+            setOtherProperty(item.getOtherPropertyModel());
+            if (tvTitle != null) {
+                if (!TextUtils.isEmpty(item.getTitle())) {
+                    tvTitle.setText(item.getTitle());
+                    tvTitle.setVisibility(View.VISIBLE);
+                } else {
+                    tvTitle.setVisibility(View.GONE);
+                }
+            }
+            if (recyclerView != null) {
+                if (item.getChildList() != null && item.getChildList().size() > 0) {
+                    adapter = getChildAdapter(item.getItemType(), mItem, (List<T2>) item.getChildList());
+                    recyclerView.setLayoutManager(getLayoutManager(mItem));
+                    recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    recyclerView.setAdapter(adapter);
+                    recyclerView.setVisibility(View.VISIBLE);
+                } else {
+                    recyclerView.setVisibility(View.GONE);
+                }
+            }
+            mListSize = item.getChildList() != null ? item.getChildList().size() : 0;
+
+            applyStyle(mItem);
+        }
     }
 }

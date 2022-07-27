@@ -12,8 +12,6 @@ import com.dynamic.network.DMNetworkManager;
 import com.helper.callback.Response;
 import com.helper.task.TaskRunner;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -61,24 +59,24 @@ public class DMDataManager extends DMBaseSorting{
         });
     }
 
-    public void getDataBySubCategory(int catId, DynamicCallback.Listener<List<DMCategory>> callback) {
+    public void getDataBySubCategory(int catId, DynamicCallback.Listener<List<DMCategory<DMContent>>> callback) {
         getDataBySubCategory(catId, null, false, callback);
     }
 
-    public void getDataBySubCategory(int catId, List<DMCategory> staticList, boolean isOrderByAsc, DynamicCallback.Listener<List<DMCategory>> callback) {
+    public void getDataBySubCategory(int catId, List<DMCategory<DMContent>> staticList, boolean isOrderByAsc, DynamicCallback.Listener<List<DMCategory<DMContent>>> callback) {
         dbManager.getDynamicData(catId, staticList, isOrderByAsc, callback);
-        networkManager.getDataBySubCategory(catId, new DynamicCallback.Listener<List<DMCategory>>() {
+        networkManager.getDataBySubCategory(catId, new DynamicCallback.Listener<List<DMCategory<DMContent>>>() {
             @Override
-            public void onSuccess(List<DMCategory> response) {
-                dbManager.saveDynamicData(catId, response, isOrderByAsc, new Response.Status<List<DMCategory>>() {
+            public void onSuccess(List<DMCategory<DMContent>> response) {
+                dbManager.saveDynamicData(catId, response, isOrderByAsc, new Response.Status<List<DMCategory<DMContent>>>() {
                     @Override
-                    public void onSuccess(List<DMCategory> result) {
+                    public void onSuccess(List<DMCategory<DMContent>> result) {
                         if(staticList != null && staticList.size() > 0){
                             result.addAll(staticList);
                         }
-                        callback.onValidate(arraySortCategory(result, isOrderByAsc), new Response.Status<List<DMCategory>>() {
+                        callback.onValidate(arraySortCategory(result, isOrderByAsc), new Response.Status<List<DMCategory<DMContent>>>() {
                             @Override
-                            public void onSuccess(List<DMCategory> result) {
+                            public void onSuccess(List<DMCategory<DMContent>> result) {
                                 callback.onSuccess(result);
                             }
                         });

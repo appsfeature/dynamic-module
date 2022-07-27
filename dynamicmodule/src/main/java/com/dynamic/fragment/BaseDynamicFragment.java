@@ -16,6 +16,7 @@ import com.dynamic.adapter.BaseDynamicAdapter;
 import com.dynamic.fragment.base.DMBaseFragment;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
+import com.dynamic.model.DMContent;
 import com.dynamic.util.DMUtility;
 import com.helper.callback.Response;
 import com.helper.util.BaseUtil;
@@ -27,7 +28,7 @@ import java.util.List;
 public abstract class BaseDynamicFragment extends DMBaseFragment {
     protected View layoutNoData;
     protected RecyclerView.Adapter<RecyclerView.ViewHolder> adapter;
-    protected final List<DMCategory> mList = new ArrayList<>();
+    protected final List<DMCategory<DMContent>> mList = new ArrayList<>();
     protected RecyclerView rvList;
     private SwipeRefreshLayout swipeRefresh;
 
@@ -42,9 +43,9 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
 
     public abstract boolean onResumeReloadList();
 
-    public abstract List<DMCategory> getStaticList();
+    public abstract List<DMCategory<DMContent>> getStaticList();
 
-    public abstract void onValidateList(List<DMCategory> list, Response.Status<List<DMCategory>> callback);
+    public abstract void onValidateList(List<DMCategory<DMContent>> list, Response.Status<List<DMCategory<DMContent>>> callback);
 
     public abstract void onNetworkRequestCompleted();
 
@@ -91,15 +92,15 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
     }
 
     private void getDataFromServer() {
-        dataManager.getDataBySubCategory(catId, getStaticList(), true, new DynamicCallback.Listener<List<DMCategory>>() {
+        dataManager.getDataBySubCategory(catId, getStaticList(), true, new DynamicCallback.Listener<List<DMCategory<DMContent>>>() {
             @Override
-            public void onSuccess(List<DMCategory> response) {
+            public void onSuccess(List<DMCategory<DMContent>> response) {
                 showProgress(false);
                 loadList(response);
             }
 
             @Override
-            public void onValidate(List<DMCategory> list, Response.Status<List<DMCategory>> callback) {
+            public void onValidate(List<DMCategory<DMContent>> list, Response.Status<List<DMCategory<DMContent>>> callback) {
                 onValidateList(list, callback);
             }
 
@@ -125,15 +126,15 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
         }
     }
 
-    protected void loadList(List<DMCategory> list) {
+    protected void loadList(List<DMCategory<DMContent>> list) {
         updateList(list, true);
     }
 
-    protected void updateList(List<DMCategory> list) {
+    protected void updateList(List<DMCategory<DMContent>> list) {
         updateList(list, false);
     }
 
-    private void updateList(List<DMCategory> list, boolean isClear) {
+    private void updateList(List<DMCategory<DMContent>> list, boolean isClear) {
         rvList.setVisibility(View.VISIBLE);
         BaseUtil.showNoData(layoutNoData, View.GONE);
         boolean isSizeChanged = isSizeChanged(list);
@@ -181,7 +182,7 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
         }
     }
 
-    private boolean isSizeChanged(List<DMCategory> list) {
+    private boolean isSizeChanged(List<DMCategory<DMContent>> list) {
         if(list != null){
             if(list.size() == 0){
                 return true;
@@ -190,8 +191,8 @@ public abstract class BaseDynamicFragment extends DMBaseFragment {
             }else if(list.size() == mList.size()){
                 try {
                     for (int i = 0; i < mList.size(); i++) {
-                        DMCategory category = mList.get(i);
-                        DMCategory lCat = list.get(i);
+                        DMCategory<DMContent> category = mList.get(i);
+                        DMCategory<DMContent> lCat = list.get(i);
                         if (category.getChildList() != null && lCat.getChildList() != null
                                 && category.getChildList().size() != lCat.getChildList().size()) {
                             return true;

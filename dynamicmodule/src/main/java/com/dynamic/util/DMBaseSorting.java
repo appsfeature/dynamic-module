@@ -14,8 +14,8 @@ import java.util.Locale;
 
 public class DMBaseSorting {
 
-    public List<DMCategory> arraySortCategory(List<DMCategory> list, boolean isOrderByAsc) {
-        Collections.sort(list, new Comparator<DMCategory>() {
+    public List<DMCategory<DMContent>> arraySortCategory(List<DMCategory<DMContent>> list, boolean isOrderByAsc) {
+        Collections.sort(list, new Comparator<DMCategory<DMContent>>() {
             @Override
             public int compare(DMCategory item, DMCategory item2) {
                 Date value = getDate(item.getCreatedAt());
@@ -23,7 +23,7 @@ public class DMBaseSorting {
                 return isOrderByAsc ? value.compareTo(value2) : value2.compareTo(value);
             }
         });
-        Collections.sort(list, new Comparator<DMCategory>() {
+        Collections.sort(list, new Comparator<DMCategory<DMContent>>() {
             @Override
             public int compare(DMCategory item, DMCategory item2) {
                 Integer value = item.getRanking();

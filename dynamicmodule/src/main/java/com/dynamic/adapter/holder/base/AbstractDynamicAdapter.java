@@ -10,12 +10,16 @@ import com.dynamic.model.DMContent;
 
 import java.util.List;
 
-public abstract class AbstractDynamicAdapter extends RecyclerView.ViewHolder{
+/**
+ * @param <T1> : DMCategory
+ * @param <T2> : DMContent
+ */
+public abstract class AbstractDynamicAdapter<T1,T2> extends RecyclerView.ViewHolder{
 
     public AbstractDynamicAdapter(@NonNull View itemView) {
         super(itemView);
     }
 
-    protected abstract RecyclerView.Adapter<RecyclerView.ViewHolder> getChildAdapter(int itemType, DMCategory category, List<DMContent> childList);
+    protected abstract RecyclerView.Adapter<RecyclerView.ViewHolder> getChildAdapter(int itemType, T1 category, List<T2> childList);
 
 }

@@ -10,10 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dynamic.R;
 import com.dynamic.listeners.DMCategoryType;
 import com.dynamic.model.DMCategory;
+import com.dynamic.model.DMContent;
 import com.dynamic.model.DMOtherProperty;
 import com.dynamic.util.DMConstants;
 
-public class BaseCommonHolder extends RecyclerView.ViewHolder{
+/**
+ * @param <T1> : DMCategory
+ */
+public class BaseCommonHolder<T1> extends RecyclerView.ViewHolder{
     protected RecyclerView.Adapter<RecyclerView.ViewHolder> adapter;
     protected final TextView tvTitle;
     protected final RecyclerView recyclerView;
@@ -36,7 +40,7 @@ public class BaseCommonHolder extends RecyclerView.ViewHolder{
         }
     }
 
-    public void applyStyle(DMCategory item) {
+    public void applyStyle(T1 item) {
         if (otherProperty != null) {
             if (tvTitle != null) {
                 tvTitle.setVisibility(otherProperty.isHideTitle() ? View.GONE : View.VISIBLE);
@@ -44,29 +48,34 @@ public class BaseCommonHolder extends RecyclerView.ViewHolder{
         }
     }
 
-    public RecyclerView.LayoutManager getLayoutManager(DMCategory item) {
-        if(item.getItemType() == DMCategoryType.TYPE_HORIZONTAL_CARD_SCROLL){
+    public RecyclerView.LayoutManager getLayoutManager(T1 item) {
+        if(item instanceof DMCategory && ((DMCategory) item).getItemType() == DMCategoryType.TYPE_HORIZONTAL_CARD_SCROLL){
             return new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false);
         }else {
             return new GridLayoutManager(itemView.getContext(), getSpanCount(item));
         }
     }
 
-    public int getSpanCount(DMCategory item) {
-        if(item.getItemType() == DMCategoryType.TYPE_GRID || item.getItemType() == DMCategoryType.TYPE_GRID_HORIZONTAL
-                || item.getItemType() == DMCategoryType.TYPE_GRID_CARD) {
-            if (otherProperty != null) {
-                if (otherProperty.isGridAutoAdjust() && item.getChildList() != null) {
-                    if (item.getChildList().size() > 0 && item.getChildList().size() <= 4) {
-                        return item.getChildList().size();
-                    } else {
-                        return 3;
+    public int getSpanCount(T1 mItem) {
+        if(mItem instanceof DMCategory) {
+            DMCategory<DMContent> item = ((DMCategory) mItem);
+            if (item.getItemType() == DMCategoryType.TYPE_GRID || item.getItemType() == DMCategoryType.TYPE_GRID_HORIZONTAL
+                    || item.getItemType() == DMCategoryType.TYPE_GRID_CARD) {
+                if (otherProperty != null) {
+                    if (otherProperty.isGridAutoAdjust() && item.getChildList() != null) {
+                        if (item.getChildList().size() > 0 && item.getChildList().size() <= 4) {
+                            return item.getChildList().size();
+                        } else {
+                            return 3;
+                        }
+                    } else if (otherProperty.getGridCount() > 0) {
+                        return otherProperty.getGridCount();
                     }
-                } else if (otherProperty.getGridCount() > 0) {
-                    return otherProperty.getGridCount();
                 }
+                return defaultGridCount;
+            } else {
+                return 1;
             }
-            return defaultGridCount;
         }else {
             return 1;
         }

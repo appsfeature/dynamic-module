@@ -29,7 +29,7 @@ import java.util.List;
 
 public class DynamicListFragment extends DMBaseFragment {
     private View layoutNoData;
-    private DynamicChildAdapter adapter;
+    private DynamicChildAdapter<DMCategory<DMContent>, DMContent> adapter;
     private final List<DMContent> mList = new ArrayList<>();
     private Activity activity;
     private RecyclerView rvList;
@@ -69,11 +69,11 @@ public class DynamicListFragment extends DMBaseFragment {
         layoutNoData = view.findViewById(R.id.ll_no_data);
         swipeRefresh = view.findViewById(R.id.swipe_refresh);
         rvList = view.findViewById(R.id.recycler_view);
-        DMCategory item = getCategoryItem();
-        BaseCommonHolder holder = new BaseCommonHolder(new View(activity));
+        DMCategory<DMContent> item = getCategoryItem();
+        BaseCommonHolder<DMCategory<DMContent>> holder = new BaseCommonHolder<>(new View(activity));
         holder.setOtherProperty(item.getOtherPropertyModel());
         rvList.setLayoutManager(holder.getLayoutManager(item));
-        adapter = new DynamicChildAdapter(activity, property.getItemType(), DMUtility.getCategory(property), mList, new Response.OnClickListener<DMContent>() {
+        adapter = new DynamicChildAdapter<>(activity, property.getItemType(), DMUtility.getCategory(property), mList, new Response.OnClickListener<DMContent>() {
             @Override
             public void onItemClicked(View view, DMContent item) {
                 openItemOnClicked(view, item);
@@ -147,8 +147,8 @@ public class DynamicListFragment extends DMBaseFragment {
         adapter.notifyDataSetChanged();
     }
 
-    private DMCategory getCategoryItem() {
-        DMCategory item = new DMCategory();
+    private DMCategory<DMContent> getCategoryItem() {
+        DMCategory<DMContent> item = new DMCategory<>();
         item.setItemType(property.getItemType());
         item.setOtherProperty(property.getOtherProperty());
         item.setChildList(mList);

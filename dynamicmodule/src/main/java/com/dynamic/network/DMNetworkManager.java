@@ -30,7 +30,7 @@ public class DMNetworkManager {
         this.context = context;
     }
 
-    public void insertCategory(DMCategory category, DynamicCallback.Listener<NetworkModel> callback) {
+    public void insertCategory(DMCategory<DMContent> category, DynamicCallback.Listener<NetworkModel> callback) {
         Map<String, String> params = new HashMap<>();
         params.put("pkg_name", context.getPackageName());
         params.put("sub_cat_id", category.getSubCatId() + "");
@@ -58,7 +58,7 @@ public class DMNetworkManager {
         });
     }
 
-    public void getCategory(int catId, DynamicCallback.Listener<List<DMCategory>> callback) {
+    public void getCategory(int catId, DynamicCallback.Listener<List<DMCategory<DMContent>>> callback) {
         Map<String, String> params = new HashMap<>();
         params.put("cat_id", catId + "");
         params.put("pkg_name", context.getPackageName());
@@ -67,7 +67,7 @@ public class DMNetworkManager {
             public void onComplete(boolean status, NetworkModel data) {
                 try {
                     if (status && !TextUtils.isEmpty(data.getData())) {
-                        List<DMCategory> list = data.getData(new TypeToken<List<DMCategory>>() {
+                        List<DMCategory<DMContent>> list = data.getData(new TypeToken<List<DMCategory<DMContent>>>() {
                         });
                         if (list != null && list.size() > 0) {
                             callback.onSuccess(list);
@@ -94,7 +94,7 @@ public class DMNetworkManager {
         });
     }
 
-    public void getDataBySubCategory(int catId, DynamicCallback.Listener<List<DMCategory>> callback) {
+    public void getDataBySubCategory(int catId, DynamicCallback.Listener<List<DMCategory<DMContent>>> callback) {
         Map<String, String> params = new HashMap<>();
         params.put("pkg_name", context.getPackageName());
         params.put("cat_id", catId + "");
@@ -103,7 +103,7 @@ public class DMNetworkManager {
             public void onComplete(boolean status, NetworkModel data) {
                 try {
                     if (status && !TextUtils.isEmpty(data.getData())) {
-                        List<DMCategory> list = data.getData(new TypeToken<List<DMCategory>>() {
+                        List<DMCategory<DMContent>> list = data.getData(new TypeToken<List<DMCategory<DMContent>>>() {
                         });
                         if (!TextUtils.isEmpty(data.getImagePath())) {
                             DMPreferences.setImageBaseUrl(context, ApiHost.HOST_DEFAULT, data.getImagePath());

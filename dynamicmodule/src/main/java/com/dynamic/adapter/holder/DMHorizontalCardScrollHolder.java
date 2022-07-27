@@ -14,7 +14,11 @@ import com.dynamic.DynamicModule;
 import com.dynamic.adapter.holder.base.DynamicCommonHolder;
 import com.dynamic.model.DMCategory;
 
-public abstract class DMHorizontalCardScrollHolder extends DynamicCommonHolder {
+/**
+ * @param <T1> : DMCategory
+ * @param <T2> : DMContent
+ */
+public abstract class DMHorizontalCardScrollHolder<T1, T2> extends DynamicCommonHolder<T1, T2> {
 
     private boolean isScrollStateIdle = true;
     private boolean isStateChange = false;
@@ -25,11 +29,16 @@ public abstract class DMHorizontalCardScrollHolder extends DynamicCommonHolder {
     }
 
     @Override
-    public void setData(DMCategory item, int position) {
+    public void setData(T1 item, int position) {
         super.setData(item, position);
-        if(recyclerView != null) {
-            SnapHelper snapHelper = new LinearSnapHelper();
-            snapHelper.attachToRecyclerView(recyclerView);
+        if(recyclerView != null && recyclerView.getOnFlingListener() == null) {
+            try {
+                SnapHelper snapHelper = new LinearSnapHelper();
+                recyclerView.setOnFlingListener(null);
+                snapHelper.attachToRecyclerView(recyclerView);
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
         }
         try {
             if (isEnableAutoScroll && mListSize > 0) {

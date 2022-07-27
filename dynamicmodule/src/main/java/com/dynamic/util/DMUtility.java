@@ -11,7 +11,6 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -23,8 +22,6 @@ import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.model.DMOtherProperty;
 import com.google.gson.JsonSyntaxException;
-import com.helper.task.TaskRunner;
-import com.helper.util.BaseConstants;
 import com.helper.util.BaseUtil;
 import com.helper.util.GsonParser;
 
@@ -131,8 +128,8 @@ public class DMUtility {
                 .setOtherProperty(item.getOtherProperty());
     }
 
-    public static DMCategory getCategory(DMProperty property) {
-        DMCategory category = new DMCategory();
+    public static DMCategory<DMContent> getCategory(DMProperty property) {
+        DMCategory<DMContent> category = new DMCategory<>();
         category.setCatId(property.getCatId());
         category.setTitle(property.getTitle());
         category.setItemType(property.getItemType());
