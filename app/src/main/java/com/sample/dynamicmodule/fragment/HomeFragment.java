@@ -15,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.dynamic.R;
 import com.dynamic.adapter.DynamicAdapter;
 import com.dynamic.fragment.base.DMBaseFragment;
+import com.dynamic.fragment.base.DMBaseFragmentGeneric;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
@@ -24,12 +25,14 @@ import com.helper.util.BaseUtil;
 import com.sample.dynamicmodule.adapter.HomeAdapter;
 import com.sample.dynamicmodule.model.CategoryModel;
 import com.sample.dynamicmodule.model.ContentModel;
+import com.sample.dynamicmodule.model.ExtraProperty;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class HomeFragment extends DMBaseFragment {
+public class HomeFragment extends DMBaseFragmentGeneric<ExtraProperty> {
     private View layoutNoData;
     private HomeAdapter adapter;
     private final List<CategoryModel> mList = new ArrayList<>();
@@ -148,4 +151,5 @@ public class HomeFragment extends DMBaseFragment {
             swipeRefresh.setRefreshing(isShow);
         }
     }
+
 }

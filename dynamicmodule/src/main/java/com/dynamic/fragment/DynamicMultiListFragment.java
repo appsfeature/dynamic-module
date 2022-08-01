@@ -25,6 +25,7 @@ import com.dynamic.util.DMUtility;
 import com.helper.callback.Response;
 import com.helper.util.BaseUtil;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -147,5 +148,10 @@ public class DynamicMultiListFragment extends DMBaseFragment {
         if (swipeRefresh != null) {
             swipeRefresh.setRefreshing(isShow);
         }
+    }
+
+    @Override
+    public void onInitDataFromArguments(Bundle bundle, Serializable extraProperty) {
+
     }
 }

@@ -24,6 +24,7 @@ import com.helper.callback.Response;
 import com.helper.util.BaseUtil;
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -149,5 +150,9 @@ public class DynamicPagerFragment extends DMBaseFragment {
     public void onResume() {
         super.onResume();
         sliderHandler.postDelayed(sliderRunnable, SLIDER_DELAY_TIME_IN_MILLIS);
+    }
+    @Override
+    public void onInitDataFromArguments(Bundle bundle, Serializable extraProperty) {
+
     }
 }

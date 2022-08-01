@@ -2,6 +2,7 @@ package com.dynamic.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import com.dynamic.util.DMUtility;
 import com.helper.callback.Response;
 import com.helper.util.BaseUtil;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -91,5 +93,10 @@ public class DynamicFragment extends BaseDynamicFragment {
     @Override
     public boolean onUpdateWhenListCountChanged() {
         return false;
+    }
+
+    @Override
+    public void onInitDataFromArguments(Bundle bundle, Serializable extraProperty) {
+
     }
 }

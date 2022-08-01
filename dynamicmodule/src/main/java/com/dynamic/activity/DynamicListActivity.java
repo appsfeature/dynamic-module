@@ -20,8 +20,15 @@ import com.dynamic.DMClassUtil;
 import com.dynamic.util.DMProperty;
 import com.dynamic.util.DMUtility;
 
+import java.io.Serializable;
+
 
 public class DynamicListActivity extends DMBaseActivity implements DynamicCallback.OnDynamicListListener {
+
+    @Override
+    public void onInitDataFromArguments(Bundle bundle, Serializable extraProperty) {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
