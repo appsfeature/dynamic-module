@@ -10,7 +10,7 @@ import com.dynamic.util.DMUtility;
 
 import java.io.Serializable;
 
-public abstract class DMBaseActivityGeneric<T> extends AppCompatActivity {
+public abstract class DMBaseGenericActivity<T> extends AppCompatActivity {
 
     protected T property;
 

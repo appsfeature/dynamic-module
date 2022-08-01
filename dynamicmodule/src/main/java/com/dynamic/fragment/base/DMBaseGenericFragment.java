@@ -13,7 +13,7 @@ import com.dynamic.util.DMUtility;
 
 import java.io.Serializable;
 
-public abstract class DMBaseFragmentGeneric<T> extends Fragment {
+public abstract class DMBaseGenericFragment<T> extends Fragment {
     protected Activity activity;
     protected T property;
 
