@@ -14,6 +14,7 @@ import com.dynamic.adapter.holder.DMAutoSliderViewHolder;
 import com.dynamic.adapter.holder.DMHorizontalCardScrollHolder;
 import com.dynamic.adapter.holder.base.DynamicCommonHolder;
 import com.dynamic.listeners.DMCategoryType;
+import com.dynamic.listeners.DMFlingType;
 import com.dynamic.listeners.DynamicCallback;
 import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
@@ -30,11 +31,17 @@ public abstract class BaseDynamicAdapter<T1, T2> extends RecyclerView.Adapter<Re
     protected final List<T1> mList;
     protected final String imageUrl;
     protected final Context context;
+    @DMFlingType
+    private final int flingType;
 
     public BaseDynamicAdapter(Context context, List<T1> mList, DynamicCallback.OnClickListener<T1, T2> listener) {
+        this(context, mList, DMFlingType.None, listener);
+    }
+    public BaseDynamicAdapter(Context context, List<T1> mList, @DMFlingType int flingType, DynamicCallback.OnClickListener<T1, T2> listener) {
         this.context = context;
         this.listener = listener;
         this.mList = mList;
+        this.flingType = flingType;
         this.imageUrl = DynamicModule.getInstance().getImageBaseUrl(context);
     }
 
@@ -81,7 +88,7 @@ public abstract class BaseDynamicAdapter<T1, T2> extends RecyclerView.Adapter<Re
             holder.setData(item, position);
         } else if (viewHolder instanceof HorizontalCardScrollHolder) {
             HorizontalCardScrollHolder holder = (HorizontalCardScrollHolder) viewHolder;
-            holder.setData(item, position);
+            holder.setData(item, position, flingType);
         } else {
             onBindViewHolderDynamic(viewHolder, position);
         }

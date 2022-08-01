@@ -7,11 +7,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
 import com.dynamic.DynamicModule;
 import com.dynamic.adapter.holder.base.DynamicCommonHolder;
+import com.dynamic.listeners.DMFlingType;
 import com.dynamic.model.DMCategory;
 
 /**
@@ -28,12 +30,11 @@ public abstract class DMHorizontalCardScrollHolder<T1, T2> extends DynamicCommon
         super(view);
     }
 
-    @Override
-    public void setData(T1 item, int position) {
+    public void setData(T1 item, int position, @DMFlingType int flingType) {
         super.setData(item, position, true);
-        if(recyclerView != null && recyclerView.getOnFlingListener() == null) {
+        if(flingType != DMFlingType.None && recyclerView != null && recyclerView.getOnFlingListener() == null) {
             try {
-                SnapHelper snapHelper = new LinearSnapHelper();
+                SnapHelper snapHelper = flingType == DMFlingType.PagerSnapHelper ? new PagerSnapHelper() : new LinearSnapHelper();
                 recyclerView.setOnFlingListener(null);
                 snapHelper.attachToRecyclerView(recyclerView);
             } catch (IllegalStateException e) {
