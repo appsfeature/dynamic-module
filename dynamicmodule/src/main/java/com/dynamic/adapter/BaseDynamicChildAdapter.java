@@ -30,10 +30,10 @@ import com.dynamic.model.DMCategory;
 import com.dynamic.model.DMContent;
 import com.dynamic.model.DMOtherProperty;
 import com.dynamic.model.DMPadding;
-import com.helper.callback.Response;
 import com.helper.model.common.BaseTimeViewHolder;
 import com.helper.util.BaseUtil;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.util.List;
 import java.util.Locale;
@@ -139,6 +139,8 @@ public abstract class BaseDynamicChildAdapter<T1,T2> extends RecyclerView.Adapte
         public TextView tvTitle, tvTitleTag, tvCreatedAt;
         public ImageView ivIcon;
         public View cardView;
+        private int targetWidth = DynamicModule.getInstance().getTargetImageWidth();
+        private int targetHeight = DynamicModule.getInstance().getTargetImageHeight();
 
         public CommonChildHolder(View v) {
             super(v);
@@ -188,9 +190,12 @@ public abstract class BaseDynamicChildAdapter<T1,T2> extends RecyclerView.Adapte
                     String imagePath = getUrl(item.getImage());
                     int placeHolder = getPlaceHolder();
                     if (BaseUtil.isValidUrl(imagePath)) {
-                        Picasso.get().load(imagePath)
-                                .placeholder(placeHolder)
-                                .into(ivIcon);
+                        RequestCreator request = Picasso.get().load(imagePath);
+                        if(targetWidth > 0 && targetHeight > 0) {
+                            request.resize(targetWidth, targetHeight);
+                        }
+                        request.placeholder(placeHolder);
+                        request.into(ivIcon);
                     } else if (item.getItemType() == DMContentType.TYPE_VIDEOS) {
                         if (!TextUtils.isEmpty(item.getLink())) {
                             String videoPreviewUrl = getYoutubePlaceholderImage(getVideoIdFromUrl(item.getLink()));
@@ -207,6 +212,12 @@ public abstract class BaseDynamicChildAdapter<T1,T2> extends RecyclerView.Adapte
                 }
                 applyStyle(item, pos);
             }
+        }
+
+        public CommonChildHolder<T> setImageResize(int targetWidth, int targetHeight) {
+            this.targetWidth = targetWidth;
+            this.targetHeight = targetHeight;
+            return this;
         }
 
         public void applyStyle(DMContent item, int pos) {

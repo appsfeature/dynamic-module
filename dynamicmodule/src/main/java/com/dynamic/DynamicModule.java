@@ -26,6 +26,7 @@ public class DynamicModule {
     private DMNetworkManager networkManager;
     private DMDatabaseManager databaseManager;
     private ConfigManager configManager;
+    private int targetImageWidth = 0, targetImageHeight = 0;
 
     private DynamicModule() { }
 
@@ -130,5 +131,19 @@ public class DynamicModule {
     public Handler getHandler(){
         if(handler == null) handler = new Handler();
         return handler;
+    }
+
+    public DynamicModule setImageResize(int targetWidth, int targetHeight) {
+        this.targetImageWidth = targetWidth;
+        this.targetImageHeight = targetHeight;
+        return this;
+    }
+
+    public int getTargetImageWidth() {
+        return targetImageWidth;
+    }
+
+    public int getTargetImageHeight() {
+        return targetImageHeight;
     }
 }
