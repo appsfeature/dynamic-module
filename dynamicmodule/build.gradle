@@ -40,5 +40,5 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.ext.retrofit_okhttp_version"
     implementation "org.bitbucket.android-dennislabs:helper:$rootProject.ext.helper_version"
     implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'com.tbuonomo:dotsindicator:4.2'
+    implementation 'com.tbuonomo:dotsindicator:4.2'//
 }
