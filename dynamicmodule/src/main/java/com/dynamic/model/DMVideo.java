@@ -17,19 +17,21 @@ import java.util.List;
 @Entity(tableName = "dm_video")
 public class DMVideo implements Cloneable, Serializable {
 
+//    @Expose
+//    @PrimaryKey(autoGenerate = true)
+//    @SerializedName(value="id")
+//    @ColumnInfo(name = "id")
+//    private int id;
     @Expose
-    @PrimaryKey(autoGenerate = true)
-    @SerializedName(value="id")
-    @ColumnInfo(name = "id")
-    private int id;
+    @PrimaryKey
+    @SerializedName(value="videoId")
+    @ColumnInfo(name = "videoId")
+    @NonNull
+    private String videoId;
     @Expose
     @SerializedName(value="catId")
     @ColumnInfo(name = "catId")
     private int catId;
-    @Expose
-    @SerializedName(value="videoId")
-    @ColumnInfo(name = "videoId")
-    private String videoId;
     @Expose
     @SerializedName(value="videoTime")
     @ColumnInfo(name = "videoTime")
@@ -61,14 +63,6 @@ public class DMVideo implements Cloneable, Serializable {
 
     public void setCatId(int catId) {
         this.catId = catId;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getVideoId() {

@@ -24,7 +24,7 @@ public interface DMVideoDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     int update(DMVideo record);
 
-    @Query("SELECT * FROM dm_video WHERE videoId IS NOT NULL AND videoId != '' order by datetime(id) DESC")
+    @Query("SELECT * FROM dm_video WHERE videoId IS NOT NULL AND videoId != ''")
     List<DMVideo> getAllData();
 
     @RawQuery
@@ -32,9 +32,6 @@ public interface DMVideoDao {
 
     @Query("SELECT * FROM dm_video WHERE videoId IN (:videoIds)")
     List<DMVideo> getAllData(List<String> videoIds);
-
-    @Query("SELECT * FROM dm_video WHERE id == :id")
-    DMVideo getItemById(int id);
 
     @Query("SELECT * FROM dm_video WHERE videoId == :videoId")
     DMVideo getItemByVideoId(String videoId);
