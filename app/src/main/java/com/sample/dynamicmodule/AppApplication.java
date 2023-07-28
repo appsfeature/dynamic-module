@@ -48,4 +48,9 @@ public class AppApplication extends BaseApplication {
                 }).init(getInstance());
     }
 
+    @Override
+    public void initLibs() {
+
+    }
+
 }
