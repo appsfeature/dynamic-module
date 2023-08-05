@@ -176,4 +176,18 @@ public class DMDataManager extends DMBaseSorting{
             }
         });
     }
+
+    private void getVideoDetail(String videoId, Response.Status<DMVideo> callback) {
+        TaskRunner.getInstance().executeAsync(new Callable<DMVideo>() {
+            @Override
+            public DMVideo call() throws Exception {
+                return dbManager.getItemByVideoId(videoId);
+            }
+        }, new TaskRunner.Callback<DMVideo>() {
+            @Override
+            public void onComplete(DMVideo result) {
+                callback.onSuccess(result);
+            }
+        });
+    }
 }

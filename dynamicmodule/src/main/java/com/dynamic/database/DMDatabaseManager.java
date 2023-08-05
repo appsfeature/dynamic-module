@@ -280,6 +280,11 @@ public class DMDatabaseManager extends DMBaseSorting {
     }
 
     @WorkerThread
+    public DMVideo getItemByVideoId(String mVideoId) {
+        return database.dmVideoDao().getItemByVideoId(mVideoId);
+    }
+
+    @WorkerThread
     public List<DMVideo> getAllVideos(String queryString, Object[] arguments) {
         return database.dmVideoDao().getAllData(new SimpleSQLiteQuery(queryString, arguments));
     }
